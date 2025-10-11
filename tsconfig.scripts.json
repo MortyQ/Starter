@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "./scripts",
+    "noEmit": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/helpers/componentsList.ts",
+    "scripts/update-readme-components.ts"
+  ]
+}

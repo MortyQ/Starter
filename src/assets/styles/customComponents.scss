@@ -1,0 +1,190 @@
+@layer components {
+  .page-title {
+    @apply font-bold opacity-90 text-primary uppercase;
+    font-size: 36px;
+  }
+
+  .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: theme('spacing.2') theme('spacing.3');
+    font-weight: 300;
+    border-radius: theme('borderRadius.md');
+    width: fit-content;
+    height: 40px;
+    box-shadow: theme('boxShadow.md');
+    transition-property: background-color, color, border-color, box-shadow;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: theme('colors.primary');
+    color: theme('colors.white');
+    border: 2px solid theme('colors.primary');
+
+    &:hover:not(:disabled) {
+      background-color: theme('colors.primary-dark');
+      color: theme('colors.white');
+      border-color: theme('colors.primary-dark');
+      box-shadow: theme('boxShadow.lg');
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &.positive-button {
+      background-color: theme('colors.positive');
+      color: theme('colors.white');
+      border-color: theme('colors.positive');
+
+      &:hover:not(:disabled) {
+        background-color: theme('colors.positive-dark');
+        border-color: theme('colors.positive-dark');
+        color: theme('colors.white');
+      }
+    }
+
+    &.negative-button {
+      background-color: theme('colors.negative');
+      color: theme('colors.white');
+      border-color: theme('colors.negative');
+
+      &:hover:not(:disabled) {
+        background-color: theme('colors.negative-dark');
+        border-color: theme('colors.negative-dark');
+        color: theme('colors.white');
+      }
+    }
+
+    &.warning-button {
+      background-color: theme('colors.warning');
+      color: theme('colors.white');
+      border-color: theme('colors.warning');
+
+      &:hover:not(:disabled) {
+        background-color: theme('colors.warning-dark');
+        border-color: theme('colors.warning-dark');
+        color: theme('colors.white');
+      }
+    }
+
+    &.link-button {
+      background-color: transparent;
+      color: theme('colors.primary');
+      border: none;
+      box-shadow: none;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0 theme('spacing.2');
+      border-radius: theme('borderRadius.md');
+      position: relative;
+      transition: color 0.2s;
+      min-width: unset;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        bottom: 6px;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, theme('colors.primary'), theme('colors.primary-dark'));
+        opacity: 0.2;
+        border-radius: 1px;
+        transition: opacity 0.3s, transform 0.3s;
+        transform: scaleX(0.6);
+        transform-origin: left;
+      }
+
+      &:hover:not(:disabled), &.router-link-active {
+        color: theme('colors.primary-dark');
+        background: transparent;
+        text-decoration: none;
+        box-shadow: none;
+      }
+
+      &:hover:not(:disabled)::after, &.router-link-active::after {
+        opacity: 0.8;
+        box-shadow: none;
+        transform: scaleX(1);
+      }
+
+      &:focus-visible {
+        outline: 2px solid theme('colors.primary');
+        outline-offset: 2px;
+      }
+
+      &:disabled {
+        color: theme('colors.gray.400');
+        cursor: not-allowed;
+        background: transparent;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .form-input-component {
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .password-icon {
+      &:hover {
+        color: theme('colors.primary');
+        transition: all 0.5s;
+        transform: scale(1.2);
+      }
+    }
+
+    .form-input {
+      transition: all 0.5s;
+      box-shadow: theme('boxShadow.md');
+      background-color: theme('colors.inputBg');
+      color: theme('colors.mainText');
+      padding-left: 50px;
+      outline: none;
+      width: 100%;
+      border-radius: theme('borderRadius.md');
+
+      &:hover {
+        box-shadow: theme('boxShadow.lg');
+      }
+
+      &:focus {
+        box-shadow: theme('boxShadow.lg');
+      }
+
+      &.input-style {
+        height: 40px;
+        padding: 0 16px;
+        font-weight: 300;
+        display: flex;
+        align-items: center;
+        border: 2px solid transparent;
+        min-width: 200px;
+      }
+
+      &.input-errorBorder {
+        transition: all 0.1s;
+        border-color: theme('colors.red.500');
+      }
+
+      &.left-slot {
+        padding-left: 50px;
+      }
+
+      &.right-slot {
+        padding-right: 50px;
+      }
+    }
+  }
+}
