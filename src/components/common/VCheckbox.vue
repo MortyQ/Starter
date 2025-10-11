@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, useAttrs, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
 interface Props {
   modelValue?: boolean | string | number | any;

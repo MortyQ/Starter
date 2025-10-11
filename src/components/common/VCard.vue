@@ -18,7 +18,9 @@ const props = withDefaults(defineProps<CardProps>(), {
 const emit = defineEmits<CardEmits>();
 
 // Computed properties
-const hasHeader = computed(() => props.title || props.subtitle || props.icon || props.image || !!slots.header);
+const hasHeader = computed(() => props.title
+    || props.subtitle || props.icon
+    || props.image || !!slots.header);
 
 const hasFooter = computed(() => !!slots.footer);
 

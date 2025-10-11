@@ -43,11 +43,13 @@ const colorClass = computed(() => {
       >
       <span
         :class="colorClass"
-        class="w-11 h-6 flex items-center rounded-full transition-colors duration-200 border-2 box-border"
+        class="w-11 h-6 flex items-center rounded-full
+        transition-colors duration-200 border-2 box-border"
       >
         <span
           :class="isChecked ? 'translate-x-5' : ''"
-          class="absolute left-1 top-1 flex items-center justify-center w-4 h-4 rounded-full bg-white shadow-md transition-transform duration-200"
+          class="absolute left-1 top-1 flex items-center justify-center
+          w-4 h-4 rounded-full bg-white shadow-md transition-transform duration-200"
         >
           <slot
             v-if="$slots.icon"

@@ -24,6 +24,11 @@ const props = withDefaults(
     type: "button",
     variant: "default",
     replace: false,
+    icon: undefined,
+    to: undefined,
+    activeClass: undefined,
+    exactActiveClass: undefined,
+    text:"",
   },
 );
 

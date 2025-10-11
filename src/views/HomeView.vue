@@ -6,7 +6,6 @@ import type { Feature } from "@/types";
 import FeatureCard from "@/components/FeatureCard.vue";
 import VButton from "@/components/common/VButton.vue";
 import VCard from "@/components/common/VCard.vue";
-import VSwitch from "@/components/common/VSwitch.vue";
 
 // Reactive state
 const count = ref(0);
@@ -57,8 +56,6 @@ function decrement() {
 function reset() {
   count.value = 0;
 }
-
-const switchValue = ref(false);
 </script>
 
 <template>
@@ -70,7 +67,8 @@ const switchValue = ref(false);
           Vue 3 Starter Template
         </h1>
         <p class="text-xl text-secondary max-w-2xl mx-auto text-balance">
-          A modern, well-architected starter template with TypeScript, Tailwind CSS, ESLint, and Prettier - ready for
+          A modern, well-architected starter template with TypeScript,
+          Tailwind CSS, ESLint, and Prettier - ready for
           production.
         </p>
       </section>

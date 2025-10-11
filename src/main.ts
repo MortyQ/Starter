@@ -1,11 +1,11 @@
 import { createPinia } from "pinia";
 import { createApp } from "vue";
+import VueFeather from "vue-feather";
 
 import App from "./App.vue";
 import router from "./router";
 
 import "./main.scss";
-import VueFeather from "vue-feather";
 
 // Create Vue app instance
 const app = createApp(App);

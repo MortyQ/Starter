@@ -86,7 +86,8 @@ onMounted(() => {
             {{ comp.name }}
             <a
               :href="`#${comp.anchor}`"
-              class="text-primary hover:text-primary-dark opacity-50 hover:opacity-100 transition-opacity"
+              class="text-primary hover:text-primary-dark opacity-50
+              hover:opacity-100 transition-opacity"
               title="Link to this section"
             >
               <VueFeather
@@ -159,7 +160,8 @@ onMounted(() => {
                 >
                   <div class="space-y-3">
                     <p>
-                      This card demonstrates advanced features including custom images, structured content, and action
+                      This card demonstrates advanced features including
+                      custom images, structured content, and action
                       buttons in the footer.
                     </p>
                     <ul class="list-disc list-inside text-sm space-y-1">
@@ -171,12 +173,21 @@ onMounted(() => {
                   </div>
                   <template #footer>
                     <div class="flex justify-between items-center">
-                      <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Featured</span>
+                      <span
+                        class="text-xs bg-blue-100
+                      text-blue-800 px-2 py-1 rounded-full"
+                      >Featured</span>
                       <div class="space-x-2">
-                        <button class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        <button
+                          class="px-3 py-1 bg-blue-500
+                        text-white rounded text-sm hover:bg-blue-600"
+                        >
                           Learn More
                         </button>
-                        <button class="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600">
+                        <button
+                          class="px-3 py-1 bg-gray-500
+                        text-white rounded text-sm hover:bg-gray-600"
+                        >
                           Save
                         </button>
                       </div>
@@ -239,7 +250,8 @@ onMounted(() => {
 
             <!-- Code Example -->
             <pre
-              class="bg-base-200 text-mainText rounded-lg p-4 text-sm overflow-x-auto border border-base-300"
+              class="bg-base-200 text-mainText rounded-lg p-4
+              text-sm overflow-x-auto border border-base-300"
             ><code>{{
               example.code
             }}</code></pre>

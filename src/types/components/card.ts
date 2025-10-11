@@ -47,9 +47,14 @@ export interface CardEmits {
 
 // Component slots
 export interface CardSlots {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   default?: () => any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   header?: () => any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   footer?: () => any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   loading?: () => any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   image?: () => any;
 }
