@@ -1,6 +1,9 @@
+import VIcon from "@/components/VIcon.vue";
 import VButton from "@/components/common/VButton.vue";
 import VCard from "@/components/common/VCard.vue";
 import VCheckbox from "@/components/common/VCheckbox.vue";
+import VModal from "@/components/common/VModal.vue";
+import VSearch from "@/components/common/VSearch.vue";
 import VSwitch from "@/components/common/VSwitch.vue";
 
 /**
@@ -399,6 +402,196 @@ export const componentsList = [
         title: "Disabled Switch",
         exampleProps: { modelValue: false, disabled: true },
         code: `<VSwitch v-model="value" disabled />`,
+      },
+    ],
+  },
+  {
+    name: "VSearch",
+    anchor: "vsearch",
+    description:
+      "Modern search input and textarea component with debounce, clear button, animated search icon, and focus effects. Supports both single-line and multi-line text input.",
+    component: VSearch,
+    props: [
+      {
+        name: "modelValue",
+        type: "string",
+        default: '""',
+        description: "Input value (v-model)",
+      },
+      {
+        name: "placeholder",
+        type: "string",
+        default: '"Search..." | "Type here..."',
+        description: "Placeholder text for input/textarea",
+      },
+      {
+        name: "debounceProp",
+        type: "boolean",
+        default: "true",
+        description: "Enable debounce (800ms delay)",
+      },
+      {
+        name: "textArea",
+        type: "boolean",
+        default: "false",
+        description: "Render as textarea instead of input",
+      },
+      {
+        name: "loading",
+        type: "boolean",
+        default: "false",
+        description: "Show loading state (reserved for future use)",
+      },
+      {
+        name: "text",
+        type: "string",
+        default: '"Search"',
+        description: "Label text (currently unused)",
+      },
+    ],
+    examples: [
+      {
+        title: "Basic Search Input with Debounce",
+        exampleProps: { modelValue: "", placeholder: "Search products..." },
+        code: `<VSearch v-model="searchQuery" placeholder="Search products..." />`,
+      },
+      {
+        title: "Search without Debounce",
+        exampleProps: { modelValue: "", placeholder: "Instant search", debounceProp: false },
+        code: `<VSearch v-model="searchQuery" placeholder="Instant search" :debounceProp="false" />`,
+      },
+      {
+        title: "Textarea Mode",
+        exampleProps: { modelValue: "", placeholder: "Enter your message...", textArea: true },
+        code: `<VSearch v-model="message" placeholder="Enter your message..." :textArea="true" />`,
+      },
+      {
+        title: "With Initial Value",
+        exampleProps: { modelValue: "Vue.js", placeholder: "Search..." },
+        code: `<VSearch v-model="searchQuery" placeholder="Search..." />
+<!-- searchQuery = "Vue.js" -->`,
+      },
+    ],
+  },
+  {
+    name: "VModal",
+    anchor: "vmodal",
+    description:
+      "Flexible modal dialog component with backdrop blur, transitions, multiple sizes, and slot support for header, content, and footer. Includes keyboard shortcuts and accessibility features.",
+    component: VModal,
+    props: [
+      {
+        name: "id",
+        type: "string",
+        default: "—",
+        description: "Unique modal identifier (required)",
+      },
+      {
+        name: "title",
+        type: "string",
+        default: '""',
+        description: "Modal title text",
+      },
+      {
+        name: "showCloseButton",
+        type: "boolean",
+        default: "true",
+        description: "Show close button in header",
+      },
+      {
+        name: "closeOnBackdrop",
+        type: "boolean",
+        default: "true",
+        description: "Close modal when clicking backdrop",
+      },
+      {
+        name: "closeOnEscape",
+        type: "boolean",
+        default: "true",
+        description: "Close modal when pressing Escape key",
+      },
+      {
+        name: "maxWidth",
+        type: '"sm" | "md" | "lg" | "xl" | "2xl" | "full"',
+        default: '"md"',
+        description: "Maximum width of modal container",
+      },
+    ],
+  },
+  {
+    name: "VIcon",
+    anchor: "vicon",
+    description:
+      "Universal icon component using unplugin-icons. Supports dynamic icon loading from multiple icon sets (Material Design Icons, Heroicons, etc.) with customizable size, color, and loading state.",
+    component: VIcon,
+    props: [
+      {
+        name: "icon",
+        type: "string",
+        default: "—",
+        description: 'Icon name in format "collection:name" (e.g., "mdi:home", "heroicons:user-solid")',
+      },
+      {
+        name: "size",
+        type: "string | number",
+        default: "24",
+        description: "Icon size in pixels",
+      },
+      {
+        name: "color",
+        type: "string",
+        default: '"currentColor"',
+        description: "Icon color (CSS color value)",
+      },
+      {
+        name: "class",
+        type: "string",
+        default: '""',
+        description: "Additional CSS classes",
+      },
+      {
+        name: "loading",
+        type: "boolean",
+        default: "false",
+        description: "Show loading spinner (mdi:loading with animation)",
+      },
+    ],
+    examples: [
+      {
+        title: "Basic Icons",
+        exampleProps: { icon: "mdi:home", size: 24 },
+        code: `<div class="flex gap-4 items-center">
+  <VIcon icon="mdi:home" />
+  <VIcon icon="mdi:account" />
+  <VIcon icon="mdi:cog" />
+  <VIcon icon="mdi:heart" />
+</div>`,
+      },
+      {
+        title: "Different Sizes",
+        exampleProps: { icon: "mdi:star" },
+        code: `<div class="flex gap-4 items-center">
+  <VIcon icon="mdi:star" :size="16" />
+  <VIcon icon="mdi:star" :size="24" />
+  <VIcon icon="mdi:star" :size="32" />
+  <VIcon icon="mdi:star" :size="48" />
+</div>`,
+      },
+      {
+        title: "Custom Colors",
+        exampleProps: { icon: "mdi:palette", size: 32, color: "#f59e0b" },
+        code: `<div class="flex gap-4 items-center">
+  <VIcon icon="mdi:palette" :size="32" color="#f59e0b" />
+  <VIcon icon="mdi:palette" :size="32" color="#3b82f6" />
+  <VIcon icon="mdi:palette" :size="32" color="#22c55e" />
+  <VIcon icon="mdi:palette" :size="32" color="#f59e0b" />
+</div>`,
+      },
+      {
+        title: "Loading State",
+        exampleProps: { icon: "mdi:loading", size: 32, loading: true },
+        code: `<VIcon icon="mdi:loading" :size="32" :loading="true" />
+`,
       },
     ],
   },

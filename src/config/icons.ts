@@ -76,6 +76,9 @@ export const iconMap: Record<string, Component> = {
   "mdi:link": defineAsyncComponent(() => import("~icons/mdi/link")),
   "mdi:eye": defineAsyncComponent(() => import("~icons/mdi/eye")),
   "mdi:eye-off": defineAsyncComponent(() => import("~icons/mdi/eye-off")),
+  "mdi:close-circle": defineAsyncComponent(() => import("~icons/mdi/close-circle")),
+  "mdi:palette": defineAsyncComponent(() => import("~icons/mdi/palette")),
+  "mdi:alert-circle": defineAsyncComponent(() => import("~icons/mdi/alert-circle")),
 
   // ==================== Heroicons ====================
 

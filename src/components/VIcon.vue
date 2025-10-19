@@ -12,6 +12,7 @@ interface Props {
   color?: string;
   /** Additional CSS class */
   class?: string;
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -39,6 +40,10 @@ const iconComponent = computed<Component>(() => {
     return FallbackIcon;
   }
 
+  if(props.loading) {
+    return iconMap["mdi:loading"];
+  }
+
   return iconMap[props.icon];
 });
 
@@ -59,7 +64,7 @@ const iconStyles = computed(() => ({
 <template>
   <span
     :style="iconStyles"
-    :class="props.class"
+    :class="[{ 'animate-spin': props.loading }, props.class]"
     class="v-icon"
   >
     <component :is="iconComponent" />

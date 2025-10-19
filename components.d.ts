@@ -18,6 +18,7 @@ declare module 'vue' {
     VIcon: typeof import('./src/components/VIcon.vue')['default']
     VLoader: typeof import('./src/components/common/VLoader.vue')['default']
     VModal: typeof import('./src/components/common/VModal.vue')['default']
+    VSearch: typeof import('./src/components/common/VSearch.vue')['default']
     VSwitch: typeof import('./src/components/common/VSwitch.vue')['default']
   }
 }

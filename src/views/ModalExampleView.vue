@@ -13,7 +13,6 @@ const modal3 = useModal("modal-3", false);
     <h1 class="text-3xl font-bold text-mainText mb-8">
       Multiple Modals Example
     </h1>
-
     <div class="flex gap-4 flex-wrap">
       <button
         class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
