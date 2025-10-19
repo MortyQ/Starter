@@ -1,12 +1,27 @@
 import {defineConfig, loadEnv} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import {fileURLToPath} from "url";
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+import Components from 'unplugin-vue-components/vite'
 
 export default ({mode}: any) => {
     process.env = {...process.env, ...loadEnv(mode, process.cwd())};
 
     return defineConfig({
-        plugins: [vue()],
+        plugins: [vue(),
+            Components({
+                resolvers: [
+                    IconsResolver({
+                        prefix: 'icon',
+                    }),
+                ],
+            }),
+            Icons({
+                autoInstall: true,
+                compiler: 'vue3',
+            })
+        ],
         resolve: {
             alias: {
                 "@": fileURLToPath(new URL("./src", import.meta.url)),

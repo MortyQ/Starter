@@ -22,32 +22,39 @@ import VButton from "@/components/common/VButton.vue";
             <div class="hidden md:block">
               <div class="flex items-baseline space-x-4">
                 <VButton
-                  class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  class="link"
                   to="/"
                   variant="link"
                 >
                   Home
                 </VButton>
                 <VButton
-                  class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  class="link"
                   to="/about"
                   variant="link"
                 >
                   About
                 </VButton>
                 <VButton
-                  class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  class="link"
                   to="/components"
                   variant="link"
                 >
                   Components
                 </VButton>
                 <VButton
-                  class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  class="link"
                   to="/modals"
                   variant="link"
                 >
                   Modals
+                </VButton>
+                <VButton
+                  class="link"
+                  to="/icons"
+                  variant="link"
+                >
+                  Icons
                 </VButton>
               </div>
             </div>
@@ -64,3 +71,9 @@ import VButton from "@/components/common/VButton.vue";
     </main>
   </div>
 </template>
+
+<style scoped>
+.link {
+  @apply px-3 py-2 rounded-md text-sm font-medium transition-colors
+}
+</style>

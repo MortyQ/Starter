@@ -8,3 +8,10 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+// Type declarations for unplugin-icons
+declare module '~icons/*' {
+  import type { FunctionalComponent, SVGAttributes } from 'vue'
+  const component: FunctionalComponent<SVGAttributes>
+  export default component
+}

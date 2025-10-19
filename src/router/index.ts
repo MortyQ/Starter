@@ -42,6 +42,14 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: "/icons",
+    name: "IconDemo",
+    component: () => import("@/views/IconDemoView.vue"),
+    meta: {
+      title: "Icon Demo - Vue 3 Starter",
+    },
+  },
+  {
     // Catch-all route for 404 handling
     path: "/:pathMatch(.*)*",
     name: "NotFound",
