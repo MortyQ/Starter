@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
 
-import CommonLoader from "@/components/common/CommonLoader.vue";
+import CommonLoader from "@/components/common/VLoader.vue";
 
 
 const slots = defineSlots();

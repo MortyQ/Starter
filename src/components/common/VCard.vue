@@ -3,7 +3,7 @@ import { computed } from "vue";
 
 import type { CardProps, CardEmits, CardSlots } from "@/types/components/card";
 
-import BaseLoader from "@/components/common/CommonLoader.vue";
+import BaseLoader from "@/components/common/VLoader.vue";
 
 
 const props = withDefaults(defineProps<CardProps>(), {

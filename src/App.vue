@@ -42,6 +42,13 @@ import VButton from "@/components/common/VButton.vue";
                 >
                   Components
                 </VButton>
+                <VButton
+                  class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  to="/modals"
+                  variant="link"
+                >
+                  Modals
+                </VButton>
               </div>
             </div>
           </div>

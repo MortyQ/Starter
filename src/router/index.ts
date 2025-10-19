@@ -34,6 +34,14 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: "/modals",
+    name: "ModalExample",
+    component: () => import("@/views/ModalExampleView.vue"),
+    meta: {
+      title: "Modal Examples - Vue 3 Starter",
+    },
+  },
+  {
     // Catch-all route for 404 handling
     path: "/:pathMatch(.*)*",
     name: "NotFound",

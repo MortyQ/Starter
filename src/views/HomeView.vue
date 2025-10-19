@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 import type { Feature } from "@/types";
 
-import FeatureCard from "@/components/FeatureCard.vue";
+import FeatureCard from "@/components/common/FeatureCard.vue";
 import VButton from "@/components/common/VButton.vue";
 import VCard from "@/components/common/VCard.vue";
 
