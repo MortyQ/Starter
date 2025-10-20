@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import DOMPurify from "dompurify";
 import debounce from "lodash.debounce";
 import { computed, onUnmounted, ref } from "vue";
 
@@ -17,6 +18,9 @@ const props = withDefaults(defineProps<Props>(), {
   text: "Search",
   debounceProp: true,
   loading: false,
+  modelValue: "",
+  textArea: false,
+  placeholder:"",
 });
 
 const emit = defineEmits<{
@@ -29,10 +33,13 @@ const inputRef = ref<HTMLInputElement | HTMLTextAreaElement | null>(null);
 const internalValue = computed({
   get: () => props.modelValue ?? "",
   set: (value: string) => {
+    // DOMPurify already handles HTML escaping and XSS protection
+    const sanitizedValue = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] });
+
     if (props.debounceProp) {
-      debouncedEmitUpdate(value);
+      debouncedEmitUpdate(sanitizedValue);
     } else {
-      emit("update:modelValue", value);
+      emit("update:modelValue", sanitizedValue);
     }
   },
 });

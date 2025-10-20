@@ -35,6 +35,8 @@ export default [
         ignoreRegExpLiterals: true,
         ignoreComments: true
       }],
+        'vue/require-default-prop': 'off',
+        'vue/script-setup-uses-vars': 'error',
       'style/indent': ['error', 2, { SwitchCase: 1 }],
       'style/semi': ['error', 'always'],
       'style/semi-style': ['error', 'last'],

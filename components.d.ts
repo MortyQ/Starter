@@ -16,6 +16,7 @@ declare module 'vue' {
     VCard: typeof import('./src/components/common/VCard.vue')['default']
     VCheckbox: typeof import('./src/components/common/VCheckbox.vue')['default']
     VIcon: typeof import('./src/components/VIcon.vue')['default']
+    VInput: typeof import('./src/components/common/VInput.vue')['default']
     VLoader: typeof import('./src/components/common/VLoader.vue')['default']
     VModal: typeof import('./src/components/common/VModal.vue')['default']
     VSearch: typeof import('./src/components/common/VSearch.vue')['default']

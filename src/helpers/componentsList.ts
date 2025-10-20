@@ -2,7 +2,7 @@ import VIcon from "@/components/VIcon.vue";
 import VButton from "@/components/common/VButton.vue";
 import VCard from "@/components/common/VCard.vue";
 import VCheckbox from "@/components/common/VCheckbox.vue";
-import VModal from "@/components/common/VModal.vue";
+import VInput from "@/components/common/VInput.vue";
 import VSearch from "@/components/common/VSearch.vue";
 import VSwitch from "@/components/common/VSwitch.vue";
 
@@ -474,51 +474,6 @@ export const componentsList = [
     ],
   },
   {
-    name: "VModal",
-    anchor: "vmodal",
-    description:
-      "Flexible modal dialog component with backdrop blur, transitions, multiple sizes, and slot support for header, content, and footer. Includes keyboard shortcuts and accessibility features.",
-    component: VModal,
-    props: [
-      {
-        name: "id",
-        type: "string",
-        default: "—",
-        description: "Unique modal identifier (required)",
-      },
-      {
-        name: "title",
-        type: "string",
-        default: '""',
-        description: "Modal title text",
-      },
-      {
-        name: "showCloseButton",
-        type: "boolean",
-        default: "true",
-        description: "Show close button in header",
-      },
-      {
-        name: "closeOnBackdrop",
-        type: "boolean",
-        default: "true",
-        description: "Close modal when clicking backdrop",
-      },
-      {
-        name: "closeOnEscape",
-        type: "boolean",
-        default: "true",
-        description: "Close modal when pressing Escape key",
-      },
-      {
-        name: "maxWidth",
-        type: '"sm" | "md" | "lg" | "xl" | "2xl" | "full"',
-        default: '"md"',
-        description: "Maximum width of modal container",
-      },
-    ],
-  },
-  {
     name: "VIcon",
     anchor: "vicon",
     description:
@@ -592,6 +547,166 @@ export const componentsList = [
         exampleProps: { icon: "mdi:loading", size: 32, loading: true },
         code: `<VIcon icon="mdi:loading" :size="32" :loading="true" />
 `,
+      },
+    ],
+  },
+  {
+    name: "VInput",
+    anchor: "vinput",
+    description:
+      "Modern input component with icon support, validation states, password toggle, multiple sizes, and XSS protection. Fully themed with light/dark mode support.",
+    component: VInput,
+    props: [
+      {
+        name: "modelValue",
+        type: "string | number",
+        default: '""',
+        description: "Input value (v-model)",
+      },
+      {
+        name: "name",
+        type: "string",
+        default: '""',
+        description: "Label text displayed above input",
+      },
+      {
+        name: "type",
+        type: "string",
+        default: '"text"',
+        description: "Input type (text, password, email, number, date, etc.)",
+      },
+      {
+        name: "placeholder",
+        type: "string",
+        default: '""',
+        description: "Placeholder text",
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        default: "false",
+        description: "Disable input",
+      },
+      {
+        name: "supportText",
+        type: "string",
+        default: '""',
+        description: "Helper text displayed below input",
+      },
+      {
+        name: "validation",
+        type: "Validation",
+        default: "undefined",
+        description: "Validation object with $error and $errors properties",
+      },
+      {
+        name: "icon",
+        type: "string",
+        default: '""',
+        description: 'Icon name for left side (e.g., "mdi:email")',
+      },
+      {
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        default: '"md"',
+        description: "Input size (sm: 36px, md: 44px, lg: 48px)",
+      },
+    ],
+    examples: [
+      {
+        title: "Basic Input",
+        exampleProps: { placeholder: "Enter your name", name: "Name" },
+        code: `<VInput v-model="name" placeholder="Enter your name" name="Name" />`,
+      },
+      {
+        title: "Input with Icon",
+        exampleProps: {
+          placeholder: "Enter email",
+          name: "Email",
+          icon: "mdi:email",
+          type: "email",
+        },
+        code: `<VInput 
+  v-model="email" 
+  placeholder="Enter email" 
+  name="Email"
+  icon="mdi:email"
+  type="email" 
+/>`,
+      },
+      {
+        title: "Password Input",
+        exampleProps: {
+          type: "password",
+          placeholder: "Enter password",
+          name: "Password",
+          icon: "mdi:lock",
+        },
+        code: `<VInput 
+  v-model="password" 
+  type="password" 
+  placeholder="Enter password"
+  name="Password"
+  icon="mdi:lock"
+/>`,
+      },
+      {
+        title: "Input with Support Text",
+        exampleProps: {
+          placeholder: "Username",
+          name: "Username",
+          supportText: "Choose a unique username (4-20 characters)",
+        },
+        code: `<VInput 
+  v-model="username" 
+  placeholder="Username" 
+  name="Username"
+  supportText="Choose a unique username (4-20 characters)" 
+/>`,
+      },
+      {
+        title: "Different Sizes",
+        exampleProps: { placeholder: "Small input", size: "sm" },
+        code: `<div class="space-y-4">
+  <VInput v-model="value" placeholder="Small input" size="sm" />
+  <VInput v-model="value" placeholder="Medium input" size="md" />
+  <VInput v-model="value" placeholder="Large input" size="lg" />
+</div>`,
+      },
+      {
+        title: "Disabled State",
+        exampleProps: {
+          placeholder: "Disabled input",
+          disabled: true,
+          modelValue: "Cannot edit this",
+        },
+        code: `<VInput 
+  v-model="value" 
+  placeholder="Disabled input" 
+  :disabled="true" 
+/>`,
+      },
+      {
+        title: "Error State with Validation",
+        exampleProps: {
+          placeholder: "Enter email",
+          name: "Email with error",
+          icon: "mdi:email",
+          validation: {
+            $error: true,
+            $errors: [{ $message: "Please enter a valid email address" }],
+          },
+        },
+        code: `<VInput 
+  v-model="email" 
+  placeholder="Enter email"
+  name="Email"
+  icon="mdi:email"
+  :validation="{ 
+    $error: true, 
+    $errors: [{ $message: 'Please enter a valid email address' }] 
+  }" 
+/>`,
       },
     ],
   },
