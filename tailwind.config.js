@@ -1,4 +1,4 @@
-import {createThemes} from './src/utils/createThemes'
+import {createThemes} from './src/features/theme/utils/createThemes.ts'
 
 /** @type {import('tailwindcss').Config} */
 export default {
