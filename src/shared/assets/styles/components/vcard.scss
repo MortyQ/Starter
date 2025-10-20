@@ -33,7 +33,7 @@
 
 .card--outlined {
   background-color: var(--colors-cardBg);
-  box-shadow: none;
+  box-shadow: none !important;
   @apply border-[1px] border-cardBorder;
 }
 
@@ -46,11 +46,12 @@
 .card--ghost {
   background-color: transparent;
   border: 1px solid transparent;
-  box-shadow: none;
+  box-shadow: none !important;
 }
 
 .card--ghost:hover {
   background-color: var(--colors-base-200);
+  box-shadow: none !important;
 }
 
 /* Sizes */
@@ -134,10 +135,22 @@
   transition: all 0.2s ease-in-out;
 }
 
-.card--interactive:hover:not(.card--disabled):not(.card--loading) {
+/* Interactive hover effects only for default and elevated variants */
+.card--interactive.card--default:hover:not(.card--disabled):not(.card--loading),
+.card--interactive.card--elevated:hover:not(.card--disabled):not(.card--loading) {
   transform: scale(1.02);
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
   0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Interactive hover for outlined - only scale, no extra shadow */
+.card--interactive.card--outlined:hover:not(.card--disabled):not(.card--loading) {
+  transform: scale(1.02);
+}
+
+/* Interactive hover for ghost - only scale */
+.card--interactive.card--ghost:hover:not(.card--disabled):not(.card--loading) {
+  transform: scale(1.02);
 }
 
 .card--interactive:active:not(.card--disabled):not(.card--loading) {
