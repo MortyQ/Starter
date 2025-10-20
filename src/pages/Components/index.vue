@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 
+import VIcon from "@/shared/ui/common/VIcon.vue";
 import { componentsList } from "@/shared/utils/componentsList";
 
 // Active section tracking for navigation
@@ -90,9 +91,9 @@ onMounted(() => {
               hover:opacity-100 transition-opacity"
               title="Link to this section"
             >
-              <VueFeather
-                size="20"
-                type="link"
+              <VIcon
+                icon="mdi:link"
+                :size="20"
               />
             </a>
           </h2>

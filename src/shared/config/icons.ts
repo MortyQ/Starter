@@ -34,6 +34,7 @@ export const iconMap: Record<string, Component> = {
   "mdi:plus": defineAsyncComponent(() => import("~icons/mdi/plus")),
   "mdi:minus": defineAsyncComponent(() => import("~icons/mdi/minus")),
   "mdi:check": defineAsyncComponent(() => import("~icons/mdi/check")),
+  "mdi:close-thick": defineAsyncComponent(() => import("~icons/mdi/close-thick")),
   "mdi:save": defineAsyncComponent(() => import("~icons/mdi/content-save")),
 
   // Status & Alerts
@@ -80,6 +81,7 @@ export const iconMap: Record<string, Component> = {
   "mdi:palette": defineAsyncComponent(() => import("~icons/mdi/palette")),
   "mdi:alert-circle": defineAsyncComponent(() => import("~icons/mdi/alert-circle")),
   "mdi:lock": defineAsyncComponent(() => import("~icons/mdi/lock")),
+  "mdi:trash": defineAsyncComponent(() => import("~icons/mdi/trash")),
 
   // ==================== Heroicons ====================
 
@@ -116,4 +118,3 @@ export const getAvailableIcons = (): string[] => {
 export const hasIcon = (iconName: string): boolean => {
   return iconName in iconMap;
 };
-

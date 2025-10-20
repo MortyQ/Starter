@@ -1,5 +1,3 @@
-import type { Component } from "vue";
-
 // Define card sizes
 export type CardSize = "sm" | "md" | "lg" | "xl" | "full";
 
@@ -30,7 +28,7 @@ export interface CardProps {
   clickable?: boolean;
 
   // Icons and images
-  icon?: string | Component;
+  icon?: string;
   image?: string;
   imageAlt?: string;
 

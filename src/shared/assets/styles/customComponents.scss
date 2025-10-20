@@ -1,3 +1,6 @@
+@use './components/vcard.scss';
+@use './components/vcheckbox.scss';
+
 @layer components {
   .page-title {
     @apply font-bold opacity-90 text-primary uppercase;

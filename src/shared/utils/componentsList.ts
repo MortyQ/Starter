@@ -82,7 +82,7 @@ export const componentsList = [
         name: "icon",
         type: "string | Component",
         default: "—",
-        description: "Feather icon name or Vue component",
+        description: "Icon name in VIcon format (e.g., 'mdi:link') or Vue component",
       },
       {
         name: "image",
@@ -116,7 +116,7 @@ export const componentsList = [
           target: "_blank",
           title: "Vue.js Documentation",
           subtitle: "Official Framework Guide",
-          icon: "external-link",
+          icon: "mdi:link",
           clickable: true,
         },
         code: `<VCard 
@@ -125,7 +125,7 @@ export const componentsList = [
   target="_blank" 
   title="Vue.js Documentation"
   subtitle="Official Framework Guide"
-  icon="external-link"
+  icon="mdi:link"
   clickable
 >
   Click to visit Vue.js official website
@@ -231,7 +231,7 @@ export const componentsList = [
         name: "icon",
         type: "string",
         default: "—",
-        description: "Feather icon name (left side)",
+        description: "Icon name in VIcon format (e.g., 'mdi:plus') for left side",
       },
       {
         name: "text",
@@ -253,13 +253,13 @@ export const componentsList = [
       },
       {
         title: "Positive Icon Button",
-        exampleProps: { icon: "plus", variant: "positive" },
-        code: '<VButton icon="plus" variant="positive" />',
+        exampleProps: { icon: "mdi:plus", variant: "positive" },
+        code: '<VButton icon="mdi:plus" variant="positive" />',
       },
       {
         title: "Negative Button with Text",
-        exampleProps: { text: "Delete", icon: "trash", variant: "negative" },
-        code: '<VButton text="Delete" icon="trash" variant="negative" />',
+        exampleProps: { text: "Delete", icon: "mdi:trash", variant: "negative" },
+        code: '<VButton text="Delete" icon="mdi:trash" variant="negative" />',
       },
       {
         title: "Primary Button",
@@ -273,8 +273,8 @@ export const componentsList = [
       },
       {
         title: "Warning Icon Button",
-        exampleProps: { icon: "alert-triangle", variant: "warning" },
-        code: '<VButton icon="alert-triangle" variant="warning" />',
+        exampleProps: { icon: "mdi:alert-circle", variant: "warning" },
+        code: '<VButton icon="mdi:alert-circle" variant="warning" />',
       },
     ],
   },
@@ -332,50 +332,50 @@ export const componentsList = [
     name: "VSwitch",
     anchor: "vswitch",
     description:
-            "Modern switch/toggle component с поддержкой тем, кастомных цветов, иконок и слотов. Подходит для современных UI.",
+            "Modern switch/toggle component with theme support, custom colors, icons, and slots. Suitable for modern UIs.",
     component: VSwitch,
     props: [
       {
         name: "modelValue",
         type: "boolean",
         default: "false",
-        description: "Текущее состояние переключателя (on/off)",
+        description: "Current switch state (on/off)",
       },
       {
         name: "disabled",
         type: "boolean",
         default: "false",
-        description: "Отключает переключатель",
+        description: "Disables the switch",
       },
       {
         name: "trueIcon",
         type: "string",
         default: "—",
-        description: "Иконка для состояния ON (использует иконки VButton)",
+        description: "Icon for ON state (format: collection:name, e.g., mdi:check)",
       },
       {
         name: "falseIcon",
         type: "string",
         default: "—",
-        description: "Иконка для состояния OFF (использует иконки VButton)",
+        description: "Icon for OFF state (format: collection:name, e.g., mdi:close-thick)",
       },
       {
         name: "trueLabel",
         type: "string",
         default: "—",
-        description: "Текст для состояния ON",
+        description: "Text for ON state",
       },
       {
         name: "falseLabel",
         type: "string",
         default: "—",
-        description: "Текст для состояния OFF",
+        description: "Text for OFF state",
       },
       {
         name: "color",
         type: "string",
         default: "primary",
-        description: "Tailwind/темный цвет для активного состояния",
+        description: "Tailwind/dark color for active state",
       },
     ],
     examples: [
@@ -386,8 +386,8 @@ export const componentsList = [
       },
       {
         title: "Switch with icons and color",
-        exampleProps: { modelValue: false, trueIcon: "check", falseIcon: "x", color: "success" },
-        code: `<VSwitch v-model="value" trueIcon="check" falseIcon="x" color="success" />`,
+        exampleProps: { modelValue: true, trueIcon: "mdi:check", falseIcon: "mdi:close-thick", color: "red" },
+        code: `<VSwitch v-model="value" trueIcon="mdi:check" falseIcon="mdi:close-thick" color="red" />`,
       },
       {
         title: "Switch with custom label via slot",

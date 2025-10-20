@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import type { CardProps, CardEmits, CardSlots } from "@/shared/types/components/card";
+import VIcon from "@/shared/ui/common/VIcon.vue";
 import BaseLoader from "@/shared/ui/common/VLoader.vue";
 
 const props = withDefaults(defineProps<CardProps>(), {
@@ -117,9 +118,9 @@ const handleClick = (event: MouseEvent) => {
         <slot name="header">
           <div class="card__header-content">
             <!-- Icon -->
-            <VueFeather
-              v-if="icon && typeof icon === 'string'"
-              :type="icon"
+            <VIcon
+              v-if="props.icon"
+              :icon="props.icon"
               class="card__icon"
             />
             <component

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { computed, useAttrs } from "vue";
 
+import VIcon from "@/shared/ui/common/VIcon.vue";
+
 interface Props {
   modelValue?: boolean;
   disabled?: boolean;
@@ -8,7 +10,7 @@ interface Props {
   falseIcon?: string;
   trueLabel?: string;
   falseLabel?: string;
-  color?: string; // tailwind color name, e.g. 'primary', 'success', etc.
+  color?: string;
 }
 
 const props = defineProps<Props>();
@@ -20,9 +22,27 @@ const isChecked = computed({
   set: (v) => emit("update:modelValue", v),
 });
 
-const colorClass = computed(() => {
+const switchStyle = computed(() => {
+  if (props.disabled) {
+    return {
+      backgroundColor: "#d1d5db",
+      borderColor: "#d1d5db",
+    };
+  }
+
+  if (props.color && isChecked.value) {
+    return {
+      backgroundColor: props.color,
+      borderColor: props.color,
+    };
+  }
+
+  return {};
+});
+
+const switchClass = computed(() => {
   if (props.disabled) return "bg-gray-300 border-gray-300";
-  if (props.color) return `bg-${props.color}-500 border-${props.color}-500`;
+  if (props.color) return "";
   return isChecked.value ? "bg-primary border-primary" : "bg-gray-300 border-gray-300";
 });
 </script>
@@ -42,7 +62,8 @@ const colorClass = computed(() => {
         @change="isChecked = ($event.target as HTMLInputElement).checked"
       >
       <span
-        :class="colorClass"
+        :class="switchClass"
+        :style="switchStyle"
         class="w-11 h-6 flex items-center rounded-full
         transition-colors duration-200 border-2 box-border"
       >
@@ -58,15 +79,15 @@ const colorClass = computed(() => {
             <slot :name="isChecked ? 'true-icon' : 'false-icon'" />
           </slot>
           <template v-else>
-            <VueFeather
+            <VIcon
               v-if="isChecked && props.trueIcon"
-              :type="props.trueIcon"
-              size="16"
+              :icon="props.trueIcon"
+              :size="16"
             />
-            <VueFeather
+            <VIcon
               v-else-if="!isChecked && props.falseIcon"
-              :type="props.falseIcon"
-              size="16"
+              :icon="props.falseIcon"
+              :size="16"
             />
           </template>
         </span>

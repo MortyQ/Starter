@@ -2,8 +2,8 @@
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
 
+import VIcon from "@/shared/ui/common/VIcon.vue";
 import CommonLoader from "@/shared/ui/common/VLoader.vue";
-
 
 const slots = defineSlots();
 
@@ -73,7 +73,7 @@ const isRouterLink = computed(() => !!props.to);
   >
     <span
       v-if="$slots.iconLeft || props.loader || props.icon"
-      class="px-2 flex items-center justify-center"
+      class="flex items-center justify-center"
     >
       <CommonLoader
         v-if="props.loader"
@@ -81,9 +81,9 @@ const isRouterLink = computed(() => !!props.to);
       />
       <template v-else>
         <slot name="iconLeft">
-          <VueFeather
+          <VIcon
             v-if="props.icon"
-            :type="props.icon"
+            :icon="props.icon"
             class="w-[20px] h-[20px]"
           />
         </slot>
