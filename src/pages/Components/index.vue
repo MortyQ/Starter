@@ -1,11 +1,97 @@
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 
 import VIcon from "@/shared/ui/common/VIcon.vue";
 import { componentsList } from "@/shared/utils/componentsList";
 
 // Active section tracking for navigation
 const activeSection = ref("");
+
+// Reactive state for components with v-model
+const componentStates = reactive({
+  // VInput states
+  inputBasic: "",
+  inputWithIcon: "",
+  inputPassword: "",
+  inputUsername: "",
+  inputSmall: "",
+  inputMedium: "",
+  inputLarge: "",
+  inputDisabled: "Cannot edit this",
+  inputError: "",
+
+  // VSearch states
+  searchBasic: "",
+  searchNoDebounce: "",
+  searchTextarea: "",
+  searchWithValue: "Vue.js",
+
+  // VCheckbox states
+  checkboxBasic: false,
+  checkboxDisabled: false,
+  checkboxIndeterminate: false,
+  checkboxCustom: false,
+
+  // VSwitch states
+  switchBasic: true,
+  switchWithIcons: true,
+  switchWithLabel: true,
+  switchDisabled: false,
+
+  // VMultiSelect states
+  multiselectSingle: null,
+  multiselectMultiple: [],
+  multiselectNotSearchable: null,
+  multiselectLoading: null,
+  multiselectDisabled: { label: "Option", value: "opt" },
+});
+
+// Helper to get reactive state key for v-model components
+const getStateKey = (componentName: string, exampleTitle: string): string | null => {
+  const stateMap: Record<string, Record<string, string>> = {
+    VInput: {
+      "Basic Input": "inputBasic",
+      "Input with Icon": "inputWithIcon",
+      "Password Input": "inputPassword",
+      "Input with Support Text": "inputUsername",
+      "Different Sizes": "inputSmall",
+      "Disabled State": "inputDisabled",
+      "Error State with Validation": "inputError",
+    },
+    VSearch: {
+      "Basic Search Input with Debounce": "searchBasic",
+      "Search without Debounce": "searchNoDebounce",
+      "Textarea Mode": "searchTextarea",
+      "With Initial Value": "searchWithValue",
+    },
+    VCheckbox: {
+      "Basic Usage": "checkboxBasic",
+      "Disabled": "checkboxDisabled",
+      "Indeterminate": "checkboxIndeterminate",
+      "Custom Label Slot": "checkboxCustom",
+    },
+    VSwitch: {
+      "Basic Switch": "switchBasic",
+      "Switch with icons and color": "switchWithIcons",
+      "Switch with custom label via slot": "switchWithLabel",
+      "Disabled Switch": "switchDisabled",
+    },
+    VMultiSelect: {
+      "Single Select": "multiselectSingle",
+      "Multiple Select": "multiselectMultiple",
+      "Not Searchable": "multiselectNotSearchable",
+      "Loading State": "multiselectLoading",
+      "Disabled State": "multiselectDisabled",
+    },
+  };
+
+  return stateMap[componentName]?.[exampleTitle] || null;
+};
+
+// Check if component needs v-model
+const needsVModel = (componentName: string): boolean => {
+  return ["VInput", "VSearch", "VCheckbox", "VSwitch", "VMultiSelect"].includes(componentName);
+};
 
 // Scroll to anchor
 const scrollToSection = (anchor: string) => {
@@ -238,15 +324,36 @@ onMounted(() => {
               </div>
 
               <!-- Default component rendering -->
-              <component
-                :is="comp.component"
-                v-else
-                v-bind="(example.exampleProps || {}) as any"
-              >
-                <template v-if="example.title === 'Interactive Link Card'">
-                  Click to visit Vue.js official website and explore the framework documentation.
-                </template>
-              </component>
+              <div v-else>
+                <component
+                  :is="comp.component"
+                  v-bind="(example.exampleProps || {}) as any"
+                  :model-value="needsVModel(comp.name) && getStateKey(comp.name, example.title)
+                    ? componentStates[getStateKey(comp.name, example.title)]
+                    : undefined"
+                  @update:model-value="(value: any) => {
+                    const key = getStateKey(comp.name, example.title);
+                    if (key && needsVModel(comp.name)) {
+                      componentStates[key] = value;
+                    }
+                  }"
+                >
+                  <template v-if="example.title === 'Interactive Link Card'">
+                    Click to visit Vue.js official website and explore the framework documentation.
+                  </template>
+                </component>
+
+                <!-- Show current value for v-model components -->
+                <div
+                  v-if="needsVModel(comp.name) && getStateKey(comp.name, example.title)"
+                  class="mt-3 p-2 bg-base-200 rounded text-sm font-mono"
+                >
+                  <span class="text-neutral/60">Current value:</span>
+                  <span class="text-primary ml-2">
+                    {{ JSON.stringify(componentStates[getStateKey(comp.name, example.title)]) }}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <!-- Code Example -->

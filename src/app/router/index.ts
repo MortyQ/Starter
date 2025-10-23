@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
+import "@/app/layouts/types"; // Import layout types for TypeScript support
 
 // Import views
 import HomeView from "@/pages/Home/index.vue";
@@ -6,6 +7,10 @@ import HomeView from "@/pages/Home/index.vue";
 /**
  * Application routes configuration
  * Following Vue Router 4 best practices with lazy loading for better performance
+ *
+ * Layout usage:
+ * - No meta.layout or meta.layout: "default" → DefaultLayout (with header/nav)
+ * - meta.layout: "auth" → AuthLayout (centered, no nav)
  */
 const routes: RouteRecordRaw[] = [
   {
@@ -14,12 +19,17 @@ const routes: RouteRecordRaw[] = [
     component: HomeView,
     meta: {
       title: "Home - Vue 3 Starter",
+      layout: "default", // Optional, default is used anyway
     },
   },
   {
     path: "/login",
     name: "Login",
     component: HomeView,
+    meta: {
+      title: "Login - Vue 3 Starter",
+      layout: "auth", // Use Auth layout (centered, no navigation)
+    },
   },
   {
     path: "/about",
@@ -39,19 +49,11 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/modals",
-    name: "ModalExample",
-    component: () => import("@/pages/Modals/index.vue"),
+    path: "/more-components",
+    name: "MoreComponents",
+    component: () => import("@/pages/MoreComponents/index.vue"),
     meta: {
       title: "Modal Examples - Vue 3 Starter",
-    },
-  },
-  {
-    path: "/icons",
-    name: "IconDemo",
-    component: () => import("@/pages/Icons/index.vue"),
-    meta: {
-      title: "Icon Demo - Vue 3 Starter",
     },
   },
   {

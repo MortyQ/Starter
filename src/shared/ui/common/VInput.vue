@@ -64,11 +64,11 @@ const sizeClasses = computed(() => {
   return sizes[props.size];
 });
 
-function handleInput(e: Event) {
+const handleInput = (e: Event) => {
   const value = (e.target as HTMLInputElement).value;
   const sanitizedValue = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] });
   emit("update:modelValue", sanitizedValue);
-}
+};
 </script>
 
 <template>

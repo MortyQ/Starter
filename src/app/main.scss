@@ -40,6 +40,11 @@
 
 /* Component styles */
 @layer components {
+  /* Page container utility - automatically applied to all pages via layout wrapper */
+  .page-container {
+    @apply flex-1 flex flex-col;
+  }
+
   .btn {
     @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2;
   }

@@ -51,6 +51,8 @@ export const iconMap: Record<string, Component> = {
   "mdi:users": defineAsyncComponent(() => import("~icons/mdi/account-group")),
   "mdi:login": defineAsyncComponent(() => import("~icons/mdi/login")),
   "mdi:logout": defineAsyncComponent(() => import("~icons/mdi/logout")),
+  "mdi:account": defineAsyncComponent(() => import("~icons/mdi/account")),
+  "mdi:cog": defineAsyncComponent(() => import("~icons/mdi/cog")),
 
   // Communication
   "mdi:email": defineAsyncComponent(() => import("~icons/mdi/email")),

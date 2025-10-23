@@ -96,12 +96,12 @@ function reset() {
           </p>
           <div class="flex gap-2 justify-center">
             <VButton
-              icon="minus"
+              icon="mdi:minus"
               variant="negative"
               @click="decrement"
             />
             <VButton
-              icon="plus"
+              icon="mdi:plus"
               variant="positive"
               @click="increment"
             />

@@ -1,98 +1,68 @@
-# 🏗️ Архитектура проекта
+## 📋 Table of Contents
 
-## 📋 Оглавление
+- [Architecture Overview](#architecture-overview)
+- [Project Structure](#project-structure)
+- [Architecture Layers](#architecture-layers)
+- [Import Rules](#import-rules)
+- [Comparison with FSD](#comparison-with-fsd)
+- [Scaling](#scaling)
+- [Usage Examples](#usage-examples)
 
-- [Обзор архитектуры](#обзор-архитектуры)
-- [Структура проекта](#структура-проекта)
-- [Слои архитектуры](#слои-архитектуры)
-- [Правила импортов](#правила-импортов)
-- [Сравнение с FSD](#сравнение-с-fsd)
-- [Масштабирование](#масштабирование)
-- [Best Practices](#best-practices)
-- [Примеры использования](#примеры-использования)
+## 🎯 Architecture Overview
 
----
+This project uses **Component-based / Feature-based architecture**, which is the standard in 70-80% of Ukrainian and Western companies (Grammarly, GitLab, Atlassian, Shopify).
 
-## 🎯 Обзор архитектуры
+### Why this architecture?
 
-Данный проект использует **Component-based / Feature-based архитектуру**, которая является стандартом в 70-80% украинских и западных компаний (Grammarly, GitLab, Atlassian, Shopify).
+✅ **Flexibility** — easily adapts to any project size  
+✅ **Easy onboarding** — new developers understand the structure in 1-2 days  
+✅ **Reusability** — clear separation of shared/features/pages  
+✅ **Development speed** — less bureaucracy than FSD  
+✅ **Industry standard** — easy to find developers familiar with the approach
 
-### Почему именно эта архитектура?
-
-✅ **Простота входа** — новые разработчики понимают структуру за 1-2 дня  
-✅ **Гибкость** — легко адаптируется под любой размер проекта  
-✅ **Переиспользование** — четкое разделение shared/features/pages  
-✅ **Скорость разработки** — меньше бюрократии, чем в FSD  
-✅ **Индустриальный стандарт** — легко найти разработчиков, знакомых с подходом
-
----
-
-## 📁 Структура проекта
+## 📁 Project Structure
 
 ```
 src/
 ├── app/                          # 🚀 Application Layer (Initialization)
-│   ├── App.vue                   # Root component
 │   ├── main.ts                   # Entry point
+│   ├── App.vue                   # Root component
 │   ├── main.scss                 # Global styles
+│   ├── layouts/                  # Application layouts
 │   └── router/                   # Vue Router configuration
-│       └── index.ts
 │
 ├── pages/                        # 📄 Pages Layer (Routes)
-│   ├── Home/
-│   │   ├── index.vue             # Main page component
-│   │   └── components/           # Page-specific components (optional)
-│   │       └── HeroSection.vue
-│   ├── About/
-│   │   └── index.vue
-│   ├── Components/
-│   │   └── index.vue
-│   ├── Modals/
-│   │   └── index.vue
-│   ├── Icons/
-│   │   └── index.vue
-│   └── NotFound/
-│       └── index.vue
+│   └── PageName/
+│       ├── index.vue             # Main page file
+│       └── components/           # Components specific to this page
 │
-├── features/                     # 🎨 Features Layer (Business Logic)
-│   ├── theme/
-│   │   ├── index.ts              # Public API
-│   │   ├── components/
-│   │   │   └── ThemeToggle.vue
-│   │   ├── composables/
-│   │   │   └── useTheme.ts       # Pinia store
-│   │   └── utils/
-│   │       └── createThemes.ts
-│   │
-│   └── modal/
+├── widgets/                      # 🧩 Widgets Layer (Layout blocks)
+│   └── WidgetName/
+│       ├── index.vue             # Main widget file
+│       └── components/           # Internal components
+│
+├── features/                     # ⚙️ Features Layer (Business logic)
+│   └── featureName/
 │       ├── index.ts              # Public API
-│       └── composables/
-│           └── useModalStore.ts  # Pinia store
+│       ├── components/           # Feature UI components
+│       ├── composables/          # Pinia stores & composables
+│       ├── api/                  # API requests
+│       └── utils/                # Feature utilities
 │
-├── widgets/                      # 🧩 Widgets Layer (Complex UI Blocks)
-│   └── (reserved for Header, Sidebar, Footer, etc.)
-│
-└── shared/                       # 🔧 Shared Layer (Reusable Code)
-    ├── ui/                       # UI Kit components
-    │   ├── ThemeToggle.vue
+└── shared/                       # 🔧 Shared Layer (Reusable code)
+    ├── ui/                       # UI components library
     │   └── common/
     │       ├── VButton.vue
-    │       ├── VCard.vue
-    │       ├── VCheckbox.vue
-    │       ├── VIcon.vue
     │       ├── VInput.vue
-    │       ├── VLoader.vue
-    │       ├── VModal.vue
-    │       ├── VSearch.vue
-    │       └── VSwitch.vue
+    │       └── VCard.vue
     │
-    ├── composables/              # Reusable Vue composables
+    ├── composables/              # Reusable composables
     │   ├── index.ts
     │   └── useModal.ts
     │
-    ├── utils/                    # Pure utility functions
+    ├── utils/                    # Utility functions
     │   ├── index.ts
-    │   └── componentsList.ts
+    │   └── formatDate.ts
     │
     ├── api/                      # API client & services
     │   ├── index.ts
@@ -111,227 +81,233 @@ src/
     └── assets/                   # Static assets & styles
         └── styles/
             ├── customComponents.scss
+            ├── vcomponentsRoot.scss
             └── components/
                 ├── vcard.scss
-                └── vcheckbox.scss
+                ├── vcheckbox.scss
 ```
 
 ---
 
-## 🏛️ Слои архитектуры
+## 🏛️ Architecture Layers
 
 ### 1️⃣ **app/** — Application Layer
 
-**Назначение:** Инициализация приложения, глобальные провайдеры, роутинг.
+**Purpose:** Application initialization, global providers, routing, layouts.
 
-**Содержит:**
-- Точку входа (`main.ts`)
-- Корневой компонент (`App.vue`)
-- Конфигурацию роутера
-- Глобальные стили
+**Contains:**
+- Entry point (`main.ts`)
+- Root component (`App.vue`)
+- Global styles
+- Router configuration
+- Layout components
 
-**Правило:** НЕ содержит бизнес-логику, только инициализацию.
+**Rule:** Does NOT contain business logic, only initialization.
 
 ---
 
 ### 2️⃣ **pages/** — Pages Layer
 
-**Назначение:** Страницы-роуты приложения.
+**Purpose:** Application routes/screens.
 
-**Структура:**
+**Structure:**
 ```
 pages/
 └── PageName/
-    ├── index.vue              # Главный файл страницы
-    ├── components/            # Компоненты только для этой страницы
+    ├── index.vue              # Main page file
+    ├── components/            # Components specific to this page
     │   └── LocalComponent.vue
-    └── hooks/                 # (опционально) Хуки только для страницы
-        └── usePageLogic.ts
+    └── hooks/                 # (optional) Hooks specific to this page
 ```
 
-**Правила:**
-- Каждая страница — отдельная папка с `index.vue`
-- Компоненты в `components/` используются ТОЛЬКО на этой странице
-- Если компонент нужен в 2+ страницах → переносим в `shared/ui/`
-- Можно импортировать из: `features/`, `widgets/`, `shared/`
+**Rules:**
+- Each page — separate folder with `index.vue`
+- Can import from `features/`, `widgets/`, `shared/`
+- Cannot import other `pages/`
 
 ---
 
-### 3️⃣ **features/** — Features Layer
+### 3️⃣ **widgets/** — Widgets Layer
 
-**Назначение:** Бизнес-фичи приложения (аутентификация, темы, уведомления).
+**Purpose:** Large layout blocks combining multiple features.
 
-**Структура:**
+**Examples:**
+- `Header/` — site header (uses `theme`, `auth`, `notifications`)
+- `Sidebar/` — side navigation
+- `Footer/` — site footer
+
+**Rules:**
+- Can import from `features/`, `shared/`
+- Cannot import other `widgets/`
+
+---
+
+### 4️⃣ **features/** — Features Layer
+
+**Purpose:** Business logic of the application.
+
+**Structure:**
 ```
 features/
 └── featureName/
-    ├── index.ts               # Public API (обязательно!)
-    ├── components/            # UI компоненты фичи
-    ├── composables/           # Pinia stores, composables
-    ├── utils/                 # Утилиты фичи
-    └── api/                   # (опционально) API запросы фичи
+    ├── index.ts               # Public API (REQUIRED!)
+    ├── components/            # Feature UI components
+    ├── composables/           # Pinia stores
+    ├── api/                   # API methods
+    └── utils/                 # Feature-specific utilities
 ```
 
-**Примеры фич:**
-- `auth/` — авторизация, логин, регистрация
-- `theme/` — управление темой (dark/light)
-- `modal/` — управление модальными окнами
-- `notifications/` — уведомления пользователю
-- `cart/` — корзина товаров (для e-commerce)
+**Examples:**
+- `auth/` — authentication and authorization
+- `theme/` — theme switching (light/dark)
+- `modal/` — modal window management
+- `notifications/` — notification system
 
-**Правила:**
-- **Обязательно** экспортируем через `index.ts` (Public API)
-- Можно импортировать только из `shared/`
-- НЕ может импортировать другие `features/` (избегаем циклических зависимостей)
-
-**Пример Public API:**
+**Public API example:**
 ```typescript
 // features/theme/index.ts
 export { default as ThemeToggle } from './components/ThemeToggle.vue';
 export { useThemeStore } from './composables/useTheme';
-export { createThemes } from './utils/createThemes';
+export * from './utils/createThemes';
 ```
 
----
-
-### 4️⃣ **widgets/** — Widgets Layer
-
-**Назначение:** Сложные самодостаточные UI-блоки, которые используют несколько фич.
-
-**Примеры:**
-- `Header/` — шапка сайта (использует `theme`, `auth`, `notifications`)
-- `Sidebar/` — боковое меню
-- `Footer/` — подвал сайта
-- `UserProfile/` — профиль пользователя
-
-**Отличие от features:**
-- Widget — это UI-блок, который **комбинирует** несколько features
-- Feature — это изолированная бизнес-логика
-
-**Правила:**
-- Может импортировать из `features/`, `shared/`
-- Не может импортировать другие `widgets/`
+**Rules:**
+- MUST have `index.ts` (Public API)
+- Can import only from `shared/`
+- Cannot import other `features/` directly
 
 ---
 
 ### 5️⃣ **shared/** — Shared Layer
 
-**Назначение:** Переиспользуемый код без бизнес-логики.
+**Purpose:** Reusable code without business logic.
 
-#### `shared/ui/` — UI Kit
-Библиотека визуальных компонентов (кнопки, инпуты, карточки).
+#### `shared/ui/` — UI Components
 
-**Правила:**
-- Компоненты должны быть **generic** (универсальные)
-- Получают данные через props
-- НЕ содержат бизнес-логику
-- НЕ делают API запросы
+Library of visual components (buttons, inputs, cards).
+
+**Rules:**
+- Components must be **generic** (universal)
+- Receive data through props
+- Do NOT contain business logic
+- Do NOT make API requests
 
 #### `shared/composables/` — Composables
-Vue composables, которые можно переиспользовать.
 
-**Примеры:**
-- `useModal.ts` — работа с модалками
-- `useDebounce.ts` — debounce для инпутов
-- `useLocalStorage.ts` — работа с localStorage
+Vue composables that can be reused.
+
+**Examples:**
+- `useModal.ts` — work with modals
+- `useDebounce.ts` — debounce for inputs
+- `useLocalStorage.ts` — work with localStorage
 
 #### `shared/utils/` — Utilities
-Чистые функции без зависимостей от Vue.
 
-**Примеры:**
+Pure functions without Vue dependencies.
+
+**Examples:**
 - `formatDate.ts`
 - `validateEmail.ts`
-- `calculateDiscount.ts`
 
 #### `shared/api/` — API Client
-Настройка axios, базовые API методы.
+
+Axios configuration, basic API methods.
 
 #### `shared/types/` — TypeScript Types
-Общие типы и интерфейсы.
+
+Common types and interfaces.
 
 ---
 
-## 🔗 Правила импортов
+## 📐 Layouts System
 
-### Матрица зависимостей
+### Overview
 
-| Слой        | Может импортировать                  |
-|-------------|--------------------------------------|
+The project uses **MasterLayout** system for dynamic layout switching based on route meta. This keeps `App.vue` minimal and moves all wrapper logic to layout components.
+
+### Structure
+
+## 🔗 Import Rules
+
+### Dependency Matrix
+
+| Layer       | Can import from                       |
+|-------------|---------------------------------------|
 | `app/`      | `pages/`, `features/`, `widgets/`, `shared/` |
-| `pages/`    | `features/`, `widgets/`, `shared/`   |
-| `widgets/`  | `features/`, `shared/`               |
-| `features/` | `shared/`                            |
-| `shared/`   | ничего (изолирован)                  |
+| `pages/`    | `features/`, `widgets/`, `shared/`    |
+| `widgets/`  | `features/`, `shared/`                |
+| `features/` | `shared/`                             |
+| `shared/`   | nothing (isolated)                    |
 
-### ✅ Правильные импорты
+### ✅ Correct imports
 
 ```typescript
-// ✅ pages импортирует features
+// ✅ pages imports features
 import { ThemeToggle } from '@/features/theme';
 
-// ✅ features импортирует shared
+// ✅ features imports shared
 import { VButton } from '@/shared/ui/common/VButton.vue';
 
-// ✅ features использует Public API
+// ✅ features uses Public API
 import { useThemeStore } from '@/features/theme';
 ```
 
-### ❌ Неправильные импорты
+### ❌ Incorrect imports
 
 ```typescript
-// ❌ shared не может импортировать features
-import { useAuth } from '@/features/auth'; // В shared/
+// ❌ shared cannot import features
+import { useAuth } from '@/features/auth'; // In shared/
 
-// ❌ features не импортирует другие features напрямую
-import { useTheme } from '@/features/theme'; // В features/auth
+// ❌ features don't import other features directly
+import { useTheme } from '@/features/theme'; // In features/auth
 
-// ❌ Обход Public API
+// ❌ Bypassing Public API
 import ThemeToggle from '@/features/theme/components/ThemeToggle.vue';
-// Правильно: import { ThemeToggle } from '@/features/theme';
+// Correct: import { ThemeToggle } from '@/features/theme';
 ```
 
 ---
 
-## 🆚 Сравнение с FSD (Feature-Sliced Design)
+## 🆚 Comparison with FSD (Feature-Sliced Design)
 
-| Критерий                  | Component-based | FSD                          |
+| Criteria                  | Component-based | FSD                          |
 |---------------------------|-----------------|------------------------------|
-| **Сложность**             | Низкая          | Высокая                      |
-| **Onboarding**            | 1-2 дня         | 1-2 недели                   |
-| **Количество слоев**      | 5               | 7+ (app/pages/widgets/features/entities/shared/processes) |
-| **Гибкость**              | Высокая         | Средняя (строгие правила)    |
-| **Best for**              | Большинство проектов | Enterprise (100+ разработчиков) |
-| **Документация**          | Простая         | Требует детальной            |
-| **Подходит для стартапов**| ✅              | ❌ (overkill)                |
+| **Complexity**            | Low             | High                         |
+| **Onboarding**            | 1-2 days        | 1-2 weeks                    |
+| **Number of layers**      | 5               | 7+ (app/pages/widgets/features/entities/shared/processes) |
+| **Flexibility**           | High            | Medium (strict rules)        |
+| **Best for**              | Most projects   | Enterprise (100+ developers) |
+| **Documentation**         | Simple          | Requires detailed            |
+| **Suitable for startups** | ✅              | ❌ (overkill)                |
 
-### Когда использовать FSD?
+### When to use FSD?
 
-- Команда 50+ разработчиков
-- Проект живет 5+ лет
-- Критична архитектурная строгость
-- Есть выделенный архитектор
+- Team of 50+ developers
+- Project lifetime 5+ years
+- Critical architectural strictness
+- Dedicated architect available
 
-### Когда использовать Component-based?
+### When to use Component-based?
 
-- Команда до 30 разработчиков
-- Нужна скорость разработки
-- MVP или стартап
-- 90% современных проектов ✅
+- Team up to 30 developers
+- Need development speed
+- MVP or startup
+- 90% of modern projects ✅
 
 ---
 
-## 📈 Масштабирование
+## 📈 Scaling
 
-### Добавление новой фичи
+### Adding a new feature
 
-**Пример:** Добавляем фичу "Авторизация"
+**Example:** Adding "Authentication" feature
 
-1. Создаем структуру:
+1. Create structure:
 ```bash
 mkdir -p src/features/auth/{components,composables,api,utils}
 ```
 
-2. Создаем файлы:
+2. Create files:
 ```
 features/auth/
 ├── index.ts                    # Public API
@@ -341,12 +317,13 @@ features/auth/
 ├── composables/
 │   └── useAuth.ts              # Pinia store
 ├── api/
-│   └── authApi.ts              # API методы
+│   └── authApi.ts              # API methods
 └── utils/
     └── validatePassword.ts
 ```
 
-3. Экспортируем через Public API:
+3. Export through Public API:
+
 ```typescript
 // features/auth/index.ts
 export { default as LoginForm } from './components/LoginForm.vue';
@@ -355,25 +332,25 @@ export { useAuthStore } from './composables/useAuth';
 export * from './api/authApi';
 ```
 
-4. Используем в страницах:
+4. Use in pages:
 ```vue
 <script setup>
-import { LoginForm, useAuthStore } from '@/features/auth';
+  import { LoginForm, useAuthStore } from '@/features/auth';
 
-const authStore = useAuthStore();
+  const authStore = useAuthStore();
 </script>
 ```
 
 ---
 
-### Добавление нового виджета
+### Adding a new widget
 
-**Пример:** Шапка сайта с темой и авторизацией
+**Example:** Site header with theme and authentication
 
 ```
 widgets/Header/
-├── index.vue                   # Главный компонент
-└── components/                 # Внутренние компоненты
+├── index.vue                   # Main component
+└── components/                 # Internal components
     ├── Logo.vue
     └── Navigation.vue
 ```
@@ -403,7 +380,7 @@ const authStore = useAuthStore();
 
 ---
 
-### Добавление новой страницы
+### Adding a new page
 
 ```bash
 mkdir src/pages/Dashboard
@@ -413,10 +390,10 @@ touch src/pages/Dashboard/index.vue
 ```vue
 <!-- pages/Dashboard/index.vue -->
 <script setup>
-import { useAuthStore } from '@/features/auth';
-import { VCard, VButton } from '@/shared/ui/common';
+  import { useAuthStore } from '@/features/auth';
+  import { VCard, VButton } from '@/shared/ui/common';
 
-const authStore = useAuthStore();
+  const authStore = useAuthStore();
 </script>
 
 <template>
@@ -424,12 +401,13 @@ const authStore = useAuthStore();
     <h1>Welcome, {{ authStore.user.name }}!</h1>
     <VCard title="Statistics">
       <p>Your dashboard content here</p>
+      <VButton>View Details</VButton>
     </VCard>
   </div>
 </template>
 ```
 
-Обновляем роутер:
+Update router:
 ```typescript
 // app/router/index.ts
 {
@@ -444,68 +422,66 @@ const authStore = useAuthStore();
 
 ## 🎯 Best Practices
 
-### 1. Public API для features
+### 1. Public API for features
 
-**Всегда** экспортируем через `index.ts`:
+**Always** export through `index.ts`:
 
 ```typescript
 // features/auth/index.ts
 export { LoginForm, RegisterForm } from './components';
 export { useAuthStore } from './composables/useAuth';
 export { login, logout, register } from './api/authApi';
-```
-
-### 2. Именование компонентов
+### 2. Component naming
 
 ```
-✅ VButton.vue      — Shared UI компонент (префикс V)
-✅ ThemeToggle.vue  — Feature компонент (без префикса)
-✅ LoginForm.vue    — Feature компонент
-✅ Header.vue       — Widget (без префикса)
+✅ VButton.vue      — Shared UI component (prefix V)
+✅ ThemeToggle.vue  — Feature component (no prefix)
+✅ LoginForm.vue    — Feature component
+✅ Header.vue       — Widget (no prefix)
 ```
 
 ### 3. Composables vs Utils
 
 ```typescript
-// ✅ Composable (использует Vue API)
+// ✅ Composable (uses Vue API)
 export function useDebounce(value: Ref<string>, delay: number) {
   const debouncedValue = ref(value.value);
   // uses watchEffect, onUnmounted, etc.
   return debouncedValue;
 }
 
-// ✅ Util (чистая функция)
+// ✅ Util (pure function)
 export function formatDate(date: Date): string {
-  return date.toLocaleDateString('uk-UA');
+  return date.toLocaleDateString('en-US');
 }
 ```
 
-### 4. Pinia Stores в features
+### 4. Pinia Stores in features
 
 ```typescript
 // features/auth/composables/useAuth.ts
 import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref(null);
-  const isAuthenticated = computed(() => !!user.value);
-  
-  async function login(credentials) {
-    // API call
-  }
-  
-  return { user, isAuthenticated, login };
+    const user = ref(null);
+    const isAuthenticated = computed(() => !!user.value);
+
+    async function login(credentials) {
+        // API call
+    }
+
+    return { user, isAuthenticated, login };
 });
 ```
 
-### 5. TypeScript типы
+### 5. TypeScript types
 
 ```typescript
 // shared/types/user.ts
 export interface User {
-  id: string;
-  name: string;
-  email: string;
+    id: string;
+    name: string;
+    email: string;
 }
 
 // features/auth/composables/useAuth.ts
@@ -516,9 +492,9 @@ const user = ref<User | null>(null);
 
 ---
 
-## 📚 Примеры использования
+## 📚 Usage Examples
 
-### Пример 1: Создание формы с валидацией
+### Example 1: Creating a form with validation
 
 ```vue
 <!-- pages/Contact/index.vue -->
@@ -568,22 +544,7 @@ const handleSubmit = () => {
 </template>
 ```
 
-### Пример 2: Feature с API интеграцией
-
-```typescript
-// features/products/api/productsApi.ts
-import apiClient from '@/shared/api/client';
-
-export async function getProducts() {
-  const { data } = await apiClient.get('/products');
-  return data;
-}
-
-export async function getProductById(id: string) {
-  const { data } = await apiClient.get(`/products/${id}`);
-  return data;
-}
-```
+### Example 2: Feature with API integration
 
 ```typescript
 // features/products/composables/useProducts.ts
@@ -597,7 +558,8 @@ export const useProductsStore = defineStore('products', () => {
   async function fetchProducts() {
     loading.value = true;
     try {
-      products.value = await getProducts();
+      const data = await getProducts();
+      products.value = data;
     } finally {
       loading.value = false;
     }
@@ -617,52 +579,55 @@ export * from './api/productsApi';
 
 ## 🚀 Migration Checklist
 
-- [x] Создана структура `features/`
-- [x] Создана структура `widgets/`
-- [x] Переименована `shared/libs/` → `shared/composables/` и `shared/utils/`
-- [x] Перемещен `app/providers/axios.ts` → `shared/api/client.ts`
-- [x] Перенесена тема в `features/theme/`
-- [x] Перенесены модалки в `features/modal/`
-- [x] Реорганизованы страницы в папочную структуру
-- [x] Обновлены все импорты
-- [x] Созданы Public API (`index.ts`) для features
-- [x] Проверена сборка проекта
-- [x] Создана документация
+- [x] Created `features/` structure
+- [x] Created `widgets/` structure
+- [x] Renamed `shared/libs/` → `shared/composables/` and `shared/utils/`
+- [x] Moved `app/providers/axios.ts` → `shared/api/client.ts`
+- [x] Moved theme to `features/theme/`
+- [x] Moved modals to `features/modal/`
+- [x] Reorganized pages into folder structure
+- [x] Updated all imports
+- [x] Created Public API (`index.ts`) for features
+- [x] Verified project build
+- [x] Created documentation
+- [x] Implemented layouts system with MasterLayout
 
 ---
 
-## 📖 Дополнительные ресурсы
+## 📖 Additional Resources
 
 - [Vue 3 Composition API](https://vuejs.org/guide/extras/composition-api-faq.html)
 - [Pinia Store Best Practices](https://pinia.vuejs.org/core-concepts/)
 - [Component Design Patterns](https://www.patterns.dev/posts/vue-patterns)
+- [Layouts Documentation](/src/docs/LAYOUTS.md)
 
 ---
 
-## 🤝 Для команды
+## 🤝 For the Team
 
 ### Code Review Guidelines
 
-1. ✅ Проверяем правильность слоя (shared/features/pages)
-2. ✅ Проверяем правила импортов
-3. ✅ Проверяем наличие Public API для features
-4. ✅ Проверяем TypeScript типы
-5. ✅ Проверяем переиспользование компонентов
+1. ✅ Check correct layer (shared/features/pages)
+2. ✅ Check import rules
+3. ✅ Check Public API presence for features
+4. ✅ Check TypeScript types
+5. ✅ Check component reusability
+6. ✅ Verify correct layout usage in routes
 
-### Когда создавать новый feature?
+### When to create a new feature?
 
-Создавайте feature если:
-- Это бизнес-логика (auth, payments, cart)
-- Код будет использоваться в нескольких местах
-- Есть state management (Pinia store)
+Create a feature if:
+- It's business logic (auth, payments, cart)
+- Code will be used in multiple places
+- Has state management (Pinia store)
 
-НЕ создавайте feature если:
-- Это просто UI компонент → `shared/ui/`
-- Используется только на одной странице → `pages/PageName/components/`
+Do NOT create a feature if:
+- It's just a UI component → `shared/ui/`
+- Used only on one page → `pages/PageName/components/`
 
 ---
 
-**Версия архитектуры:** 1.0  
-**Дата обновления:** Октябрь 2025  
-**Контакт:** Ваша команда разработки
+**Architecture Version:** 1.0  
+**Last Updated:** October 2025  
+**Contact:** github - @MortyQ 
 

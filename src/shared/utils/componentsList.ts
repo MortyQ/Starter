@@ -3,8 +3,10 @@ import VCard from "@/shared/ui/common/VCard.vue";
 import VCheckbox from "@/shared/ui/common/VCheckbox.vue";
 import VIcon from "@/shared/ui/common/VIcon.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
+import VMultiSelect from "@/shared/ui/common/VMultiSelect.vue";
 import VSearch from "@/shared/ui/common/VSearch.vue";
 import VSwitch from "@/shared/ui/common/VSwitch.vue";
+import VTabs from "@/shared/ui/common/VTabs.vue";
 
 /**
  * List of reusable UI components for the /components library page.
@@ -707,6 +709,293 @@ export const componentsList = [
     $errors: [{ $message: 'Please enter a valid email address' }] 
   }" 
 />`,
+      },
+    ],
+  },
+  {
+    name: "VMultiSelect",
+    anchor: "vmultiselect",
+    description:
+      "Modern select and multi-select component based on vue-multiselect with custom styling, search functionality, loading state, and full theme support. Supports single and multiple selection modes.",
+    component: VMultiSelect,
+    props: [
+      {
+        name: "modelValue",
+        type: "Option | Option[] | null",
+        default: "null",
+        description: "Selected value(s) - single object or array of objects",
+      },
+      {
+        name: "options",
+        type: "Option[]",
+        default: "[]",
+        description: "Array of options with { label, value } structure",
+      },
+      {
+        name: "placeholder",
+        type: "string",
+        default: '"Select option"',
+        description: "Placeholder text when no option is selected",
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        default: "false",
+        description: "Disable the select input",
+      },
+      {
+        name: "multiple",
+        type: "boolean",
+        default: "false",
+        description: "Enable multiple selection mode",
+      },
+      {
+        name: "searchable",
+        type: "boolean",
+        default: "true",
+        description: "Enable search/filter functionality",
+      },
+      {
+        name: "clearOnSelect",
+        type: "boolean",
+        default: "true",
+        description: "Clear search input after selection",
+      },
+      {
+        name: "closeOnSelect",
+        type: "boolean",
+        default: "true",
+        description: "Close dropdown after selection",
+      },
+      {
+        name: "loading",
+        type: "boolean",
+        default: "false",
+        description: "Show loading state with spinner",
+      },
+      {
+        name: "label",
+        type: "string",
+        default: '"label"',
+        description: "Property name to use for option label",
+      },
+      {
+        name: "trackBy",
+        type: "string",
+        default: '"value"',
+        description: "Property name to track option by",
+      },
+    ],
+    examples: [
+      {
+        title: "Single Select",
+        exampleProps: {
+          options: [
+            { label: "Option 1", value: "opt1" },
+            { label: "Option 2", value: "opt2" },
+            { label: "Option 3", value: "opt3" },
+          ],
+          placeholder: "Choose one option",
+        },
+        code: `<VMultiSelect
+  v-model="selectedValue"
+  :options="options"
+  placeholder="Choose one option"
+/>
+
+// options = [
+//   { label: "Option 1", value: "opt1" },
+//   { label: "Option 2", value: "opt2" },
+//   { label: "Option 3", value: "opt3" }
+// ]`,
+      },
+      {
+        title: "Multiple Select",
+        exampleProps: {
+          options: [
+            { label: "Vue", value: "vue" },
+            { label: "React", value: "react" },
+            { label: "Angular", value: "angular" },
+            { label: "Svelte", value: "svelte" },
+          ],
+          placeholder: "Choose frameworks",
+          multiple: true,
+          closeOnSelect: false,
+        },
+        code: `<VMultiSelect
+  v-model="selectedFrameworks"
+  :options="frameworks"
+  placeholder="Choose frameworks"
+  multiple
+  :close-on-select="false"
+/>`,
+      },
+      {
+        title: "Not Searchable",
+        exampleProps: {
+          options: [
+            { label: "Small", value: "sm" },
+            { label: "Medium", value: "md" },
+            { label: "Large", value: "lg" },
+          ],
+          placeholder: "Select size",
+          searchable: false,
+        },
+        code: `<VMultiSelect
+  v-model="size"
+  :options="sizes"
+  placeholder="Select size"
+  :searchable="false"
+/>`,
+      },
+      {
+        title: "Loading State",
+        exampleProps: {
+          options: [],
+          placeholder: "Loading...",
+          loading: true,
+        },
+        code: `<VMultiSelect
+  v-model="value"
+  :options="options"
+  placeholder="Loading..."
+  :loading="true"
+/>`,
+      },
+      {
+        title: "Disabled State",
+        exampleProps: {
+          options: [{ label: "Option", value: "opt" }],
+          placeholder: "Disabled",
+          disabled: true,
+          modelValue: { label: "Option", value: "opt" },
+        },
+        code: `<VMultiSelect
+  v-model="value"
+  :options="options"
+  placeholder="Disabled"
+  :disabled="true"
+/>`,
+      },
+    ],
+  },
+  {
+    name: "VTabs",
+    anchor: "vtabs",
+    description:
+      "Modern tabs component with URL hash support, keyboard navigation, loading states, and customizable styling. Automatically syncs active tab with browser URL for better UX and bookmarkability.",
+    component: VTabs,
+    props: [
+      {
+        name: "tabs",
+        type: "ITab[]",
+        default: "[]",
+        description: "Array of tab objects with { id, label, disabled?, icon?, styles?, activeByDefault? }",
+      },
+      {
+        name: "loader",
+        type: "boolean",
+        default: "false",
+        description: "Show loading skeleton instead of tabs",
+      },
+      {
+        name: "reset",
+        type: "boolean",
+        default: "false",
+        description: "Reset to first tab when changed to true",
+      },
+    ],
+    examples: [
+      {
+        title: "Basic Tabs",
+        exampleProps: {
+          tabs: [
+            { id: "tab1", label: "First Tab" },
+            { id: "tab2", label: "Second Tab" },
+            { id: "tab3", label: "Third Tab" },
+          ],
+        },
+        code: `<VTabs :tabs="tabs">
+  <template #tab1>
+    <div class="p-4">Content for First Tab</div>
+  </template>
+  <template #tab2>
+    <div class="p-4">Content for Second Tab</div>
+  </template>
+  <template #tab3>
+    <div class="p-4">Content for Third Tab</div>
+  </template>
+</VTabs>
+
+// tabs = [
+//   { id: "tab1", label: "First Tab" },
+//   { id: "tab2", label: "Second Tab" },
+//   { id: "tab3", label: "Third Tab" }
+// ]`,
+      },
+      {
+        title: "Tabs with Icons",
+        exampleProps: {
+          tabs: [
+            { id: "home", label: "Home", icon: "mdi:home" },
+            { id: "settings", label: "Settings", icon: "mdi:cog" },
+            { id: "profile", label: "Profile", icon: "mdi:account" },
+          ],
+        },
+        code: `<VTabs :tabs="tabs">
+  <template #home>
+    <div class="p-4">Home Content</div>
+  </template>
+  <template #settings>
+    <div class="p-4">Settings Content</div>
+  </template>
+  <template #profile>
+    <div class="p-4">Profile Content</div>
+  </template>
+</VTabs>
+
+// tabs = [
+//   { id: "home", label: "Home", icon: "mdi:home" },
+//   { id: "settings", label: "Settings", icon: "mdi:cog" },
+//   { id: "profile", label: "Profile", icon: "mdi:account" }
+// ]`,
+      },
+      {
+        title: "Tabs with Disabled State",
+        exampleProps: {
+          tabs: [
+            { id: "available", label: "Available" },
+            { id: "disabled", label: "Disabled", disabled: true },
+            { id: "active", label: "Active" },
+          ],
+        },
+        code: `<VTabs :tabs="tabs">
+  <template #available>
+    <div class="p-4">Available Content</div>
+  </template>
+  <template #disabled>
+    <div class="p-4">This tab is disabled</div>
+  </template>
+  <template #active>
+    <div class="p-4">Active Content</div>
+  </template>
+</VTabs>
+
+// tabs = [
+//   { id: "available", label: "Available" },
+//   { id: "disabled", label: "Disabled", disabled: true },
+//   { id: "active", label: "Active" }
+// ]`,
+      },
+      {
+        title: "Loading State",
+        exampleProps: {
+          tabs: [{ id: "tab1", label: "Tab 1" }, { id: "tab2", label: "Tab 2" }],
+          loader: true,
+        },
+        code: `<VTabs :tabs="tabs" :loader="true">
+  <!-- Content slots -->
+</VTabs>`,
       },
     ],
   },

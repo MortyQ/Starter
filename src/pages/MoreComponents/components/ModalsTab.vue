@@ -5,7 +5,6 @@ import VModal from "@/shared/ui/common/VModal.vue";
 const modal1 = useModal("modal-1", false);
 const modal2 = useModal("modal-2", false);
 const modal3 = useModal("modal-3", false);
-
 </script>
 
 <template>
