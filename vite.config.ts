@@ -22,6 +22,13 @@ export default ({mode}: any) => {
                 compiler: 'vue3',
             })
         ],
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    api: 'modern-compiler', // Use modern Sass API (fixes deprecation warning)
+                },
+            },
+        },
         resolve: {
             alias: {
                 "@": fileURLToPath(new URL("./src", import.meta.url)),
