@@ -40,9 +40,11 @@ export const iconMap: Record<string, Component> = {
   // Status & Alerts
   "mdi:alert": defineAsyncComponent(() => import("~icons/mdi/alert")),
   "mdi:info": defineAsyncComponent(() => import("~icons/mdi/information")),
+  "mdi:information": defineAsyncComponent(() => import("~icons/mdi/information")),
   "mdi:warning": defineAsyncComponent(() => import("~icons/mdi/alert-circle")),
   "mdi:error": defineAsyncComponent(() => import("~icons/mdi/alert-octagon")),
   "mdi:success": defineAsyncComponent(() => import("~icons/mdi/check-circle")),
+  "mdi:check-circle": defineAsyncComponent(() => import("~icons/mdi/check-circle")),
   "mdi:loading": defineAsyncComponent(() => import("~icons/mdi/loading")),
 
   // User & Account
@@ -56,6 +58,7 @@ export const iconMap: Record<string, Component> = {
 
   // Communication
   "mdi:email": defineAsyncComponent(() => import("~icons/mdi/email")),
+  "mdi:message-text": defineAsyncComponent(() => import("~icons/mdi/message-text")),
   "mdi:phone": defineAsyncComponent(() => import("~icons/mdi/phone")),
   "mdi:message": defineAsyncComponent(() => import("~icons/mdi/message")),
   "mdi:bell": defineAsyncComponent(() => import("~icons/mdi/bell")),
@@ -95,6 +98,7 @@ export const iconMap: Record<string, Component> = {
   "mdi:eye-off": defineAsyncComponent(() => import("~icons/mdi/eye-off")),
   "mdi:close-circle": defineAsyncComponent(() => import("~icons/mdi/close-circle")),
   "mdi:palette": defineAsyncComponent(() => import("~icons/mdi/palette")),
+  "mdi:gesture-tap": defineAsyncComponent(() => import("~icons/mdi/gesture-tap")),
   "mdi:alert-circle": defineAsyncComponent(() => import("~icons/mdi/alert-circle")),
   "mdi:lock": defineAsyncComponent(() => import("~icons/mdi/lock")),
   "mdi:trash": defineAsyncComponent(() => import("~icons/mdi/trash")),
