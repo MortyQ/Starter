@@ -3,6 +3,7 @@ import { RouterView } from "vue-router";
 
 import ThemeToggle from "@/features/theme/components/ThemeToggle.vue";
 import TopBar from "@/widgets/Navigation/TopBar.vue";
+
 </script>
 
 <template>

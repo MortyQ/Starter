@@ -161,7 +161,6 @@ const handleKeydown = (event: KeyboardEvent) => {
 }
 
 .modal-container {
-  background: var(--color-cardBg);
   border-radius: 0.75rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -169,12 +168,13 @@ const handleKeydown = (event: KeyboardEvent) => {
   max-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--color-cardBorder);
 
   [data-theme="dark"] & {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5),
       0 10px 10px -5px rgba(0, 0, 0, 0.3);
   }
+
+  @apply bg-cardBg border-[1px] border-cardBorder;
 }
 
 .modal-header {
@@ -182,14 +182,14 @@ const handleKeydown = (event: KeyboardEvent) => {
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem;
-  border-bottom: 1px solid var(--color-cardBorder);
+  @apply border-b-[1px] border-cardBorder;
 }
 
 .modal-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-mainText);
   margin: 0;
+  @apply text-mainText
 }
 
 .modal-close-btn {
@@ -200,15 +200,14 @@ const handleKeydown = (event: KeyboardEvent) => {
   height: 2rem;
   border: none;
   background: transparent;
-  color: var(--color-secondaryText);
   cursor: pointer;
   border-radius: 0.375rem;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  @apply text-secondaryText;
 
   &:hover {
-    background: var(--color-base-200);
-    color: var(--color-mainText);
+    @apply text-mainText bg-base-200
   }
 
   &:focus-visible {
@@ -226,10 +225,10 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 .modal-footer {
   padding: 1rem 1.25rem;
-  border-top: 1px solid var(--color-cardBorder);
   display: flex;
   gap: 0.75rem;
   justify-content: flex-end;
+  @apply border-t-[1px] border-cardBorder;
 }
 
 /* Transitions */

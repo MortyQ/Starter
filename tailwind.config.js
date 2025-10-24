@@ -39,12 +39,12 @@ export default {
                 lightPositive: '#bbf7d0',
                 'warning-dark': '#b45309',
                 lightWarning: '#fef3c7',
-                cardBg: '#fff',
+                cardBg: '#ffffff',
                 cardBorder: '#e5e7eb',
                 mainBg: '#f3f4f6',
                 mainText: '#1e293b',
                 secondaryText: '#64748b',
-                inputBg: '#fff',
+                inputBg: '#ffffff',
                 primaryHover: '#0e61d5',
                 lightGray: '#f3f4f6',
             },
@@ -79,7 +79,5 @@ export default {
                 lightGray: '#334155',
             },
         }),
-
-
     ],
 }

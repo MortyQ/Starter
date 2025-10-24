@@ -39,7 +39,7 @@ const modal3 = useModal("modal-3", false);
     <VModal
       id="modal-1"
       title="First Modal"
-      max-width="full"
+      max-width="md"
     >
       <div class="space-y-4">
         <p class="text-secondaryText">

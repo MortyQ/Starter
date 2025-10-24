@@ -6,4 +6,5 @@
  */
 
 export { componentsList } from "./componentsList";
+export * from "./formatters";
 
