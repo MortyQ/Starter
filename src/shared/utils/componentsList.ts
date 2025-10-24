@@ -1004,7 +1004,7 @@ export const componentsList = [
     anchor: "toast",
     description:
       "Beautiful toast notifications powered by vue-sonner. Fully styled to match your theme. Import the composable to use toast notifications throughout your app.",
-    component: null as any,
+    component: null as never,
     props: [
       {
         name: "toast.success(message, description?)",
