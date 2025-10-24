@@ -2,8 +2,8 @@
 import { ref } from "vue";
 
 
+import FeatureCard from "@/pages/Components/components/FeatureCard.vue";
 import type { Feature } from "@/shared/types";
-import FeatureCard from "@/shared/ui/common/FeatureCard.vue";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VCard from "@/shared/ui/common/VCard.vue";
 
