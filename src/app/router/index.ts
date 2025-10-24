@@ -49,11 +49,11 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/more-components",
-    name: "MoreComponents",
-    component: () => import("@/pages/MoreComponents/index.vue"),
+    path: "/ui-gallery",
+    name: "UIGallery",
+    component: () => import("@/pages/UIGallery/index.vue"),
     meta: {
-      title: "Modal Examples - Vue 3 Starter",
+      title: "UI Gallery - Vue 3 Starter",
     },
   },
   {

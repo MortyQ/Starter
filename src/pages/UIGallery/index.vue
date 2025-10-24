@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import FileInputsTab from "@/pages/MoreComponents/components/FileInputsTab.vue";
-import IconsTab from "@/pages/MoreComponents/components/IconsTab.vue";
-import Modals from "@/pages/MoreComponents/components/ModalsTab.vue";
-import MultiSelectTab from "@/pages/MoreComponents/components/MultiSelectTab.vue";
-import ToastsTab from "@/pages/MoreComponents/components/ToastsTab.vue";
+import FileInputsTab from "@/pages/UIGallery/components/FileInputsTab.vue";
+import IconsTab from "@/pages/UIGallery/components/IconsTab.vue";
+import Modals from "@/pages/UIGallery/components/ModalsTab.vue";
+import MultiSelectTab from "@/pages/UIGallery/components/MultiSelectTab.vue";
+import ToastsTab from "@/pages/UIGallery/components/ToastsTab.vue";
 import VTabs from "@/shared/ui/common/VTabs.vue";
 
 const tabs = [
@@ -11,7 +11,7 @@ const tabs = [
   { id: "toasts", label: "Toasts", component: ToastsTab },
   { id: "icons", label: "Icons", component: IconsTab },
   { id: "multiSelect", label: "Multi-Select", component: MultiSelectTab },
-  { id:"drop", label:"File Inputs", component: FileInputsTab },
+  { id:"fileInputs", label:"File Inputs", component: FileInputsTab },
 ];
 </script>
 

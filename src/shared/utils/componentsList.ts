@@ -999,4 +999,100 @@ export const componentsList = [
       },
     ],
   },
+  {
+    name: "Toast",
+    anchor: "toast",
+    description:
+      "Beautiful toast notifications powered by vue-sonner. Fully styled to match your theme. Import the composable to use toast notifications throughout your app.",
+    component: null as any,
+    props: [
+      {
+        name: "toast.success(message, description?)",
+        type: "function",
+        default: "—",
+        description: "Show success toast with green accent",
+      },
+      {
+        name: "toast.error(message, description?)",
+        type: "function",
+        default: "—",
+        description: "Show error toast with red accent",
+      },
+      {
+        name: "toast.warning(message, description?)",
+        type: "function",
+        default: "—",
+        description: "Show warning toast with yellow/orange accent",
+      },
+      {
+        name: "toast.info(message, description?)",
+        type: "function",
+        default: "—",
+        description: "Show info toast with blue accent",
+      },
+      {
+        name: "toast.promise(promise, options)",
+        type: "function",
+        default: "—",
+        description: "Show toast with promise states (loading → success/error)",
+      },
+      {
+        name: "toast.dismiss(toastId?)",
+        type: "function",
+        default: "—",
+        description: "Dismiss a specific toast or all toasts",
+      },
+    ],
+    examples: [
+      {
+        title: "Import and Initialize",
+        exampleProps: {},
+        code: `import { useToast } from '@/shared/composables';
+
+const toast = useToast();
+
+// Now you can use toast methods anywhere in your component`,
+      },
+      {
+        title: "Basic Toast Types",
+        exampleProps: {},
+        code: `// Success notification
+toast.success('Success!', 'Operation completed successfully');
+
+// Error notification
+toast.error('Error!', 'Something went wrong');
+
+// Warning notification
+toast.warning('Warning!', 'Please check your input');
+
+// Info notification
+toast.info('Information', 'Here is some information');`,
+      },
+      {
+        title: "Promise-based Toast (Async Operations)",
+        exampleProps: {},
+        code: `// Show loading state, then success or error
+const uploadData = async () => {
+  const response = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData
+  });
+  return response.json();
+};
+
+toast.promise(uploadData(), {
+  loading: 'Uploading data...',
+  success: 'Data uploaded successfully!',
+  error: 'Failed to upload data',
+});
+
+// With dynamic messages
+toast.promise(fetchUser(id), {
+  loading: 'Loading user...',
+  success: (data) => 'Welcome ' + data.name + '!',
+  error: (err) => 'Error: ' + err.message,
+});`,
+      },
+    ],
+  },
 ];

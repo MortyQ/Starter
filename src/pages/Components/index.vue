@@ -1,11 +1,58 @@
 <script lang="ts" setup>
 import { ref, onMounted, reactive } from "vue";
 
+import { useToast } from "@/shared/composables";
+import VButton from "@/shared/ui/common/VButton.vue";
 import VIcon from "@/shared/ui/common/VIcon.vue";
 import { componentsList } from "@/shared/utils/componentsList";
 
 // Active section tracking for navigation
 const activeSection = ref("");
+
+// Scroll to top button visibility
+const showScrollToTop = ref(false);
+
+// Toast composable for demo
+const toast = useToast();
+const isLoadingPromise = ref(false);
+
+// Toast demo functions
+const showToastSuccess = () => {
+  toast.success("Success!", "Your operation completed successfully.");
+};
+
+const showToastError = () => {
+  toast.error("Error occurred!", "Something went wrong. Please try again.");
+};
+
+const showToastWarning = () => {
+  toast.warning("Warning!", "Please check your input before continuing.");
+};
+
+const showToastInfo = () => {
+  toast.info("Information", "This is an informational message for you.");
+};
+
+const showToastPromise = () => {
+  isLoadingPromise.value = true;
+
+  const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() > 0.5) {
+        resolve({ data: "Success" });
+      } else {
+        reject(new Error("Failed"));
+      }
+      isLoadingPromise.value = false;
+    }, 2000);
+  });
+
+  toast.promise(promise, {
+    loading: "Loading data...",
+    success: "Data loaded successfully!",
+    error: "Failed to load data",
+  });
+};
 
 // Reactive state for components with v-model
 const componentStates = reactive({
@@ -103,6 +150,9 @@ const scrollToSection = (anchor: string) => {
 
 // Track active section on scroll
 const handleScroll = () => {
+  // Show/hide scroll to top button
+  showScrollToTop.value = window.scrollY > 300;
+
   const sections = componentsList.map((comp) => comp.anchor);
   const scrollPosition = window.scrollY + 100; // Offset for header
 
@@ -117,6 +167,12 @@ const handleScroll = () => {
     }
   }
 };
+
+// Scroll to top function
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
@@ -323,8 +379,60 @@ onMounted(() => {
                 </component>
               </div>
 
+              <!-- Special handling for Toast demos -->
+              <div
+                v-else-if="
+                  !comp.component && example.title === 'Basic Toast Types'
+                "
+              >
+                <div class="flex flex-wrap gap-3">
+                  <VButton
+                    variant="positive"
+                    text="Success"
+                    icon="mdi:check-circle"
+                    @click="showToastSuccess"
+                  />
+                  <VButton
+                    variant="negative"
+                    text="Error"
+                    icon="mdi:alert-circle"
+                    @click="showToastError"
+                  />
+                  <VButton
+                    variant="warning"
+                    text="Warning"
+                    icon="mdi:alert"
+                    @click="showToastWarning"
+                  />
+                  <VButton
+                    variant="primary"
+                    text="Info"
+                    icon="mdi:information"
+                    @click="showToastInfo"
+                  />
+                </div>
+              </div>
+
+              <div
+                v-else-if="
+                  !comp.component &&
+                    example.title === 'Promise-based Toast (Async Operations)'
+                "
+              >
+                <VButton
+                  variant="primary"
+                  text="Test Promise Toast"
+                  icon="mdi:loading"
+                  :disabled="isLoadingPromise"
+                  @click="showToastPromise"
+                />
+                <p class="mt-2 text-sm text-secondaryText">
+                  Click to simulate async operation with 50% success rate
+                </p>
+              </div>
+
               <!-- Default component rendering -->
-              <div v-else>
+              <div v-else-if="comp.component">
                 <component
                   :is="comp.component"
                   v-bind="(example.exampleProps || {}) as any"
@@ -414,5 +522,41 @@ onMounted(() => {
         </div>
       </section>
     </main>
+
+    <!-- Scroll to Top Button -->
+    <Transition name="fade">
+      <button
+        v-if="showScrollToTop"
+        class="fixed bottom-6 right-6 z-50 p-3 bg-primary text-white rounded-full
+        shadow-lg hover:bg-primary-dark transition-all duration-300
+        hover:scale-110 active:scale-95 focus:outline-none focus:ring-2
+        focus:ring-primary focus:ring-offset-2"
+        title="Scroll to top"
+        @click="scrollToTop"
+      >
+        <VIcon
+          icon="mdi:chevron-up"
+          :size="24"
+        />
+      </button>
+    </Transition>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>
+
