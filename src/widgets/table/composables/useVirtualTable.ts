@@ -1,11 +1,8 @@
 import { useVirtualizer } from "@tanstack/vue-virtual";
 import { computed, type Ref } from "vue";
 
-export interface VirtualTableOptions {
-  estimateSize?: number
-  overscan?: number
-  measureElement?: boolean
-}
+import { VirtualTableOptions } from "@/widgets/table/types";
+
 
 export function useVirtualTable(
   scrollContainerRef: Ref<HTMLElement | null>,

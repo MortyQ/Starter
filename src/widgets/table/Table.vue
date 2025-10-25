@@ -5,8 +5,8 @@ import TableCell from "./components/TableCell.vue";
 import TableHeader from "./components/TableHeader.vue";
 import TablePagination from "./components/TablePagination.vue";
 import TableRow from "./components/TableRow.vue";
+import { useColumnResize } from "./composables/useColumnResize";
 import { useExpandableTable } from "./composables/useExpandableTable";
-import { useTable } from "./composables/useTable";
 import { useVirtualTable } from "./composables/useVirtualTable";
 import type { ExpandableRow } from "./types/index";
 
@@ -26,8 +26,17 @@ const emit = defineEmits<{
   "row-click": [row: Record<string, unknown>]
 }>();
 
-// Основна логіка таблиці
-const { gridTemplateColumns, handleRowClick } = useTable(props);
+// Column resizing logic
+const columnsRef = computed(() => props.columns);
+const {
+  gridTemplateColumns,
+  startResize,
+  autoFitColumn,
+  isResizing,
+} = useColumnResize(columnsRef);
+
+// Event handler для кліку по рядку
+const handleRowClick = (row: Record<string, unknown>) => row;
 
 // Автоматичне визначення expandable по наявності children
 const isExpandable = computed(() =>
@@ -121,6 +130,7 @@ const hasRowChildren = (row: Record<string, unknown>): boolean => {
         <!-- Grid контейнер -->
         <div
           class="table-grid"
+          :class="{ 'is-resizing': isResizing }"
           :style="gridStyles"
         >
           <!-- Header (завжди видимий, sticky) -->
@@ -130,6 +140,9 @@ const hasRowChildren = (row: Record<string, unknown>): boolean => {
               :key="column.key"
               :label="column.label"
               :align="column.align"
+              :column-key="column.key"
+              @resize-start="startResize"
+              @resize-dblclick="autoFitColumn"
             />
           </div>
 
@@ -323,6 +336,21 @@ const hasRowChildren = (row: Record<string, unknown>): boolean => {
 </template>
 
 <style scoped>
+.table-grid {
+  display: grid;
+  width: 100%;
+  transition: none; /* Вимикаємо transition при resize */
+}
+
+.table-grid.is-resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.table-grid.is-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
 .table-grid {
   display: grid;
   width: 100%;
