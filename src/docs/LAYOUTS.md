@@ -13,7 +13,7 @@ src/app/
 ├── App.vue              # Minimal - only <MasterLayout />
 └── layouts/
     ├── MasterLayout.vue # Dynamic layout switcher
-    ├── types.ts         # TypeScript types for meta.layout
+    ├── index.ts         # TypeScript types for meta.layout
     ├── DefaultLayout.vue # Layout with header + navigation
     ├── AuthLayout.vue   # Layout for auth pages (no nav)
     └── EmptyLayout.vue  # Minimal layout (content only)
@@ -55,7 +55,7 @@ const routes: RouteRecordRaw[] = [
 All layouts are typed via `LayoutType`:
 
 ```typescript
-// src/app/layouts/types.ts
+// src/app/layouts/index.ts
 export type LayoutType = "default" | "auth" | "empty";
 ```
 
@@ -148,7 +148,7 @@ const layouts: Record<string, Component> = {
 ### Step 3: Add type
 
 ```typescript
-// src/app/layouts/types.ts
+// src/app/layouts/index.ts
 export type LayoutType = "default" | "auth" | "empty" | "dashboard";
 ```
 
