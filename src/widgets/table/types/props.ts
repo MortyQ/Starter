@@ -6,6 +6,7 @@ export type TableProps = {
   loading?: boolean
   virtualized?: boolean
   rowHeight?: number
+  height?: string | number // Висота таблиці (CSS значення або число в px)
 };
 
 export type UseTableProps = {

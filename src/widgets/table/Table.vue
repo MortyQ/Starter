@@ -35,6 +35,21 @@ const {
   isResizing,
 } = useColumnResize(columnsRef);
 
+// Висота таблиці - просте обчислення на основі пропа
+const tableHeight = computed(() => {
+  if (!props.height) {
+    return "600px"; // Дефолтна висота
+  }
+
+  // Якщо число - додаємо 'px'
+  if (typeof props.height === "number") {
+    return `${props.height}px`;
+  }
+
+  // Якщо строка - використовуємо як є (підтримує: '100%', '50vh', 'calc(...)')
+  return props.height;
+});
+
 // Автоматичне визначення expandable по наявності children
 const isExpandable = computed(() =>
   props.data.some(row => row.children && row.children.length > 0),
@@ -150,8 +165,9 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
       <!-- Скролл контейнер -->
       <div
         ref="scrollContainerRef"
-        class="table-scroll-container overflow-auto max-h-[600px]
+        class="table-scroll-container overflow-auto
                border border-cardBorder rounded-lg bg-cardBg"
+        :style="{ height: tableHeight }"
       >
         <!-- Grid контейнер -->
         <div
@@ -328,6 +344,16 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
 </template>
 
 <style scoped>
+/* Обёртка таблицы */
+.table-wrapper {
+  width: 100%;
+}
+
+/* Скролл контейнер */
+.table-scroll-container {
+  scroll-behavior: smooth;
+}
+
 .table-grid {
   display: grid;
   width: 100%;
@@ -355,13 +381,6 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
   display: contents;
 }
 
-/* Плавна прокрутка */
-.table-scroll-container {
-  scroll-behavior: smooth;
-}
-
-
-/* Стилі для expand button */
 /* Стилі для expand button */
 .expand-btn {
   display: inline-flex;
@@ -387,8 +406,7 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
   transition: transform 0.2s ease;
 }
 
-.expand-btn :deep(svg) {
+.expand-btn:hover :deep(svg) {
   transform: scale(1.1);
 }
 </style>
-

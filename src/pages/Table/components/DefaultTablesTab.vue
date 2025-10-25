@@ -12,11 +12,16 @@ const columnsRegular: Column[] = [
 </script>
 
 <template>
-  <h2 class="text-xl font-semibold mb-4 text-mainText">
-    Звичайна таблиця ({{ mockDataUsers.length }} записів)
-  </h2>
-  <Table
-    :columns="columnsRegular"
-    :data="mockDataUsers"
-  />
+  <div class="page-container gap-5">
+    <Table
+      :columns="columnsRegular"
+      :data="mockDataUsers"
+      height="40vh"
+    />
+    <Table
+      :columns="columnsRegular"
+      :data="mockDataUsers"
+      height="20vh"
+    />
+  </div>
 </template>
