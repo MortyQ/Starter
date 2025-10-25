@@ -25,8 +25,7 @@ const computedPaddingLeft = computed(() => {
 
 <template>
   <div
-    class="table-cell px-4 py-3 border-b border-cardBorder text-mainText
-           overflow-hidden"
+    class="table-cell px-4 py-3 border-b border-cardBorder text-mainText"
     :class="{
       'text-left': align === 'left',
       'text-center': align === 'center',

@@ -1,22 +1,16 @@
-import { computed } from "vue";
+import { type Ref } from "vue";
 
 import { UseTableProps } from "@/widgets/table/types/props";
 
-export function useTable(props: UseTableProps) {
-  // Grid columns computation
-  const gridTemplateColumns = computed(() => {
-    return props.columns
-      .map((col) => col.width || "1fr")
-      .join(" ");
-  });
-
-  // Event handler
+export function useTable(props: Ref<UseTableProps>) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const testProps = props.value;
   const handleRowClick = (row: Record<string, unknown>) => {
     return row;
   };
 
   return {
-    gridTemplateColumns,
+    testProps,
     handleRowClick,
   };
 }

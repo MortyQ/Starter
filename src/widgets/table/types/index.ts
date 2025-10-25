@@ -36,3 +36,10 @@ export interface VirtualTableOptions {
   overscan?: number
   measureElement?: boolean
 }
+
+export interface ResizeState {
+  isResizing: boolean;
+  columnKey: string | null;
+  startX: number;
+  startWidth: number;
+}
