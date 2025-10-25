@@ -2,7 +2,7 @@
 
 import ThemeToggle from "../../features/theme/components/ThemeToggle.vue";
 
-import TopBar from "@/widgets/Navigation/TopBar.vue";
+import TopBar from "@/widgets/navigation/TopBar.vue";
 </script>
 
 <template>
