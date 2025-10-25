@@ -3,6 +3,7 @@ export interface Column {
   label: string         // Текст хедера
   width?: string        // CSS значення (1fr, 150px, auto)
   align?: "left" | "center" | "right"
+  interactive?: boolean // Чи містить колонка інтерактивні елементи (select, dropdown тощо)
 }
 
 export interface ExpandableRow {

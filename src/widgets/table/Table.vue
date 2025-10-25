@@ -198,7 +198,6 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
             :has-children="hasRowChildren(item.row)"
             :style="getRowStyles(item)"
             @click="onRowClick(item.row)"
-            @toggle="handleToggleRow(item.row.id as string | number)"
           >
             <!-- Data cells -->
             <TableCell
@@ -230,8 +229,14 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
                 </button>
 
                 <!-- Динамічний slot для контента першої колонки -->
-                <div class="flex-1 min-w-0 overflow-hidden">
-                  <div class="truncate">
+                <div
+                  class="flex-1 min-w-0"
+                  :class="{ 'overflow-hidden': !column.interactive }"
+                >
+                  <div
+                    v-if="!column.interactive"
+                    class="truncate"
+                  >
                     <slot
                       :name="`cell-${column.key}`"
                       :value="item.row[column.key]"
@@ -246,15 +251,50 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
                       </span>
                     </slot>
                   </div>
+                  <!-- Для інтерактивних колонок - без truncate обгортки -->
+                  <slot
+                    v-else
+                    :name="`cell-${column.key}`"
+                    :value="item.row[column.key]"
+                    :row="item.row"
+                    :column="column"
+                    :index="item.index"
+                    :depth="getRowDepth(item.row)"
+                  >
+                    <!-- Дефолтний рендеринг -->
+                    <span>{{ item.row[column.key] }}</span>
+                  </slot>
                 </div>
               </div>
 
               <!-- Звичайні колонки без expand button -->
               <div
                 v-else
-                class="min-w-0 overflow-hidden truncate"
+                class="min-w-0"
+                :class="{
+                  'overflow-hidden truncate': !column.interactive
+                }"
               >
+                <!-- Не інтерактивна колонка - з truncate -->
+                <template v-if="!column.interactive">
+                  <slot
+                    :name="`cell-${column.key}`"
+                    :value="item.row[column.key]"
+                    :row="item.row"
+                    :column="column"
+                    :index="item.index"
+                    :depth="getRowDepth(item.row)"
+                  >
+                    <!-- Дефолтний рендеринг -->
+                    <span :title="String(item.row[column.key])">
+                      {{ item.row[column.key] }}
+                    </span>
+                  </slot>
+                </template>
+
+                <!-- Інтерактивна колонка - без truncate -->
                 <slot
+                  v-else
                   :name="`cell-${column.key}`"
                   :value="item.row[column.key]"
                   :row="item.row"
@@ -263,9 +303,7 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
                   :depth="getRowDepth(item.row)"
                 >
                   <!-- Дефолтний рендеринг -->
-                  <span :title="String(item.row[column.key])">
-                    {{ item.row[column.key] }}
-                  </span>
+                  <span>{{ item.row[column.key] }}</span>
                 </slot>
               </div>
             </TableCell>
