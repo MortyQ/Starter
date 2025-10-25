@@ -25,7 +25,8 @@ const computedPaddingLeft = computed(() => {
 
 <template>
   <div
-    class="table-cell px-4 py-3 border-b border-cardBorder text-mainText"
+    class="table-cell px-4 py-3 border-b border-cardBorder text-mainText
+           overflow-hidden"
     :class="{
       'text-left': align === 'left',
       'text-center': align === 'center',
@@ -34,11 +35,18 @@ const computedPaddingLeft = computed(() => {
     :style="{ paddingLeft: computedPaddingLeft }"
   >
     <slot>
-      {{ value }}
+      <div
+        class="truncate"
+        :title="String(value)"
+      >
+        {{ value }}
+      </div>
     </slot>
   </div>
 </template>
 
 <style scoped>
-
+.table-cell {
+  min-width: 0; /* Важливо для роботи truncate в grid */
+}
 </style>

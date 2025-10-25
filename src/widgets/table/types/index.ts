@@ -31,3 +31,8 @@ export interface TableEmits {
   "row-click": [row: Record<string, unknown>]
 }
 
+export interface VirtualTableOptions {
+  estimateSize?: number
+  overscan?: number
+  measureElement?: boolean
+}
