@@ -25,6 +25,7 @@ export interface TableProps {
   loading?: boolean
   virtualized?: boolean  // Увімкнути віртуалізацію
   rowHeight?: number     // Висота рядка для віртуалізації (default: 50)
+  height?: string | number // Висота таблиці: число в px або CSS значення ('100%', '50vh', 'calc(...)')
 }
 
 export interface TableEmits {

@@ -23,10 +23,7 @@ const accountStatusList = [{
 </script>
 
 <template>
-  <div>
-    <h2 class="text-xl font-semibold mb-4 text-mainText">
-      Expandable таблиця з nested структурою
-    </h2>
+  <div class="page-container">
     <Table
       :columns="columnsExpandable"
       :data="mockDataExpandable"
