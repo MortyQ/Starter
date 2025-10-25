@@ -1,13 +1,6 @@
 import { ref, computed, type Ref } from "vue";
 
-import type { Column } from "../types";
-
-interface ResizeState {
-  isResizing: boolean;
-  columnKey: string | null;
-  startX: number;
-  startWidth: number;
-}
+import type { Column, ResizeState } from "../types";
 
 const MIN_COLUMN_WIDTH = 80; // мінімальна ширина колонки в px
 const DEFAULT_COLUMN_WIDTH = 150; // дефолтна ширина в px

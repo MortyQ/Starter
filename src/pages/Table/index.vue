@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+import VMultiSelect from "@/shared/ui/common/VMultiSelect.vue";
 import Table from "@/widgets/table/Table.vue";
 import type { Column } from "@/widgets/table/types/index";
 import { mockDataUsers, mockDataExpandable } from "@/widgets/table/utils/mockData";
@@ -15,10 +16,21 @@ const columnsRegular: Column[] = [
 
 // Колонки для expandable таблиці
 const columnsExpandable: Column[] = [
-  { key: "name", label: "Назва", width: "3fr" },
-  { key: "status", label: "Статус", width: "150px", align: "center" },
-  { key: "count", label: "Кількість", width: "150px", align: "center" },
+  { key: "name", label: "Назва", width: "300px" },
+  { key: "status", label: "Статус", width: "150px" },
+  { key: "count", label: "Кількість", width: "150px" },
+  { key: "accountStatus", label: "Account Status", width: "150px" },
 ];
+
+const accountStatusList = [{
+  label: "Active",value: "active",
+},
+{
+  label: "Inactive",value: "inactive",
+},
+{
+  label: "Block", value: "block",
+}];
 
 const showExpandable = ref(false);
 
@@ -64,7 +76,19 @@ const handleRowClick = (row: Record<string, unknown>) => {
         :columns="columnsExpandable"
         :data="mockDataExpandable"
         @row-click="handleRowClick"
-      />
+      >
+        <template #cell-status="{depth, value}">
+          TEXT  TEXT  TEXT  TEXT {{ value }}: {{ depth }}
+        </template>
+        <template #cell-accountStatus>
+          <VMultiSelect
+            :options="accountStatusList"
+            label="label"
+            placeholder="Account Status"
+            :searchable="false"
+          />
+        </template>
+      </Table>
     </div>
   </div>
 </template>

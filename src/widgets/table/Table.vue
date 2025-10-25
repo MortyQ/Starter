@@ -35,9 +35,6 @@ const {
   isResizing,
 } = useColumnResize(columnsRef);
 
-// Event handler для кліку по рядку
-const handleRowClick = (row: Record<string, unknown>) => row;
-
 // Автоматичне визначення expandable по наявності children
 const isExpandable = computed(() =>
   props.data.some(row => row.children && row.children.length > 0),
@@ -76,11 +73,9 @@ const gridStyles = computed(() => ({
 
 // Обробка кліку по рядку
 const onRowClick = (row: Record<string, unknown>) => {
-  const result = handleRowClick(row);
-  emit("row-click", result);
+  emit("row-click", row);
 };
 
-// Toggle expand для рядка
 const handleToggleRow = (id: string | number) => {
   if (expandableLogic) {
     expandableLogic.toggleRow(id);
@@ -106,6 +101,37 @@ const isRowExpanded = (row: Record<string, unknown>): boolean => {
 // Перевірка чи рядок має дочірні елементи
 const hasRowChildren = (row: Record<string, unknown>): boolean => {
   return (row.hasChildren as boolean) || false;
+};
+
+// Computed для фінальних рядків (враховуючи віртуалізацію)
+const rowsToRender = computed(() => {
+  if (!props.virtualized || virtualItems.value.length === 0) {
+    // Звичайний рендеринг без віртуалізації
+    return displayData.value.map((row, index) => ({
+      row,
+      index,
+      key: (row.id as string) || index,
+      isVirtual: false,
+    }));
+  }
+
+  // Віртуалізований рендеринг
+  return virtualItems.value.map((virtualRow) => ({
+    row: displayData.value[virtualRow.index],
+    index: virtualRow.index,
+    key: virtualRow.index,
+    isVirtual: true,
+    virtualRow,
+  }));
+});
+
+// Стилі для віртуалізованих рядків
+const getRowStyles = (item: { isVirtual: boolean }) => {
+  if (!item.isVirtual) return {};
+  return {
+    height: `${props.rowHeight}px`,
+    minHeight: `${props.rowHeight}px`,
+  };
 };
 </script>
 
@@ -154,178 +180,106 @@ const hasRowChildren = (row: Record<string, unknown>): boolean => {
             Немає даних для відображення
           </div>
 
-          <!-- Віртуалізовані рядки -->
-          <template v-else-if="virtualized">
-            <!-- Якщо virtualItems ще не ініціалізовані, рендеримо без віртуалізації -->
-            <template v-if="virtualItems.length === 0">
-              <TableRow
-                v-for="(row, index) in displayData"
-                :key="(row.id as string) || index"
-                :data="row"
-                :columns="columns"
-                :depth="getRowDepth(row)"
-                :is-expanded="isRowExpanded(row)"
-                :has-children="hasRowChildren(row)"
-                @click="onRowClick(row)"
-                @toggle="handleToggleRow(row.id as string | number)"
-              >
-                <!-- Data cells -->
-                <TableCell
-                  v-for="(column, colIndex) in columns"
-                  :key="`${(row.id as string) || index}-${column.key}`"
-                  :value="row[column.key]"
-                  :align="column.align"
-                  :depth="getRowDepth(row)"
-                >
-                  <!-- Expand button в першій колонці (якщо expandable) -->
-                  <template
-                    v-if="colIndex === 0 && isExpandable"
-                    #default
-                  >
-                    <div class="flex items-center gap-2">
-                      <button
-                        v-if="isRowExpandable(row as ExpandableRow)"
-                        class="expand-btn p-1 hover:bg-cardBorder/50 rounded
-                               transition-all duration-200 flex-shrink-0"
-                        @click.stop="handleToggleRow(row.id as string | number)"
-                      >
-                        <VIcon
-                          :icon="isRowExpanded(row) ? 'mdi:chevron-down' : 'mdi:chevron-right'"
-                          :size="18"
-                          class="text-secondaryText hover:text-mainText transition-colors"
-                        />
-                      </button>
-                      <span class="flex-1">{{ row[column.key] }}</span>
-                    </div>
-                  </template>
-                </TableCell>
-              </TableRow>
-            </template>
+          <!-- Віртуалізація: spacer before -->
+          <div
+            v-if="props.virtualized && virtualItems.length > 0 && virtualItems[0]"
+            :style="{ height: `${virtualItems[0].start}px` }"
+            class="col-span-full"
+          />
 
-            <!-- Virtual container з правильною висотою -->
-            <div
-              v-else
-              class="virtual-container contents"
-              :style="{ height: `${totalSize}px` }"
+          <!-- Рядки таблиці (універсальний рендеринг) -->
+          <TableRow
+            v-for="item in rowsToRender"
+            :key="item.key"
+            :data="item.row"
+            :columns="columns"
+            :depth="getRowDepth(item.row)"
+            :is-expanded="isRowExpanded(item.row)"
+            :has-children="hasRowChildren(item.row)"
+            :style="getRowStyles(item)"
+            @click="onRowClick(item.row)"
+            @toggle="handleToggleRow(item.row.id as string | number)"
+          >
+            <!-- Data cells -->
+            <TableCell
+              v-for="(column, colIndex) in columns"
+              :key="`${item.key}-${column.key}`"
+              :value="item.row[column.key]"
+              :align="column.align"
+              :depth="getRowDepth(item.row)"
             >
-              <!-- Spacer before (відступ зверху) -->
+              <!-- Первая колонка с expand button (если expandable) -->
               <div
-                v-if="virtualItems[0]"
-                :style="{ height: `${virtualItems[0].start}px` }"
-                class="col-span-full"
-              />
-
-              <!-- Virtual rows (тільки видимі рядки) -->
-              <template
-                v-for="virtualRow in virtualItems"
-                :key="virtualRow.index"
+                v-if="colIndex === 0 && isExpandable"
+                class="flex items-center gap-2"
               >
-                <TableRow
-                  :data="displayData[virtualRow.index]"
-                  :columns="columns"
-                  :depth="getRowDepth(displayData[virtualRow.index])"
-                  :is-expanded="isRowExpanded(displayData[virtualRow.index])"
-                  :has-children="hasRowChildren(displayData[virtualRow.index])"
-                  :style="{
-                    height: `${rowHeight}px`,
-                    minHeight: `${rowHeight}px`
-                  }"
-                  @click="onRowClick(displayData[virtualRow.index])"
-                  @toggle="handleToggleRow(displayData[virtualRow.index].id as string | number)"
+                <button
+                  v-if="isRowExpandable(item.row as ExpandableRow)"
+                  class="expand-btn p-1 hover:bg-cardBorder/50 rounded
+                         transition-all duration-200 flex-shrink-0"
+                  @click.stop="handleToggleRow(item.row.id as string | number)"
                 >
-                  <!-- Data cells -->
-                  <TableCell
-                    v-for="(column, colIndex) in columns"
-                    :key="`${virtualRow.index}-${column.key}`"
-                    :value="displayData[virtualRow.index][column.key]"
-                    :align="column.align"
-                    :depth="getRowDepth(displayData[virtualRow.index])"
-                  >
-                    <!-- Expand button в першій колонці (якщо expandable) -->
-                    <template
-                      v-if="colIndex === 0 && isExpandable"
-                      #default
-                    >
-                      <div class="flex items-center gap-2">
-                        <button
-                          v-if="isRowExpandable(displayData[virtualRow.index] as ExpandableRow)"
-                          class="expand-btn p-1 hover:bg-cardBorder/50 rounded
-                                 transition-all duration-200 flex-shrink-0"
-                          @click.stop="handleToggleRow(
-                            displayData[virtualRow.index].id as string | number
-                          )"
-                        >
-                          <VIcon
-                            :icon="isRowExpanded(displayData[virtualRow.index])
-                              ? 'mdi:chevron-down'
-                              : 'mdi:chevron-right'"
-                            size="18"
-                            class="text-secondaryText hover:text-mainText transition-colors"
-                          />
-                        </button>
-                        <span class="flex-1">{{ displayData[virtualRow.index][column.key] }}</span>
-                      </div>
-                    </template>
-                  </TableCell>
-                </TableRow>
-              </template>
+                  <VIcon
+                    :icon="isRowExpanded(item.row)
+                      ? 'mdi:chevron-down'
+                      : 'mdi:chevron-right'"
+                    :size="18"
+                    class="text-secondaryText hover:text-mainText
+                           transition-colors"
+                  />
+                </button>
 
-              <!-- Spacer after (відступ знизу) -->
-              <div
-                v-if="virtualItems[virtualItems.length - 1]"
-                :style="{
-                  height: `${totalSize - virtualItems[virtualItems.length - 1].end}px`
-                }"
-                class="col-span-full"
-              />
-            </div>
-          </template>
-
-          <!-- Звичайні рядки (без віртуалізації) -->
-          <template v-else>
-            <TableRow
-              v-for="(row, index) in displayData"
-              :key="(row.id as string) || index"
-              :data="row"
-              :columns="columns"
-              :depth="getRowDepth(row)"
-              :is-expanded="isRowExpanded(row)"
-              :has-children="hasRowChildren(row)"
-              @click="onRowClick(row)"
-              @toggle="handleToggleRow(row.id as string | number)"
-            >
-              <!-- Data cells -->
-              <TableCell
-                v-for="(column, colIndex) in columns"
-                :key="`${(row.id as string) || index}-${column.key}`"
-                :value="row[column.key]"
-                :align="column.align"
-                :depth="getRowDepth(row)"
-              >
-                <!-- Expand button в першій колонці (якщо expandable) -->
-                <template
-                  v-if="colIndex === 0 && isExpandable"
-                  #default
-                >
-                  <div class="flex items-center gap-2">
-                    <button
-                      v-if="isRowExpandable(row as ExpandableRow)"
-                      class="expand-btn p-1 hover:bg-cardBorder/50 rounded
-                             transition-all duration-200 flex-shrink-0"
-                      @click.stop="handleToggleRow(row.id as string | number)"
+                <!-- Динамічний slot для контента першої колонки -->
+                <div class="flex-1 min-w-0 overflow-hidden">
+                  <div class="truncate">
+                    <slot
+                      :name="`cell-${column.key}`"
+                      :value="item.row[column.key]"
+                      :row="item.row"
+                      :column="column"
+                      :index="item.index"
+                      :depth="getRowDepth(item.row)"
                     >
-                      <VIcon
-                        :icon="isRowExpanded(row) ? 'mdi:chevron-down' : 'mdi:chevron-right'"
-                        :size="18"
-                        class="text-secondaryText hover:text-mainText transition-colors"
-                      />
-                    </button>
-                    <span class="flex-1">{{ row[column.key] }}</span>
+                      <!-- Дефолтний рендеринг з truncate -->
+                      <span :title="String(item.row[column.key])">
+                        {{ item.row[column.key] }}
+                      </span>
+                    </slot>
                   </div>
-                </template>
-              </TableCell>
-            </TableRow>
-          </template>
+                </div>
+              </div>
+
+              <!-- Звичайні колонки без expand button -->
+              <div
+                v-else
+                class="min-w-0 overflow-hidden truncate"
+              >
+                <slot
+                  :name="`cell-${column.key}`"
+                  :value="item.row[column.key]"
+                  :row="item.row"
+                  :column="column"
+                  :index="item.index"
+                  :depth="getRowDepth(item.row)"
+                >
+                  <!-- Дефолтний рендеринг -->
+                  <span :title="String(item.row[column.key])">
+                    {{ item.row[column.key] }}
+                  </span>
+                </slot>
+              </div>
+            </TableCell>
+          </TableRow>
+
+          <!-- Віртуалізація: spacer after -->
+          <div
+            v-if="props.virtualized && virtualItems.length > 0 &&
+              virtualItems[virtualItems.length - 1]"
+            :style="{
+              height: `${totalSize - virtualItems[virtualItems.length - 1].end}px`
+            }"
+            class="col-span-full"
+          />
         </div>
       </div>
 
@@ -351,10 +305,6 @@ const hasRowChildren = (row: Record<string, unknown>): boolean => {
   cursor: col-resize !important;
   user-select: none !important;
 }
-.table-grid {
-  display: grid;
-  width: 100%;
-}
 
 .table-header-row {
   position: sticky;
@@ -372,6 +322,8 @@ const hasRowChildren = (row: Record<string, unknown>): boolean => {
   scroll-behavior: smooth;
 }
 
+
+/* Стилі для expand button */
 /* Стилі для expand button */
 .expand-btn {
   display: inline-flex;
@@ -397,7 +349,7 @@ const hasRowChildren = (row: Record<string, unknown>): boolean => {
   transition: transform 0.2s ease;
 }
 
-.expand-btn:hover :deep(svg) {
+.expand-btn :deep(svg) {
   transform: scale(1.1);
 }
 </style>
