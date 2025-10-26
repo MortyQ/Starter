@@ -2,7 +2,7 @@
 import VMultiSelect from "@/shared/ui/common/VMultiSelect.vue";
 import Table from "@/widgets/table/Table.vue";
 import { Column } from "@/widgets/table/types";
-import { mockDataExpandable } from "@/widgets/table/utils/mockData";
+import { mockDataExpandable, mockDataExpandableTotalRow } from "@/widgets/table/utils/mockData";
 
 const columnsExpandable: Column[] = [
   { key: "name", label: "Назва", width: "300px" },
@@ -43,6 +43,7 @@ const accountStatusList = [
     <Table
       :columns="columnsExpandable"
       :data="mockDataExpandable"
+      :total-row="mockDataExpandableTotalRow"
     >
       <template #cell-status="{depth, value}">
         TEXT  TEXT  TEXT  TEXT {{ value }}: {{ depth }}
@@ -54,6 +55,28 @@ const accountStatusList = [
           placeholder="Account Status"
           :searchable="false"
         />
+      </template>
+
+      <!-- Total row slots з кастомним форматуванням -->
+      <template #total-cell-name="{ value }">
+        <span class="text-accent font-bold uppercase">
+          {{ value }}
+        </span>
+      </template>
+      <template #total-cell-salary="{ value }">
+        <span class="text-positive font-bold">
+          ${{ value.toLocaleString() }}
+        </span>
+      </template>
+      <template #total-cell-budget="{ value }">
+        <span class="text-info font-bold">
+          ${{ value.toLocaleString() }}
+        </span>
+      </template>
+      <template #total-cell-revenue="{ value }">
+        <span class="text-positive font-bold">
+          ${{ value.toLocaleString() }}
+        </span>
       </template>
     </Table>
   </div>

@@ -7,6 +7,7 @@ export type TableProps = {
   virtualized?: boolean
   rowHeight?: number
   height?: string | number // Висота таблиці (CSS значення або число в px)
+  totalRow?: Record<string, unknown> // Підсумковий рядок (sticky bottom)
 };
 
 export type UseTableProps = {

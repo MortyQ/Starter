@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Table from "@/widgets/table/Table.vue";
 import type { Column } from "@/widgets/table/types";
-import { mockDataUsers } from "@/widgets/table/utils/mockData";
+import { mockDataUsers, mockDataUsersTotalRow } from "@/widgets/table/utils/mockData";
 
 const columnsRegular: Column[] = [
   { key: "id", label: "ID", width: "80px", align: "center" },
@@ -16,11 +16,13 @@ const columnsRegular: Column[] = [
     <Table
       :columns="columnsRegular"
       :data="mockDataUsers"
+      :total-row="mockDataUsersTotalRow"
       height="40vh"
     />
     <Table
       :columns="columnsRegular"
       :data="mockDataUsers"
+      :total-row="mockDataUsersTotalRow"
       height="20vh"
     />
   </div>

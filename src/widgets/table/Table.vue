@@ -26,6 +26,9 @@ const emit = defineEmits<{
   "row-click": [row: Record<string, unknown>]
 }>();
 
+// Total row видимість - просто перевіряємо наявність
+const shouldShowTotal = computed(() => props.totalRow !== undefined);
+
 // Column resizing logic
 const columnsRef = computed(() => props.columns);
 const {
@@ -274,6 +277,47 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
             }"
             class="col-span-full"
           />
+
+          <!-- Total Row (sticky bottom, не бере участь у віртуалізації) -->
+          <template v-if="shouldShowTotal && totalRow">
+            <TableCell
+              v-for="(column, colIndex) in columns"
+              :key="`total-${column.key}`"
+              :value="totalRow[column.key]"
+              :align="column.align"
+              :depth="0"
+              class="table-total-cell"
+            >
+              <div class="flex items-center gap-2 min-w-0">
+                <!-- Spacer замість expand button для першої колонки -->
+                <div
+                  v-if="colIndex === 0 && isExpandable"
+                  class="flex-shrink-0"
+                  style="width: 28px;"
+                />
+
+                <!-- Контент total комірки -->
+                <div
+                  class="flex-1 min-w-0"
+                  :class="{ 'overflow-hidden truncate': !column.interactive }"
+                >
+                  <slot
+                    :name="`total-cell-${column.key}`"
+                    :value="totalRow[column.key]"
+                    :column="column"
+                  >
+                    <!-- Дефолтний рендеринг -->
+                    <span
+                      class="font-semibold"
+                      :title="!column.interactive ? String(totalRow[column.key]) : undefined"
+                    >
+                      {{ totalRow[column.key] }}
+                    </span>
+                  </slot>
+                </div>
+              </div>
+            </TableCell>
+          </template>
         </div>
       </div>
 
@@ -349,4 +393,15 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
 .expand-btn:hover :deep(svg) {
   transform: scale(1.1);
 }
+
+/* Total Row - sticky внизу таблиці */
+.table-total-cell {
+  position: sticky;
+  bottom: 0;
+  z-index: 9;
+  border-top: 2px solid theme('colors.cardBorder');
+  font-weight: 600;
+  @apply bg-cardBg;
+}
+
 </style>
