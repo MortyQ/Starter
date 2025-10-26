@@ -314,7 +314,7 @@ const getColumnClasses = (column: Column) => {
             class="col-span-full"
           />
 
-          <!-- Total Row (sticky bottom, не бере участь у віртуалізації) -->
+          <!-- Total Row (sticky bottom всередині grid) -->
           <template v-if="shouldShowTotal && totalRow">
             <TableCell
               v-for="(column, colIndex) in columns"
@@ -432,7 +432,7 @@ const getColumnClasses = (column: Column) => {
   transform: scale(1.1);
 }
 
-/* Total Row - sticky внизу таблиці */
+/* Total Row - sticky внизу grid контейнера */
 .table-total-cell {
   position: sticky;
   bottom: 0;
@@ -440,6 +440,13 @@ const getColumnClasses = (column: Column) => {
   border-top: 2px solid theme('colors.cardBorder');
   font-weight: 600;
   @apply bg-cardBg;
+}
+
+/* Backdrop для total row */
+@supports (backdrop-filter: blur(8px)) {
+  .table-total-cell {
+    backdrop-filter: blur(8px);
+  }
 }
 
 /* Fixed Columns - sticky left/right */

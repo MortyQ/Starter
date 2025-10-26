@@ -16,7 +16,10 @@ export function useVirtualTable(
   } = options;
 
   const virtualizerOptions: Record<string, unknown> = {
-    count: data.value.length,
+    // ВИПРАВЛЕНО: використовуємо computed для reactive count
+    get count() {
+      return data.value.length;
+    },
     getScrollElement: () => scrollContainerRef.value,
     estimateSize: () => estimateSize,
     overscan,

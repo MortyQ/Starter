@@ -6,9 +6,9 @@ import { mockDataExpandable, mockDataExpandableTotalRow } from "@/widgets/table/
 
 const columnsExpandable: Column[] = [
   // Всі left fixed колонки підряд
-  { key: "name", label: "Назва", width: "300px", fixed: "left" },
-  { key: "count", label: "Кількість", width: "120px", fixed: "left" },
-  { key: "salary", label: "Salary", width: "120px", fixed: "left" },
+  { key: "name", label: "Назва", width: "300px"  },
+  { key: "count", label: "Кількість", width: "120px" },
+  { key: "salary", label: "Salary", width: "120px" },
 
   // Звичайні scrollable колонки
   { key: "email", label: "Email", width: "250px" },
@@ -24,7 +24,7 @@ const columnsExpandable: Column[] = [
   { key: "revenue", label: "Revenue", width: "130px" },
 
   // Right fixed в кінці
-  { key: "accountStatus", label: "Account Status", width: "200px", interactive: true, fixed: "right" },
+  { key: "accountStatus", label: "Account Status", width: "200px", interactive: true },
 ];
 
 const accountStatusList = [
