@@ -7,8 +7,9 @@ import TablePagination from "./components/TablePagination.vue";
 import TableRow from "./components/TableRow.vue";
 import { useColumnResize } from "./composables/useColumnResize";
 import { useExpandableTable } from "./composables/useExpandableTable";
+import { useFixedColumns } from "./composables/useFixedColumns";
 import { useVirtualTable } from "./composables/useVirtualTable";
-import type { ExpandableRow } from "./types/index";
+import type { Column, ExpandableRow } from "./types/index";
 
 
 import VIcon from "@/shared/ui/common/VIcon.vue";
@@ -36,7 +37,17 @@ const {
   startResize,
   autoFitColumn,
   isResizing,
+  columnWidths,
 } = useColumnResize(columnsRef);
+
+// Fixed columns logic (з динамічними ширинами)
+const {
+  getFixedStyles,
+  isFixed,
+  isLastLeftFixed,
+  isFirstRightFixed,
+} = useFixedColumns(columnsRef, columnWidths);
+
 
 // Висота таблиці - просте обчислення на основі пропа
 const tableHeight = computed(() => {
@@ -151,6 +162,27 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
     minHeight: `${props.rowHeight}px`,
   };
 };
+
+// Класи для колонки (fixed з shadow effects)
+const getColumnClasses = (column: Column) => {
+  const classes: string[] = [];
+
+  if (isFixed(column)) {
+    classes.push("table-fixed-column");
+
+    // Shadow для останньої лівої колонки
+    if (isLastLeftFixed(column.key)) {
+      classes.push("table-fixed-left-last");
+    }
+
+    // Shadow для першої правої колонки
+    if (isFirstRightFixed(column.key)) {
+      classes.push("table-fixed-right-first");
+    }
+  }
+
+  return classes;
+};
 </script>
 
 <template>
@@ -186,6 +218,8 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
               :label="column.label"
               :align="column.align"
               :column-key="column.key"
+              :class="getColumnClasses(column)"
+              :style="getFixedStyles(column)"
               @resize-start="startResize"
               @resize-dblclick="autoFitColumn"
             />
@@ -225,6 +259,8 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
               :value="item.row[column.key]"
               :align="column.align"
               :depth="getRowDepth(item.row)"
+              :class="getColumnClasses(column)"
+              :style="getFixedStyles(column)"
             >
               <div class="flex items-center gap-2 min-w-0">
                 <!-- Expand button тільки для першої колонки -->
@@ -287,6 +323,8 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
               :align="column.align"
               :depth="0"
               class="table-total-cell"
+              :class="getColumnClasses(column)"
+              :style="getFixedStyles(column)"
             >
               <div class="flex items-center gap-2 min-w-0">
                 <!-- Spacer замість expand button для першої колонки -->
@@ -404,4 +442,54 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
   @apply bg-cardBg;
 }
 
+/* Fixed Columns - sticky left/right */
+.table-fixed-column {
+  @apply bg-cardBg;
+}
+
+/* Backdrop для fixed колонок (кращий контраст) */
+@supports (backdrop-filter: blur(4px)) {
+  .table-fixed-column {
+    backdrop-filter: blur(4px);
+    background: theme('colors.cardBg' / 0.98);
+  }
+}
+
+/* Shadow для останньої лівої fixed колонки */
+.table-fixed-left-last::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  transform: translateX(100%);
+  pointer-events: none;
+  transition: box-shadow 0.2s ease;
+  box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.15);
+}
+
+/* Shadow для першої правої fixed колонки */
+.table-fixed-right-first::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10px;
+  transform: translateX(-100%);
+  pointer-events: none;
+  transition: box-shadow 0.2s ease;
+  box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.15);
+}
+
+/* Fixed колонка в header має вищий z-index */
+.table-header-row .table-fixed-column {
+  z-index: 200 !important;
+}
+
+/* Fixed колонка в total row має спеціальний z-index */
+.table-total-cell.table-fixed-column {
+  z-index: 150 !important;
+}
 </style>

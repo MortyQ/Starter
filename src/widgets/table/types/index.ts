@@ -4,6 +4,7 @@ export interface Column {
   width?: string        // CSS значення (1fr, 150px, auto)
   align?: "left" | "center" | "right"
   interactive?: boolean // Чи містить колонка інтерактивні елементи (select, dropdown тощо)
+  fixed?: "left" | "right" // Фіксація колонки (sticky) зліва або справа
 }
 
 export interface ExpandableRow {
