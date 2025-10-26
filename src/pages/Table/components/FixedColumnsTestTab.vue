@@ -3,15 +3,15 @@ import Table from "@/widgets/table/Table.vue";
 import type { Column } from "@/widgets/table/types";
 import { mockDataUsers, mockDataUsersTotalRow } from "@/widgets/table/utils/mockData";
 
-// Тест 1: Fixed колонки підряд (РЕКОМЕНДОВАНО)
+// Test 1: Fixed columns in a row (RECOMMENDED)
 const columnsGood: Column[] = [
   { key: "id", label: "ID", width: "80px", align: "center", fixed: "left" },
-  { key: "name", label: "Ім'я", width: "200px", fixed: "left" },
-  { key: "age", label: "Вік", width: "100px", align: "center" },
+  { key: "name", label: "Name", width: "200px", fixed: "left" },
+  { key: "age", label: "Age", width: "100px", align: "center" },
   { key: "email", label: "Email", width: "250px" },
   { key: "phone", label: "Phone", width: "150px" },
   { key: "position", label: "Position", width: "150px" },
-  { key: "status", label: "Статус", width: "150px" },
+  { key: "status", label: "Status", width: "150px" },
   { key: "performance", label: "Rating", width: "100px" },
   { key: "startDate", label: "Start Date", width: "130px" },
   { key: "projects", label: "Projects", width: "100px" },
@@ -22,15 +22,15 @@ const columnsGood: Column[] = [
   { key: "salary", label: "Salary", width: "120px", fixed: "right" },
 ];
 
-// Тест 2: Fixed колонки НЕ підряд (працює, але НЕ РЕКОМЕНДОВАНО)
+// Test 2: Fixed columns NOT in a row (works, but NOT RECOMMENDED)
 const columnsBad: Column[] = [
   { key: "id", label: "ID", width: "80px", align: "center", fixed: "left" },
-  { key: "age", label: "Вік", width: "100px", align: "center" }, // Normal між fixed
-  { key: "name", label: "Ім'я", width: "200px", fixed: "left" }, // Ще один fixed після normal
+  { key: "age", label: "Age", width: "100px", align: "center" }, // Normal between fixed
+  { key: "name", label: "Name", width: "200px", fixed: "left" }, // Another fixed after normal
   { key: "email", label: "Email", width: "250px" },
   { key: "phone", label: "Phone", width: "150px" },
   { key: "position", label: "Position", width: "150px" },
-  { key: "status", label: "Статус", width: "150px" },
+  { key: "status", label: "Status", width: "150px" },
   { key: "performance", label: "Rating", width: "100px" },
   { key: "startDate", label: "Start Date", width: "130px" },
   { key: "projects", label: "Projects", width: "100px" },
@@ -43,13 +43,14 @@ const columnsBad: Column[] = [
 
 <template>
   <div class="page-container flex flex-col gap-8">
-    <!-- Good practice: fixed підряд -->
+    <!-- Good practice: fixed in a row -->
     <div>
       <h2 class="text-xl font-bold mb-4 text-mainText">
-        ✅ Good Practice: Fixed колонки підряд
+        ✅ Good Practice: Fixed columns in a row
       </h2>
       <p class="text-secondaryText mb-4">
-        ID та Name зліва фіксовані, Salary справа фіксований. Всі fixed підряд в масиві.
+        ID and Name are fixed on the left, Salary is fixed on the right.
+        All fixed columns are in a row in the array.
       </p>
       <Table
         :columns="columnsGood"
@@ -59,14 +60,14 @@ const columnsBad: Column[] = [
       />
     </div>
 
-    <!-- Bad practice: fixed НЕ підряд -->
+    <!-- Bad practice: fixed NOT in a row -->
     <div>
       <h2 class="text-xl font-bold mb-4 text-mainText">
-        ⚠️ Not Recommended: Fixed колонки НЕ підряд
+        ⚠️ Not Recommended: Fixed columns NOT in a row
       </h2>
       <p class="text-secondaryText mb-4">
-        ID fixed, потім Age normal, потім Name знову fixed.
-        Технічно працює, але візуально може бути незрозуміло.
+        ID is fixed, then Age is normal, then Name is fixed again.
+        Technically works, but may be visually confusing.
       </p>
       <Table
         :columns="columnsBad"

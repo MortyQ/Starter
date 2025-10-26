@@ -1,8 +1,8 @@
-// Table Header Styles
+// Table Header Styles - Modern Edition
 // ============================================
 @use './variables' as *;
 
-// Header row wrapper
+// ...existing code...
 .table-header-row {
   display: contents;
 
@@ -14,16 +14,27 @@
   }
 }
 
-// Individual header cell
+// Individual header cell with modern aesthetics
 .table-header-cell {
   position: sticky;
   top: 0;
   z-index: $z-index-header;
   padding: $table-header-padding-y $table-header-padding-x;
-  background-color: theme('colors.cardBg');
+
+  // Subtle background distinction - cardBg with slight darkening for depth
+  background-color: color-mix(in srgb, theme('colors.cardBg') 98%, theme('colors.mainText') 2%);
+
+  // Minimal bottom border using cardBorder
   border-bottom: $table-border-width solid theme('colors.cardBorder');
-  font-weight: 600;
+
+  // Typography - semibold for emphasis
+  font-weight: $table-font-weight-semibold;
+  font-size: $table-font-size-header;
+  line-height: $table-line-height-header;
   color: theme('colors.mainText');
+  text-transform: uppercase;
+  letter-spacing: 0.025em; // Slight tracking for uppercase
+
   overflow: hidden;
   min-width: 0;
 
@@ -46,75 +57,50 @@
   }
 }
 
-// Label in header
+// Label in header - clean, readable
 .table-header-label {
   user-select: none;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-right: 0.75rem; // space for resize handle
+  padding-right: 1rem; // space for resize handle
 }
 
-// Resize handle
+// Resize handle - subtle, modern appearance
 .table-resize-handle {
   position: absolute;
-  right: -4px;
+  right: 0;
   top: 0;
   bottom: 0;
   width: $table-resize-handle-width;
   cursor: col-resize;
   z-index: 20;
-  padding: 0 4px;
-  margin: 8px -6px;
   display: flex;
   align-items: center;
-  justify-content: center;
+
+  // Barely visible by default
+  background-color: transparent;
   transition: background-color $transition-fast;
-  background-color: theme('colors.cardBorder');
 
-  // Hover state
+  // Hover state - subtle indicator
   &:hover {
-    background-color: theme('colors.primary' / 0.1);
-
-    .table-resize-indicator {
-      opacity: 1;
-    }
+    background-color: color-mix(in srgb, theme('colors.primary') 25%, transparent 75%);
   }
 
-  // Active state
+  // Active state - clear feedback
   &:active {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      theme('colors.primary' / 0.15) 50%,
-      transparent 100%
-    );
+    background-color: theme('colors.primary');
   }
 }
 
-// Resize indicator (grip lines)
+// Resize indicator (grip lines) - minimal, appears on hover
 .table-resize-indicator {
-  display: flex;
-  gap: 2px;
-  opacity: 0;
-  transition: opacity $transition-fast;
-
-  .table-resize-line {
-    width: 2px;
-    height: 1rem;
-    background-color: theme('colors.primary' / 0.4);
-    border-radius: 9999px;
-  }
+  display: none; // Hidden in modern minimal design
 }
 
-// Divider line
+// Divider line - removed for cleaner look
 .table-resize-divider {
-  position: absolute;
-  right: 0;
-  top: 0.5rem;
-  bottom: 0.5rem;
-  width: 2px;
-  background-color: theme('colors.cardBorder');
+  @apply border-r border-cardBorder h-[80%]
 }
 

@@ -365,6 +365,5 @@ const getColumnClasses = (column: Column) => {
 </template>
 
 <style lang="scss">
-// Import modular table styles with @use (modern Sass)
 @use './assets/styles/table.scss';
 </style>

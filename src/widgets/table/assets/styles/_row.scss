@@ -1,35 +1,43 @@
-// Table Row Styles
+// Table Row Styles - Modern Edition
 // ============================================
 @use './variables' as *;
 
-// Row wrapper (uses display: contents)
+// ...existing code...
 .table-row-wrapper {
   display: contents;
   cursor: pointer;
 
-  // Hover effect on all cells in the row
+  // Subtle hover effect - cardBg with minimal mainText overlay for readability
   &:hover > .table-cell {
-    background-color: theme('colors.cardBg' / $hover-bg-opacity);
+    background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
   }
 
-  // Active/clicked state
+  // Active/clicked state - slightly more prominent
   &:active > .table-cell {
-    background-color: theme('colors.cardBorder' / 0.3);
+    background-color: color-mix(in srgb, theme('colors.cardBg') 94%, theme('colors.mainText') 6%);
   }
 
-  // Disabled state
+  // Disabled state - clear visual feedback
   &--disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: $opacity-disabled;
 
     &:hover > .table-cell {
-      background-color: transparent;
+      background-color: theme('colors.cardBg'); // No hover when disabled
     }
   }
 
-  // Selected state
+  // Selected state - primary color at low opacity for clear indication
   &--selected > .table-cell {
-    background-color: theme('colors.primary' / 0.05);
+    background-color: color-mix(in srgb, theme('colors.cardBg') 92%, theme('colors.primary') 8%);
+
+    // Slightly bolder text for selected rows
+    font-weight: $table-font-weight-medium;
+  }
+
+  // Combined selected + hover state
+  &--selected:hover > .table-cell {
+    background-color: color-mix(in srgb, theme('colors.cardBg') 88%, theme('colors.primary') 12%);
   }
 }
 
@@ -44,25 +52,25 @@
   }
 }
 
-// Expandable row (for nested/children)
+// Expandable row (for nested/children) with smooth animations
 .table-row-expandable {
   display: contents;
 
-  // Appear animation for child rows
+  // Appear animation for child rows - elegant fade + slide
   &--entering > .table-cell {
-    animation: expandRowIn $transition-normal ease-out;
+    animation: expandRowIn $transition-normal cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &--leaving > .table-cell {
-    animation: expandRowOut $transition-normal ease-in;
+    animation: expandRowOut $transition-normal cubic-bezier(0.4, 0, 1, 1);
   }
 }
 
-// Keyframes for expand animation
+// Keyframes for expand animation - smooth, professional
 @keyframes expandRowIn {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-4px);
   }
   to {
     opacity: 1;
@@ -77,7 +85,7 @@
   }
   to {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-4px);
   }
 }
 

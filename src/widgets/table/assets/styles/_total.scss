@@ -1,24 +1,31 @@
-// Table Total Row Styles
+// Table Total Row Styles - Modern Edition
 // ============================================
 @use './variables' as *;
 
-// Total row cell
+// ...existing code...
 .table-total-cell {
   position: sticky;
   bottom: 0;
   z-index: $z-index-total;
   padding: $table-cell-padding-y $table-cell-padding-x;
-  background-color: theme('colors.cardBg');
-  border-top: $table-total-border-width solid theme('colors.cardBorder');
+
+  // Stronger background distinction for total row - cardBg with more prominent tint
+  background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+
+  // Subtle top border for clear separation using cardBorder
+  border-top: $table-border-width solid theme('colors.cardBorder');
   border-bottom: none;
-  font-weight: 600;
+
+  // Typography - bold for emphasis
+  font-weight: $table-font-weight-bold;
+  font-size: $table-font-size-base;
+  line-height: $table-line-height-base;
   color: theme('colors.mainText');
+
   min-width: 0;
 
-  // Backdrop blur for better visibility
-  @supports (backdrop-filter: $backdrop-blur-total) {
-    backdrop-filter: $backdrop-blur-total;
-  }
+  // PERFORMANCE: Solid background (no backdrop-blur) for 60 FPS
+  // backdrop-filter is removed to maintain smooth scrolling
 
   // Text alignment
   &--left {
@@ -47,11 +54,11 @@
   min-width: 0;
 }
 
-// Text in total cell
+// Text in total cell - emphasized
 .table-total-text {
   flex: 1;
   min-width: 0;
-  font-weight: 600;
+  font-weight: $table-font-weight-bold;
 
   &--truncate {
     overflow: hidden;

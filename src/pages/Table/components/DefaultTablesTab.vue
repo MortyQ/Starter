@@ -5,8 +5,8 @@ import { mockDataUsers, mockDataUsersTotalRow } from "@/widgets/table/utils/mock
 
 const columnsRegular: Column[] = [
   { key: "id", label: "ID", width: "80px", align: "center" },
-  { key: "name", label: "Ім'я", width: "2fr" },
-  { key: "age", label: "Вік", width: "100px", align: "center" },
+  { key: "name", label: "Name", width: "2fr" },
+  { key: "age", label: "Age", width: "100px", align: "center" },
   { key: "email", label: "Email", width: "2fr" },
 ];
 </script>

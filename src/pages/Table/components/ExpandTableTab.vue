@@ -5,16 +5,16 @@ import { Column } from "@/widgets/table/types";
 import { mockDataExpandable, mockDataExpandableTotalRow } from "@/widgets/table/utils/mockData";
 
 const columnsExpandable: Column[] = [
-  // Всі left fixed колонки підряд
-  { key: "name", label: "Назва", width: "300px"  },
-  { key: "count", label: "Кількість", width: "120px" },
+  // All left fixed columns in a row
+  { key: "name", label: "Name", width: "300px"  },
+  { key: "count", label: "Count", width: "120px" },
   { key: "salary", label: "Salary", width: "120px" },
 
-  // Звичайні scrollable колонки
+  // Regular scrollable columns
   { key: "email", label: "Email", width: "250px" },
   { key: "phone", label: "Phone", width: "150px" },
   { key: "position", label: "Position", width: "150px" },
-  { key: "status", label: "Статус", width: "150px" },
+  { key: "status", label: "Status", width: "150px" },
   { key: "performance", label: "Rating", width: "100px" },
   { key: "startDate", label: "Start Date", width: "130px" },
   { key: "projects", label: "Projects", width: "100px" },
@@ -23,7 +23,7 @@ const columnsExpandable: Column[] = [
   { key: "budget", label: "Budget", width: "130px" },
   { key: "revenue", label: "Revenue", width: "130px" },
 
-  // Right fixed в кінці
+  // Right fixed at the end
   { key: "accountStatus", label: "Account Status", width: "200px", interactive: true, fixed: "right" },
 ];
 
@@ -62,7 +62,7 @@ const accountStatusList = [
         />
       </template>
 
-      <!-- Total row slots з кастомним форматуванням -->
+      <!-- Total row slots with custom formatting -->
       <template #total-cell-name="{ value }">
         <span class="text-accent font-bold uppercase">
           {{ value }}
