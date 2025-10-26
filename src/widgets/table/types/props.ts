@@ -6,11 +6,17 @@ export type TableProps = {
   loading?: boolean
   virtualized?: boolean
   rowHeight?: number
-  height?: string | number // Висота таблиці (CSS значення або число в px)
-  totalRow?: Record<string, unknown> // Підсумковий рядок (sticky bottom)
+  height?: string | number // Table height (CSS value or number in px)
+  totalRow?: Record<string, unknown> // Summary row (sticky bottom)
 };
 
 export type UseTableProps = {
   columns: Column[]
   data: Record<string, unknown>[]
 };
+
+
+export interface TableEmits {
+  "page-change": [page: number]
+  "row-click": [row: Record<string, unknown>]
+}

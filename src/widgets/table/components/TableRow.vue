@@ -20,7 +20,7 @@ const emit = defineEmits<{
 
 <template>
   <div
-    class="table-row-wrapper contents cursor-pointer hover:bg-cardBg/50 transition-colors"
+    class="table-row-wrapper"
     @click="emit('toggle')"
   >
     <slot />
@@ -28,8 +28,6 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
-.contents {
-  display: contents;
-}
+/* Styles defined in assets/styles/_row.scss */
 </style>
 

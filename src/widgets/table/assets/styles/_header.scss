@@ -1,0 +1,120 @@
+// Table Header Styles
+// ============================================
+@use './variables' as *;
+
+// Header row wrapper
+.table-header-row {
+  display: contents;
+
+  // Sticky positioning for all header cells
+  & > * {
+    position: sticky;
+    top: 0;
+    z-index: $z-index-header;
+  }
+}
+
+// Individual header cell
+.table-header-cell {
+  position: sticky;
+  top: 0;
+  z-index: $z-index-header;
+  padding: $table-header-padding-y $table-header-padding-x;
+  background-color: theme('colors.cardBg');
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+  font-weight: 600;
+  color: theme('colors.mainText');
+  overflow: hidden;
+  min-width: 0;
+
+  // Text alignment
+  &--left {
+    text-align: left;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
+
+  // Fixed header has higher z-index (always on top)
+  &.table-fixed-column {
+    z-index: $z-index-header-fixed !important;
+  }
+}
+
+// Label in header
+.table-header-label {
+  user-select: none;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 0.75rem; // space for resize handle
+}
+
+// Resize handle
+.table-resize-handle {
+  position: absolute;
+  right: -4px;
+  top: 0;
+  bottom: 0;
+  width: $table-resize-handle-width;
+  cursor: col-resize;
+  z-index: 20;
+  padding: 0 4px;
+  margin: 8px -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color $transition-fast;
+  background-color: theme('colors.cardBorder');
+
+  // Hover state
+  &:hover {
+    background-color: theme('colors.primary' / 0.1);
+
+    .table-resize-indicator {
+      opacity: 1;
+    }
+  }
+
+  // Active state
+  &:active {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      theme('colors.primary' / 0.15) 50%,
+      transparent 100%
+    );
+  }
+}
+
+// Resize indicator (grip lines)
+.table-resize-indicator {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity $transition-fast;
+
+  .table-resize-line {
+    width: 2px;
+    height: 1rem;
+    background-color: theme('colors.primary' / 0.4);
+    border-radius: 9999px;
+  }
+}
+
+// Divider line
+.table-resize-divider {
+  position: absolute;
+  right: 0;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background-color: theme('colors.cardBorder');
+}
+

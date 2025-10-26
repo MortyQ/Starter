@@ -1,0 +1,83 @@
+// Table Row Styles
+// ============================================
+@use './variables' as *;
+
+// Row wrapper (uses display: contents)
+.table-row-wrapper {
+  display: contents;
+  cursor: pointer;
+
+  // Hover effect on all cells in the row
+  &:hover > .table-cell {
+    background-color: theme('colors.cardBg' / $hover-bg-opacity);
+  }
+
+  // Active/clicked state
+  &:active > .table-cell {
+    background-color: theme('colors.cardBorder' / 0.3);
+  }
+
+  // Disabled state
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover > .table-cell {
+      background-color: transparent;
+    }
+  }
+
+  // Selected state
+  &--selected > .table-cell {
+    background-color: theme('colors.primary' / 0.05);
+  }
+}
+
+// Virtual row styles
+.table-row-virtual {
+  display: contents;
+
+  // Fixed height for virtualization
+  & > .table-cell {
+    min-height: $table-row-height;
+    height: $table-row-height;
+  }
+}
+
+// Expandable row (for nested/children)
+.table-row-expandable {
+  display: contents;
+
+  // Appear animation for child rows
+  &--entering > .table-cell {
+    animation: expandRowIn $transition-normal ease-out;
+  }
+
+  &--leaving > .table-cell {
+    animation: expandRowOut $transition-normal ease-in;
+  }
+}
+
+// Keyframes for expand animation
+@keyframes expandRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandRowOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+

@@ -16,7 +16,7 @@ export function useVirtualTable(
   } = options;
 
   const virtualizerOptions: Record<string, unknown> = {
-    // ВИПРАВЛЕНО: використовуємо computed для reactive count
+    // FIXED: use computed for reactive count
     get count() {
       return data.value.length;
     },
@@ -25,7 +25,7 @@ export function useVirtualTable(
     overscan,
   };
 
-  // 🔑 КРИТИЧНО для expand/collapse: динамічне вимірювання висоти
+  // 🔑 CRITICAL for expand/collapse: dynamic height measurement
   if (measureElement) {
     virtualizerOptions.measureElement = (el: Element | null) => {
       if (!el) return estimateSize;
@@ -35,10 +35,10 @@ export function useVirtualTable(
 
   const virtualizer = useVirtualizer(virtualizerOptions as never);
 
-  // Отримуємо список видимих віртуальних елементів
+  // Get list of visible virtual elements
   const virtualItems = computed(() => virtualizer.value.getVirtualItems());
 
-  // Загальна висота всіх елементів
+  // Total height of all elements
   const totalSize = computed(() => virtualizer.value.getTotalSize());
 
   return {

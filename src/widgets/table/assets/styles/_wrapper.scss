@@ -1,0 +1,54 @@
+// Table Wrapper Styles
+// ============================================
+@use './variables' as *;
+
+// Main table wrapper
+.table-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+// Scroll container
+.table-scroll-container {
+  scroll-behavior: smooth;
+  overflow: auto;
+  border: $table-border-width solid theme('colors.cardBorder');
+  border-radius: $table-border-radius;
+  background-color: theme('colors.cardBg');
+
+  // Custom scrollbar (optional enhancement)
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: theme('colors.cardBg');
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: theme('colors.cardBorder');
+    border-radius: 4px;
+
+    &:hover {
+      background: theme('colors.secondaryText' / 0.3);
+    }
+  }
+}
+
+// Loading state
+.table-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 0;
+}
+
+// Empty state
+.table-empty {
+  padding: 3rem 0;
+  text-align: center;
+  color: theme('colors.secondaryText');
+  grid-column: 1 / -1; // span all columns
+}
+

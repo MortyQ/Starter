@@ -1,0 +1,112 @@
+// Table Pagination Styles
+// ============================================
+@use './variables' as *;
+
+// Pagination wrapper
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+// Pagination info
+.table-pagination-info {
+  color: theme('colors.secondaryText');
+  font-size: 0.875rem;
+
+  &-highlight {
+    color: theme('colors.mainText');
+    font-weight: 500;
+  }
+}
+
+// Pagination controls
+.table-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// Pagination button
+.table-pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  border: $table-border-width solid theme('colors.cardBorder');
+  border-radius: 6px;
+  background-color: theme('colors.cardBg');
+  color: theme('colors.mainText');
+  cursor: pointer;
+  transition: all $transition-fast;
+  font-size: 0.875rem;
+
+  &:hover:not(:disabled) {
+    background-color: theme('colors.primary' / 0.1);
+    border-color: theme('colors.primary');
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  // Active page button
+  &--active {
+    background-color: theme('colors.primary');
+    color: white;
+    border-color: theme('colors.primary');
+    font-weight: 600;
+
+    &:hover {
+      background-color: theme('colors.primary');
+    }
+  }
+}
+
+// Page size selector
+.table-pagination-size {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  label {
+    color: theme('colors.secondaryText');
+    font-size: 0.875rem;
+  }
+
+  select {
+    padding: 0.5rem;
+    border: $table-border-width solid theme('colors.cardBorder');
+    border-radius: 6px;
+    background-color: theme('colors.cardBg');
+    color: theme('colors.mainText');
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      border-color: theme('colors.primary');
+    }
+
+    &:focus {
+      outline: none;
+      border-color: theme('colors.primary');
+      box-shadow: 0 0 0 3px theme('colors.primary' / 0.1);
+    }
+  }
+}
+

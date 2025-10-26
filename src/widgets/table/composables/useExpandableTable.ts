@@ -3,12 +3,12 @@ import { ref, computed, type Ref } from "vue";
 import { ExpandableRow, FlattenedRow } from "@/widgets/table/types";
 
 export function useExpandableTable(data: Ref<ExpandableRow[]>) {
-  // Стан розгорнутих рядків (Set для O(1) lookup)
+  // State of expanded rows (Set for O(1) lookup)
   const expandedRows = ref<Set<string | number>>(new Set());
 
   /**
-   * Перетворює tree структуру у flat список з урахуванням expanded стану
-   * Це ключова функція для роботи з TanStack Virtual
+   * Converts tree structure to flat list considering expanded state
+   * This is the key function for working with TanStack Virtual
    */
   const flattenedData = computed<FlattenedRow[]>(() => {
     const result: FlattenedRow[] = [];
@@ -25,7 +25,7 @@ export function useExpandableTable(data: Ref<ExpandableRow[]>) {
         );
         const isExpanded = expandedRows.value.has(row.id);
 
-        // Додаємо батьківський рядок
+        // Add parent row
         result.push({
           ...row,
           depth,
@@ -34,7 +34,7 @@ export function useExpandableTable(data: Ref<ExpandableRow[]>) {
           isExpanded,
         });
 
-        // Якщо розгорнутий І має дочірні елементи — додаємо їх
+        // If expanded AND has children — add them
         if (isExpanded && row.children?.length) {
           flatten(row.children, depth + 1, row.id);
         }
@@ -46,7 +46,7 @@ export function useExpandableTable(data: Ref<ExpandableRow[]>) {
   });
 
   /**
-   * Toggle expand стану для конкретного рядка
+   * Toggle expand state for specific row
    */
   const toggleRow = (id: string | number) => {
     if (expandedRows.value.has(id)) {
@@ -59,7 +59,7 @@ export function useExpandableTable(data: Ref<ExpandableRow[]>) {
   };
 
   /**
-   * Expand всіх рядків
+   * Expand all rows
    */
   const expandAll = () => {
     const collectExpandableIds = (rows: ExpandableRow[]): (string | number)[] => {
@@ -79,7 +79,7 @@ export function useExpandableTable(data: Ref<ExpandableRow[]>) {
   };
 
   /**
-   * Collapse всіх рядків
+   * Collapse all rows
    */
   const collapseAll = () => {
     expandedRows.value.clear();
@@ -87,16 +87,16 @@ export function useExpandableTable(data: Ref<ExpandableRow[]>) {
   };
 
   /**
-   * Перевірка чи рядок expandable
+   * Check if row is expandable
    */
   const isExpandable = (row: ExpandableRow): boolean => {
     return Boolean(row.children?.length || row.expandable);
   };
 
   return {
-    flattenedData,      // Для передачі у virtualizer
-    expandedRows,       // Для UI індикаторів
-    toggleRow,          // Для click handlers
+    flattenedData,      // For passing to virtualizer
+    expandedRows,       // For UI indicators
+    toggleRow,          // For click handlers
     expandAll,
     collapseAll,
     isExpandable,

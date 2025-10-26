@@ -1,0 +1,104 @@
+// Table Cell Styles
+// ============================================
+@use './variables' as *;
+
+// Base cell
+.table-cell {
+  padding: $table-cell-padding-y $table-cell-padding-x;
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+  color: theme('colors.mainText');
+  min-width: 0; // Important for truncate to work in grid
+  transition: background-color $transition-normal;
+
+  // Text alignment
+  &--left {
+    text-align: left;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+// Content wrapper in cell
+.table-cell-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+// Text content (with truncate for non-interactive)
+.table-cell-text {
+  flex: 1;
+  min-width: 0;
+
+  &--truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &--wrap {
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+}
+
+// Interactive cell (doesn't truncate content)
+.table-cell--interactive {
+  .table-cell-text {
+    overflow: visible;
+  }
+}
+
+// Expand button in first column
+.table-cell-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $table-expand-button-size;
+  height: $table-expand-button-size;
+  padding: 0.25rem;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: all $transition-normal;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: theme('colors.cardBorder' / 0.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  // Icon in expand button
+  :deep(svg) {
+    transition: transform $transition-normal;
+    color: theme('colors.secondaryText');
+  }
+
+  &:hover :deep(svg) {
+    transform: scale(1.1);
+    color: theme('colors.mainText');
+  }
+}
+
+// Spacer instead of expand button (for alignment)
+.table-cell-expand-spacer {
+  width: $table-expand-button-size;
+  flex-shrink: 0;
+}
+
+// Indent for nested rows
+.table-cell--indented {
+  // Dynamic padding added through inline styles
+  // padding-left: calc(depth * $table-indent-size + base-padding)
+}
+

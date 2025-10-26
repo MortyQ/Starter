@@ -1,0 +1,30 @@
+// Table Component Styles
+// ============================================
+// Main file that imports all modular styles
+// Each module is responsible for its part of functionality
+
+// 1. Design tokens & Variables
+@use './variables';
+
+// 2. Layout Components
+@use './wrapper';
+@use './grid';
+
+// 3. Table Elements
+@use './header';
+@use './row';
+@use './cell';
+@use './total';
+
+// 4. Features
+@use './fixed';
+@use './pagination';
+
+// 5. Utilities
+@use './utilities';
+
+// ============================================
+// This file can be imported in component:
+// @use '@/widgets/table/assets/styles/table.scss';
+// ============================================
+

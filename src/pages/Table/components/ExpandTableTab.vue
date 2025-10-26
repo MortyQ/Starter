@@ -24,7 +24,7 @@ const columnsExpandable: Column[] = [
   { key: "revenue", label: "Revenue", width: "130px" },
 
   // Right fixed в кінці
-  { key: "accountStatus", label: "Account Status", width: "200px", interactive: true },
+  { key: "accountStatus", label: "Account Status", width: "200px", interactive: true, fixed: "right" },
 ];
 
 const accountStatusList = [

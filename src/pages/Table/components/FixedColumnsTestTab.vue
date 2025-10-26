@@ -10,6 +10,15 @@ const columnsGood: Column[] = [
   { key: "age", label: "Вік", width: "100px", align: "center" },
   { key: "email", label: "Email", width: "250px" },
   { key: "phone", label: "Phone", width: "150px" },
+  { key: "position", label: "Position", width: "150px" },
+  { key: "status", label: "Статус", width: "150px" },
+  { key: "performance", label: "Rating", width: "100px" },
+  { key: "startDate", label: "Start Date", width: "130px" },
+  { key: "projects", label: "Projects", width: "100px" },
+  { key: "location", label: "Location", width: "150px" },
+  { key: "manager", label: "Manager", width: "180px" },
+  { key: "budget", label: "Budget", width: "130px" },
+  { key: "revenue", label: "Revenue", width: "130px" },
   { key: "salary", label: "Salary", width: "120px", fixed: "right" },
 ];
 
@@ -20,6 +29,14 @@ const columnsBad: Column[] = [
   { key: "name", label: "Ім'я", width: "200px", fixed: "left" }, // Ще один fixed після normal
   { key: "email", label: "Email", width: "250px" },
   { key: "phone", label: "Phone", width: "150px" },
+  { key: "position", label: "Position", width: "150px" },
+  { key: "status", label: "Статус", width: "150px" },
+  { key: "performance", label: "Rating", width: "100px" },
+  { key: "startDate", label: "Start Date", width: "130px" },
+  { key: "projects", label: "Projects", width: "100px" },
+  { key: "location", label: "Location", width: "150px" },
+  { key: "manager", label: "Manager", width: "180px" },
+  { key: "budget", label: "Budget", width: "130px" },
   { key: "salary", label: "Salary", width: "120px", fixed: "right" },
 ];
 </script>

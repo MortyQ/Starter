@@ -1,0 +1,67 @@
+// Table Design Tokens & Variables
+// ============================================
+// Centralized location for all table variables
+
+// Spacing
+$table-cell-padding-x: 1rem; // 16px
+$table-cell-padding-y: 0.75rem; // 12px
+$table-header-padding-x: 1rem;
+$table-header-padding-y: 0.75rem;
+
+// Sizing
+$table-default-height: 600px;
+$table-row-height: 50px;
+$table-expand-button-size: 28px;
+$table-resize-handle-width: 12px;
+$table-indent-size: 24px;
+
+// Borders
+$table-border-width: 1px;
+$table-border-radius: 0.5rem; // 8px
+$table-total-border-width: 2px;
+
+// Shadows for fixed columns
+$table-shadow-left: inset 10px 0 8px -8px rgba(0, 0, 0, 0.15);
+$table-shadow-right: inset -10px 0 8px -8px rgba(0, 0, 0, 0.15);
+$table-shadow-offset: 10px;
+
+// Z-index layers (proper hierarchy for sticky elements)
+// ============================================
+// Visual hierarchy (top to bottom):
+//
+// 15 ┌─────────────────────────────────────┐
+//    │  Header + Fixed (highest)           │ ← always on top
+// 11 ├─────────────────────────────────────┤
+//    │  Total + Fixed                      │
+// 10 ├─────────────────────────────────────┤
+//    │  Header (regular)                   │ ← above fixed cells!
+//  9 ├─────────────────────────────────────┤
+//    │  Total (regular)                    │
+//  5 ├─────────────────────────────────────┤
+//    │  Fixed Cells (body)                 │ ← below header!
+//  2 ├─────────────────────────────────────┤
+//    │  Row hover                          │
+//  1 └─────────────────────────────────────┘
+//    │  Base cells                         │
+// ============================================
+$z-index-base: 1;
+$z-index-row-hover: 2;
+$z-index-fixed-cell: 5; // Fixed cells lower than header!
+$z-index-total: 9;
+$z-index-header: 10; // Header above fixed cells
+$z-index-total-fixed: 11; // Total with fixed slightly above header
+$z-index-header-fixed: 15; // Fixed header highest!
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.2s ease;
+$transition-slow: 0.3s ease;
+
+// Backdrop blur
+$backdrop-blur-fixed: blur(4px);
+$backdrop-blur-total: blur(8px);
+
+// Opacity
+$fixed-bg-opacity: 0.98;
+$hover-bg-opacity: 0.5;
+

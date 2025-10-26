@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
   isFirstColumn: false,
 });
 
-// Обчислюємо padding для indent вкладених рядків
+// Calculate padding for indent of nested rows
 const computedPaddingLeft = computed(() => {
   if (props.isFirstColumn && props.depth > 0) {
     return `${props.depth * 24 + 16}px`;
@@ -25,17 +25,18 @@ const computedPaddingLeft = computed(() => {
 
 <template>
   <div
-    class="table-cell px-4 py-3 border-b border-cardBorder text-mainText"
+    class="table-cell"
     :class="{
-      'text-left': align === 'left',
-      'text-center': align === 'center',
-      'text-right': align === 'right'
+      'table-cell--left': align === 'left',
+      'table-cell--center': align === 'center',
+      'table-cell--right': align === 'right',
+      'table-cell--indented': isFirstColumn && depth > 0
     }"
     :style="{ paddingLeft: computedPaddingLeft }"
   >
     <slot>
       <div
-        class="truncate"
+        class="table-cell-text table-cell-text--truncate"
         :title="String(value)"
       >
         {{ value }}
@@ -45,7 +46,5 @@ const computedPaddingLeft = computed(() => {
 </template>
 
 <style scoped>
-.table-cell {
-  min-width: 0; /* Важливо для роботи truncate в grid */
-}
+/* Styles defined in assets/styles/_cell.scss */
 </style>

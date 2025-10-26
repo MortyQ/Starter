@@ -3,21 +3,21 @@ import { computed, type ComputedRef, type Ref } from "vue";
 import type { Column } from "../types";
 
 /**
- * Composable для роботи з фіксованими колонками (sticky left/right)
+ * Composable for working with fixed columns (sticky left/right)
  *
- * Обчислює:
- * - Позиції (left/right offset) для кожної фіксованої колонки
- * - z-index для правильного стекування
- * - CSS класи та інлайн стилі
+ * Calculates:
+ * - Positions (left/right offset) for each fixed column
+ * - z-index for proper stacking
+ * - CSS classes and inline styles
  *
- * @param columns - Reactive масив колонок
- * @param columnWidths - Опціональний Map з динамічними ширинами (з useColumnResize)
+ * @param columns - Reactive array of columns
+ * @param columnWidths - Optional Map with dynamic widths (from useColumnResize)
  */
 export function useFixedColumns(
   columns: Ref<Column[]> | ComputedRef<Column[]>,
   columnWidths?: Ref<Map<string, number>>,
 ) {
-  // Валідація: перевірка що fixed колонки мають px ширину
+  // Validation: check that fixed columns have px width
   if (import.meta.env.DEV) {
     columns.value.forEach((col) => {
       if (col.fixed && (!col.width || !col.width.endsWith("px"))) {
@@ -28,9 +28,9 @@ export function useFixedColumns(
     });
   }
 
-  // Helper: отримати ширину колонки (з динамічних або статичних)
+  // Helper: get column width (from dynamic or static)
   const getColumnWidth = (columnKey: string, fallbackWidth?: string): number => {
-    // Спробувати отримати з динамічних ширин (columnWidths з useColumnResize)
+    // Try to get from dynamic widths (columnWidths from useColumnResize)
     if (columnWidths?.value) {
       const dynamicWidth = columnWidths.value.get(columnKey);
       if (dynamicWidth !== undefined) {
@@ -38,11 +38,11 @@ export function useFixedColumns(
       }
     }
 
-    // Fallback на статичну ширину з column.width
+    // Fallback to static width from column.width
     return parseColumnWidth(fallbackWidth) || 150; // 150px default
   };
 
-  // Розділяємо колонки на групи
+  // Divide columns into groups
   const leftFixedColumns = computed(() =>
     columns.value.filter((col) => col.fixed === "left"),
   );
@@ -55,13 +55,13 @@ export function useFixedColumns(
     columns.value.filter((col) => !col.fixed),
   );
 
-  // Обчислюємо offset для лівих фіксованих колонок
+  // Calculate offset for left fixed columns
   const getLeftOffset = (columnKey: string): number => {
     let offset = 0;
-    // Йдемо по оригінальному масиву columns (зберігаючи порядок)
+    // Go through original columns array (preserving order)
     for (const col of columns.value) {
       if (col.key === columnKey) break;
-      // Рахуємо тільки ліві fixed колонки
+      // Count only left fixed columns
       if (col.fixed === "left") {
         const width = getColumnWidth(col.key, col.width);
         offset += width;
@@ -70,12 +70,12 @@ export function useFixedColumns(
     return offset;
   };
 
-  // Обчислюємо offset для правих фіксованих колонок
+  // Calculate offset for right fixed columns
   const getRightOffset = (columnKey: string): number => {
     let offset = 0;
     let foundColumn = false;
 
-    // Йдемо по оригінальному масиву columns в зворотному порядку
+    // Go through original columns array in reverse order
     for (let i = columns.value.length - 1; i >= 0; i--) {
       const col = columns.value[i];
 
@@ -84,7 +84,7 @@ export function useFixedColumns(
         continue;
       }
 
-      // Рахуємо тільки праві fixed колонки що йдуть після поточної
+      // Count only right fixed columns that come after current one
       if (foundColumn && col.fixed === "right") {
         const width = getColumnWidth(col.key, col.width);
         offset += width;
@@ -93,44 +93,44 @@ export function useFixedColumns(
     return offset;
   };
 
-  // z-index для стекування (лівіші колонки мають більший z-index)
+  // z-index for stacking (leftmost columns have higher z-index)
   const getZIndex = (columnKey: string, column: Column): number => {
-    const baseZIndex = 50; // Base для фіксованих колонок
+    const baseZIndex = 50; // Base for fixed columns
 
     if (column.fixed === "left") {
-      // Знаходимо індекс в оригінальному масиві
+      // Find index in original array
       const index = columns.value.findIndex((col) => col.key === columnKey);
-      // Підраховуємо скільки лівих fixed колонок до цієї
+      // Count how many left fixed columns before this one
       let leftFixedCount = 0;
       for (let i = 0; i < index; i++) {
         if (columns.value[i].fixed === "left") leftFixedCount++;
       }
-      // Лівіші колонки вище (більший z-index)
+      // Leftmost columns higher (larger z-index)
       return baseZIndex + (leftFixedColumns.value.length - leftFixedCount);
     }
 
     if (column.fixed === "right") {
-      // Знаходимо індекс в оригінальному масиві
+      // Find index in original array
       const index = columns.value.findIndex((col) => col.key === columnKey);
-      // Підраховуємо скільки правих fixed колонок після цієї
+      // Count how many right fixed columns after this one
       let rightFixedCount = 0;
       for (let i = index + 1; i < columns.value.length; i++) {
         if (columns.value[i].fixed === "right") rightFixedCount++;
       }
-      // Правіші колонки вище
+      // Rightmost columns higher
       return baseZIndex + rightFixedCount + 1;
     }
 
-    return 1; // Звичайні колонки
+    return 1; // Regular columns
   };
 
-  // Отримуємо стилі для фіксованої колонки
+  // Get styles for fixed column
   const getFixedStyles = (column: Column) => {
     if (!column.fixed) return {};
 
     const styles: Record<string, string> = {
-      position: "sticky",
-      zIndex: String(getZIndex(column.key, column)),
+      // position: sticky added through CSS classes!
+      // zIndex also controlled through CSS for proper hierarchy
     };
 
     if (column.fixed === "left") {
@@ -145,16 +145,16 @@ export function useFixedColumns(
     return styles;
   };
 
-  // Перевірка чи колонка фіксована
+  // Check if column is fixed
   const isFixed = (column: Column): boolean => {
     return !!column.fixed;
   };
 
-  // Перевірка чи це остання ліва фіксована колонка (для shadow)
+  // Check if this is the last left fixed column (for shadow)
   const isLastLeftFixed = (columnKey: string): boolean => {
     if (leftFixedColumns.value.length === 0) return false;
 
-    // Знаходимо останню ліву fixed колонку в оригінальному порядку
+    // Find last left fixed column in original order
     let lastLeftFixedKey: string | null = null;
     for (const col of columns.value) {
       if (col.fixed === "left") {
@@ -165,11 +165,11 @@ export function useFixedColumns(
     return lastLeftFixedKey === columnKey;
   };
 
-  // Перевірка чи це перша права фіксована колонка (для shadow)
+  // Check if this is the first right fixed column (for shadow)
   const isFirstRightFixed = (columnKey: string): boolean => {
     if (rightFixedColumns.value.length === 0) return false;
 
-    // Знаходимо першу праву fixed колонку в оригінальному порядку
+    // Find first right fixed column in original order
     for (const col of columns.value) {
       if (col.fixed === "right") {
         return col.key === columnKey;
@@ -192,8 +192,8 @@ export function useFixedColumns(
 }
 
 /**
- * Парсить ширину колонки (тільки px значення)
- * Для fr, auto, % повертає null
+ * Parses column width (only px values)
+ * For fr, auto, % returns null
  */
 function parseColumnWidth(width?: string): number | null {
   if (!width) return null;

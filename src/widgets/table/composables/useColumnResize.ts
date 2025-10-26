@@ -2,14 +2,14 @@ import { ref, computed, type Ref } from "vue";
 
 import type { Column, ResizeState } from "../types";
 
-const MIN_COLUMN_WIDTH = 80; // мінімальна ширина колонки в px
-const DEFAULT_COLUMN_WIDTH = 150; // дефолтна ширина в px
+const MIN_COLUMN_WIDTH = 80; // minimum column width in px
+const DEFAULT_COLUMN_WIDTH = 150; // default width in px
 
 export function useColumnResize(columns: Ref<Column[]>) {
-  // Зберігаємо фактичні ширини колонок (в px)
+  // Store actual column widths (in px)
   const columnWidths = ref<Map<string, number>>(new Map());
 
-  // Стан resizing
+  // Resizing state
   const resizeState = ref<ResizeState>({
     isResizing: false,
     columnKey: null,
@@ -17,31 +17,31 @@ export function useColumnResize(columns: Ref<Column[]>) {
     startWidth: 0,
   });
 
-  // Ініціалізація ширин колонок
+  // Initialize column widths
   const initializeWidths = () => {
     columns.value.forEach((column) => {
       if (!columnWidths.value.has(column.key)) {
-        // Парсимо width з Column типу
+        // Parse width from Column type
         const width = parseColumnWidth(column.width);
         columnWidths.value.set(column.key, width);
       }
     });
   };
 
-  // Парсинг width з різних форматів
+  // Parse width from different formats
   const parseColumnWidth = (width?: string): number => {
     if (!width) return DEFAULT_COLUMN_WIDTH;
 
-    // Якщо в px - використовуємо як є
+    // If in px - use as is
     if (width.endsWith("px")) {
       return parseInt(width, 10);
     }
 
-    // Якщо fr або auto - дефолтна ширина
+    // If fr or auto - default width
     return DEFAULT_COLUMN_WIDTH;
   };
 
-  // Grid template columns з урахуванням поточних ширин
+  // Grid template columns considering current widths
   const gridTemplateColumns = computed(() => {
     return columns.value
       .map((col) => {
@@ -51,7 +51,7 @@ export function useColumnResize(columns: Ref<Column[]>) {
       .join(" ");
   });
 
-  // Початок resize
+  // Start resize
   const startResize = (columnKey: string, event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -65,14 +65,14 @@ export function useColumnResize(columns: Ref<Column[]>) {
       startWidth: currentWidth,
     };
 
-    // Додаємо global listeners
+    // Add global listeners
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", stopResize);
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
   };
 
-  // Процес resize (mousemove)
+  // Resize process (mousemove)
   const handleMouseMove = (event: MouseEvent) => {
     if (!resizeState.value.isResizing || !resizeState.value.columnKey) {
       return;
@@ -87,7 +87,7 @@ export function useColumnResize(columns: Ref<Column[]>) {
     columnWidths.value.set(resizeState.value.columnKey, newWidth);
   };
 
-  // Кінець resize (mouseup)
+  // End resize (mouseup)
   const stopResize = () => {
     resizeState.value = {
       isResizing: false,
@@ -102,25 +102,25 @@ export function useColumnResize(columns: Ref<Column[]>) {
     document.body.style.userSelect = "";
   };
 
-  // Double-click для auto-fit (можна розширити пізніше)
+  // Double-click for auto-fit (can be expanded later)
   const autoFitColumn = (columnKey: string) => {
-    // TODO: можна додати логіку для обчислення оптимальної ширини
-    // на основі контенту колонки
+    // TODO: can add logic to calculate optimal width
+    // based on column content
     columnWidths.value.set(columnKey, DEFAULT_COLUMN_WIDTH);
   };
 
-  // Скидання всіх ширин до дефолтних
+  // Reset all widths to defaults
   const resetWidths = () => {
     columnWidths.value.clear();
     initializeWidths();
   };
 
-  // Отримання поточної ширини колонки
+  // Get current column width
   const getColumnWidth = (columnKey: string): number => {
     return columnWidths.value.get(columnKey) || DEFAULT_COLUMN_WIDTH;
   };
 
-  // Ініціалізація при створенні
+  // Initialize on creation
   initializeWidths();
 
   return {

@@ -14,7 +14,7 @@ import type { Column, ExpandableRow } from "./types/index";
 
 import VIcon from "@/shared/ui/common/VIcon.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
-import { TableProps } from "@/widgets/table/types/props";
+import { TableEmits, TableProps } from "@/widgets/table/types/props";
 
 
 const props = withDefaults(defineProps<TableProps>(), {
@@ -23,11 +23,9 @@ const props = withDefaults(defineProps<TableProps>(), {
   rowHeight: 50,
 });
 
-const emit = defineEmits<{
-  "row-click": [row: Record<string, unknown>]
-}>();
+const emit = defineEmits<TableEmits>();
 
-// Total row видимість - просто перевіряємо наявність
+// Total row visibility - simply check for presence
 const shouldShowTotal = computed(() => props.totalRow !== undefined);
 
 // Column resizing logic
@@ -40,7 +38,7 @@ const {
   columnWidths,
 } = useColumnResize(columnsRef);
 
-// Fixed columns logic (з динамічними ширинами)
+// Fixed columns logic (with dynamic widths)
 const {
   getFixedStyles,
   isFixed,
@@ -49,38 +47,38 @@ const {
 } = useFixedColumns(columnsRef, columnWidths);
 
 
-// Висота таблиці - просте обчислення на основі пропа
+// Table height - simple calculation based on prop
 const tableHeight = computed(() => {
   if (!props.height) {
-    return "600px"; // Дефолтна висота
+    return "600px"; // Default height
   }
 
-  // Якщо число - додаємо 'px'
+  // If number - add 'px'
   if (typeof props.height === "number") {
     return `${props.height}px`;
   }
 
-  // Якщо строка - використовуємо як є (підтримує: '100%', '50vh', 'calc(...)')
+  // If string - use as is (supports: '100%', '50vh', 'calc(...)')
   return props.height;
 });
 
-// Автоматичне визначення expandable по наявності children
+// Automatic expandable detection by presence of children
 const isExpandable = computed(() =>
   props.data.some(row => row.children && row.children.length > 0),
 );
 
-// Expandable логіка (якщо є children)
+// Expandable logic (if there are children)
 const dataRef = computed(() => props.data);
 const expandableLogic = isExpandable.value
   ? useExpandableTable(dataRef)
   : null;
 
-// Дані для рендерингу (з flatten якщо expandable, інакше звичайні)
+// Data for rendering (with flatten if expandable, otherwise regular)
 const displayData = computed(() => {
   return expandableLogic ? expandableLogic.flattenedData.value : props.data;
 });
 
-// Віртуалізація з динамічною висотою для expand
+// Virtualization with dynamic height for expand
 const scrollContainerRef = ref<HTMLElement | null>(null);
 const {
   virtualItems,
@@ -91,7 +89,7 @@ const {
   {
     estimateSize: props.rowHeight,
     overscan: 5,
-    measureElement: isExpandable.value, // Динамічна висота тільки для expandable
+    measureElement: isExpandable.value, // Dynamic height only for expandable
   },
 );
 
@@ -100,7 +98,7 @@ const gridStyles = computed(() => ({
   gridTemplateColumns: gridTemplateColumns.value,
 }));
 
-// Обробка кліку по рядку
+// Handle row click
 const onRowClick = (row: Record<string, unknown>) => {
   emit("row-click", row);
 };
@@ -111,31 +109,31 @@ const handleToggleRow = (id: string | number) => {
   }
 };
 
-// Перевірка чи рядок expandable
+// Check if row is expandable
 const isRowExpandable = (row: ExpandableRow): boolean => {
   if (!expandableLogic) return false;
   return expandableLogic.isExpandable(row);
 };
 
-// Отримуємо depth рядка (для indent)
+// Get row depth (for indent)
 const getRowDepth = (row: Record<string, unknown>): number => {
   return (row.depth as number) || 0;
 };
 
-// Перевірка чи рядок розгорнутий
+// Check if row is expanded
 const isRowExpanded = (row: Record<string, unknown>): boolean => {
   return (row.isExpanded as boolean) || false;
 };
 
-// Перевірка чи рядок має дочірні елементи
+// Check if row has children
 const hasRowChildren = (row: Record<string, unknown>): boolean => {
   return (row.hasChildren as boolean) || false;
 };
 
-// Computed для фінальних рядків (враховуючи віртуалізацію)
+// Computed for final rows (considering virtualization)
 const rowsToRender = computed(() => {
   if (!props.virtualized || virtualItems.value.length === 0) {
-    // Звичайний рендеринг без віртуалізації
+    // Regular rendering without virtualization
     return displayData.value.map((row, index) => ({
       row,
       index,
@@ -144,7 +142,7 @@ const rowsToRender = computed(() => {
     }));
   }
 
-  // Віртуалізований рендеринг
+  // Virtualized rendering
   return virtualItems.value.map((virtualRow) => ({
     row: displayData.value[virtualRow.index],
     index: virtualRow.index,
@@ -154,7 +152,7 @@ const rowsToRender = computed(() => {
   }));
 });
 
-// Стилі для віртуалізованих рядків
+// Styles for virtualized rows
 const getRowStyles = (item: { isVirtual: boolean }) => {
   if (!item.isVirtual) return {};
   return {
@@ -163,19 +161,26 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
   };
 };
 
-// Класи для колонки (fixed з shadow effects)
+// Classes for column (fixed with shadow effects)
 const getColumnClasses = (column: Column) => {
   const classes: string[] = [];
 
   if (isFixed(column)) {
     classes.push("table-fixed-column");
 
-    // Shadow для останньої лівої колонки
+    // Add direction class for fixed
+    if (column.fixed === "left") {
+      classes.push("table-fixed-left");
+    } else if (column.fixed === "right") {
+      classes.push("table-fixed-right");
+    }
+
+    // Shadow for last left column
     if (isLastLeftFixed(column.key)) {
       classes.push("table-fixed-left-last");
     }
 
-    // Shadow для першої правої колонки
+    // Shadow for first right column
     if (isFirstRightFixed(column.key)) {
       classes.push("table-fixed-right-first");
     }
@@ -190,28 +195,27 @@ const getColumnClasses = (column: Column) => {
     <!-- Loading state -->
     <div
       v-if="loading"
-      class="flex items-center justify-center py-20"
+      class="table-loading"
     >
       <VLoader />
     </div>
 
-    <!-- Таблиця -->
+    <!-- Table -->
     <template v-else>
-      <!-- Скролл контейнер -->
+      <!-- Scroll container -->
       <div
         ref="scrollContainerRef"
-        class="table-scroll-container overflow-auto
-               border border-cardBorder rounded-lg bg-cardBg"
+        class="table-scroll-container table-scrollbar-styled"
         :style="{ height: tableHeight }"
       >
-        <!-- Grid контейнер -->
+        <!-- Grid container -->
         <div
           class="table-grid"
           :class="{ 'is-resizing': isResizing }"
           :style="gridStyles"
         >
-          <!-- Header (завжди видимий, sticky) -->
-          <div class="table-header-row contents">
+          <!-- Header (always visible, sticky) -->
+          <div class="table-header-row">
             <TableHeader
               v-for="column in columns"
               :key="column.key"
@@ -225,22 +229,22 @@ const getColumnClasses = (column: Column) => {
             />
           </div>
 
-          <!-- Порожній стан -->
+          <!-- Empty state -->
           <div
             v-if="displayData.length === 0"
-            class="col-span-full py-12 text-center text-secondaryText"
+            class="table-empty"
           >
-            Немає даних для відображення
+            No data to display
           </div>
 
-          <!-- Віртуалізація: spacer before -->
+          <!-- Virtualization: spacer before -->
           <div
             v-if="props.virtualized && virtualItems.length > 0 && virtualItems[0]"
             :style="{ height: `${virtualItems[0].start}px` }"
-            class="col-span-full"
+            class="table-virtual-spacer"
           />
 
-          <!-- Рядки таблиці (універсальний рендеринг) -->
+          <!-- Table rows (universal rendering) -->
           <TableRow
             v-for="item in rowsToRender"
             :key="item.key"
@@ -262,13 +266,12 @@ const getColumnClasses = (column: Column) => {
               :class="getColumnClasses(column)"
               :style="getFixedStyles(column)"
             >
-              <div class="flex items-center gap-2 min-w-0">
-                <!-- Expand button тільки для першої колонки -->
+              <div class="table-cell-content">
+                <!-- Expand button only for first column -->
                 <button
                   v-if="colIndex === 0 && isExpandable &&
                     isRowExpandable(item.row as ExpandableRow)"
-                  class="expand-btn p-1 hover:bg-cardBorder/50 rounded
-                         transition-all duration-200 flex-shrink-0"
+                  class="table-cell-expand-btn"
                   @click.stop="handleToggleRow(item.row.id as string | number)"
                 >
                   <VIcon
@@ -276,15 +279,13 @@ const getColumnClasses = (column: Column) => {
                       ? 'mdi:chevron-down'
                       : 'mdi:chevron-right'"
                     :size="18"
-                    class="text-secondaryText hover:text-mainText
-                           transition-colors"
                   />
                 </button>
 
-                <!-- Контент колонки (універсальний для всіх) -->
+                <!-- Column content (universal for all) -->
                 <div
-                  class="flex-1 min-w-0"
-                  :class="{ 'overflow-hidden truncate': !column.interactive }"
+                  class="table-cell-text"
+                  :class="{ 'table-cell-text--truncate': !column.interactive }"
                 >
                   <slot
                     :name="`cell-${column.key}`"
@@ -294,7 +295,7 @@ const getColumnClasses = (column: Column) => {
                     :index="item.index"
                     :depth="getRowDepth(item.row)"
                   >
-                    <!-- Дефолтний рендеринг -->
+                    <!-- Default rendering -->
                     <span :title="!column.interactive ? String(item.row[column.key]) : undefined">
                       {{ item.row[column.key] }}
                     </span>
@@ -304,17 +305,17 @@ const getColumnClasses = (column: Column) => {
             </TableCell>
           </TableRow>
 
-          <!-- Віртуалізація: spacer after -->
+          <!-- Virtualization: spacer after -->
           <div
             v-if="props.virtualized && virtualItems.length > 0 &&
               virtualItems[virtualItems.length - 1]"
             :style="{
               height: `${totalSize - virtualItems[virtualItems.length - 1].end}px`
             }"
-            class="col-span-full"
+            class="table-virtual-spacer"
           />
 
-          <!-- Total Row (sticky bottom всередині grid) -->
+          <!-- Total Row (sticky bottom inside grid) -->
           <template v-if="shouldShowTotal && totalRow">
             <TableCell
               v-for="(column, colIndex) in columns"
@@ -326,27 +327,25 @@ const getColumnClasses = (column: Column) => {
               :class="getColumnClasses(column)"
               :style="getFixedStyles(column)"
             >
-              <div class="flex items-center gap-2 min-w-0">
-                <!-- Spacer замість expand button для першої колонки -->
+              <div class="table-total-content">
+                <!-- Spacer instead of expand button for first column -->
                 <div
                   v-if="colIndex === 0 && isExpandable"
-                  class="flex-shrink-0"
-                  style="width: 28px;"
+                  class="table-total-spacer"
                 />
 
-                <!-- Контент total комірки -->
+                <!-- Total cell content -->
                 <div
-                  class="flex-1 min-w-0"
-                  :class="{ 'overflow-hidden truncate': !column.interactive }"
+                  class="table-total-text"
+                  :class="{ 'table-total-text--truncate': !column.interactive }"
                 >
                   <slot
                     :name="`total-cell-${column.key}`"
                     :value="totalRow[column.key]"
                     :column="column"
                   >
-                    <!-- Дефолтний рендеринг -->
+                    <!-- Default rendering -->
                     <span
-                      class="font-semibold"
                       :title="!column.interactive ? String(totalRow[column.key]) : undefined"
                     >
                       {{ totalRow[column.key] }}
@@ -359,144 +358,13 @@ const getColumnClasses = (column: Column) => {
         </div>
       </div>
 
-      <!-- Pagination (пустой блок для вашей реализации) -->
+      <!-- Pagination -->
       <TablePagination />
     </template>
   </div>
 </template>
 
-<style scoped>
-/* Обёртка таблицы */
-.table-wrapper {
-  width: 100%;
-}
-
-/* Скролл контейнер */
-.table-scroll-container {
-  scroll-behavior: smooth;
-}
-
-.table-grid {
-  display: grid;
-  width: 100%;
-  transition: none; /* Вимикаємо transition при resize */
-}
-
-.table-grid.is-resizing {
-  cursor: col-resize;
-  user-select: none;
-}
-
-.table-grid.is-resizing * {
-  cursor: col-resize !important;
-  user-select: none !important;
-}
-
-.table-header-row {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-/* Grid layout для header і cells використовує contents */
-.contents {
-  display: contents;
-}
-
-/* Стилі для expand button */
-.expand-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.expand-btn:hover {
-  transform: scale(1.05);
-  @apply bg-cardBorder/10;
-}
-
-.expand-btn:active {
-  transform: scale(0.95);
-}
-
-/* Плавна анімація для іконки */
-.expand-btn :deep(svg) {
-  transition: transform 0.2s ease;
-}
-
-.expand-btn:hover :deep(svg) {
-  transform: scale(1.1);
-}
-
-/* Total Row - sticky внизу grid контейнера */
-.table-total-cell {
-  position: sticky;
-  bottom: 0;
-  z-index: 9;
-  border-top: 2px solid theme('colors.cardBorder');
-  font-weight: 600;
-  @apply bg-cardBg;
-}
-
-/* Backdrop для total row */
-@supports (backdrop-filter: blur(8px)) {
-  .table-total-cell {
-    backdrop-filter: blur(8px);
-  }
-}
-
-/* Fixed Columns - sticky left/right */
-.table-fixed-column {
-  @apply bg-cardBg;
-}
-
-/* Backdrop для fixed колонок (кращий контраст) */
-@supports (backdrop-filter: blur(4px)) {
-  .table-fixed-column {
-    backdrop-filter: blur(4px);
-    background: theme('colors.cardBg' / 0.98);
-  }
-}
-
-/* Shadow для останньої лівої fixed колонки */
-.table-fixed-left-last::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 10px;
-  transform: translateX(100%);
-  pointer-events: none;
-  transition: box-shadow 0.2s ease;
-  box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.15);
-}
-
-/* Shadow для першої правої fixed колонки */
-.table-fixed-right-first::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 10px;
-  transform: translateX(-100%);
-  pointer-events: none;
-  transition: box-shadow 0.2s ease;
-  box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.15);
-}
-
-/* Fixed колонка в header має вищий z-index */
-.table-header-row .table-fixed-column {
-  z-index: 200 !important;
-}
-
-/* Fixed колонка в total row має спеціальний z-index */
-.table-total-cell.table-fixed-column {
-  z-index: 150 !important;
-}
+<style lang="scss">
+// Import modular table styles with @use (modern Sass)
+@use './assets/styles/table.scss';
 </style>

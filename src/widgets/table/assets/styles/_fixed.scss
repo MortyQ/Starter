@@ -1,0 +1,97 @@
+// Table Fixed Columns Styles
+// ============================================
+@use './variables' as *;
+
+// Base fixed column
+// Only background and z-index styles, WITHOUT position: sticky!
+// Sticky is added separately for left/right
+.table-fixed-column {
+  z-index: $z-index-fixed-cell;
+  background-color: theme('colors.cardBg');
+
+  // Backdrop blur for better contrast
+  @supports (backdrop-filter: $backdrop-blur-fixed) {
+    backdrop-filter: $backdrop-blur-fixed;
+    background-color: theme('colors.cardBg' / $fixed-bg-opacity);
+  }
+}
+
+// Left fixed column - adds sticky for horizontal scroll
+.table-fixed-left {
+  position: sticky;
+  left: 0;
+
+  // Dynamic left position set through inline styles
+  // left: calc(sum of previous fixed left widths)
+}
+
+// Right fixed column - adds sticky for horizontal scroll
+.table-fixed-right {
+  position: sticky;
+  right: 0;
+
+  // Dynamic right position set through inline styles
+  // right: calc(sum of previous fixed right widths)
+}
+
+// Shadow for last left fixed column
+.table-fixed-left-last {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: $table-shadow-offset;
+    transform: translateX(100%);
+    pointer-events: none;
+    transition: box-shadow $transition-normal;
+    box-shadow: $table-shadow-left;
+  }
+}
+
+// Shadow for first right fixed column
+.table-fixed-right-first {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: $table-shadow-offset;
+    transform: translateX(-100%);
+    pointer-events: none;
+    transition: box-shadow $transition-normal;
+    box-shadow: $table-shadow-right;
+  }
+}
+
+// Hover effect on fixed columns
+.table-row-wrapper:hover {
+  .table-fixed-column {
+    background-color: theme('colors.cardBg' / $hover-bg-opacity);
+
+    @supports (backdrop-filter: $backdrop-blur-fixed) {
+      background-color: theme('colors.cardBg' / calc($fixed-bg-opacity * $hover-bg-opacity));
+    }
+  }
+}
+
+// Body cells with fixed (not header, not total)
+// Have lowest z-index to not overlap header/total
+.table-cell.table-fixed-column {
+  z-index: $z-index-fixed-cell !important;
+}
+
+// Fixed in header (highest z-index: 15)
+// Always on top to not overlap during scroll
+.table-header-cell.table-fixed-column {
+  z-index: $z-index-header-fixed !important;
+}
+
+// Fixed in total row (z-index: 11)
+// Above regular header but below header+fixed
+.table-total-cell.table-fixed-column {
+  z-index: $z-index-total-fixed !important;
+}
+
