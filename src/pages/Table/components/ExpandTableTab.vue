@@ -6,8 +6,19 @@ import { mockDataExpandable } from "@/widgets/table/utils/mockData";
 
 const columnsExpandable: Column[] = [
   { key: "name", label: "Назва", width: "300px" },
+  { key: "email", label: "Email", width: "250px" },
+  { key: "phone", label: "Phone", width: "150px" },
+  { key: "position", label: "Position", width: "150px" },
   { key: "status", label: "Статус", width: "150px" },
-  { key: "count", label: "Кількість", width: "150px" },
+  { key: "count", label: "Кількість", width: "120px" },
+  { key: "salary", label: "Salary", width: "120px" },
+  { key: "performance", label: "Rating", width: "100px" },
+  { key: "startDate", label: "Start Date", width: "130px" },
+  { key: "projects", label: "Projects", width: "100px" },
+  { key: "location", label: "Location", width: "150px" },
+  { key: "manager", label: "Manager", width: "180px" },
+  { key: "budget", label: "Budget", width: "130px" },
+  { key: "revenue", label: "Revenue", width: "130px" },
   { key: "accountStatus", label: "Account Status", width: "200px", interactive: true },
 ];
 
@@ -48,6 +59,3 @@ const accountStatusList = [
   </div>
 </template>
 
-<style scoped>
-
-</style>
