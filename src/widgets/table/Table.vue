@@ -223,13 +223,11 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
               :align="column.align"
               :depth="getRowDepth(item.row)"
             >
-              <!-- Первая колонка с expand button (если expandable) -->
-              <div
-                v-if="colIndex === 0 && isExpandable"
-                class="flex items-center gap-2"
-              >
+              <div class="flex items-center gap-2 min-w-0">
+                <!-- Expand button тільки для першої колонки -->
                 <button
-                  v-if="isRowExpandable(item.row as ExpandableRow)"
+                  v-if="colIndex === 0 && isExpandable &&
+                    isRowExpandable(item.row as ExpandableRow)"
                   class="expand-btn p-1 hover:bg-cardBorder/50 rounded
                          transition-all duration-200 flex-shrink-0"
                   @click.stop="handleToggleRow(item.row.id as string | number)"
@@ -244,55 +242,11 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
                   />
                 </button>
 
-                <!-- Динамічний slot для контента першої колонки -->
+                <!-- Контент колонки (універсальний для всіх) -->
                 <div
                   class="flex-1 min-w-0"
-                  :class="{ 'overflow-hidden': !column.interactive }"
+                  :class="{ 'overflow-hidden truncate': !column.interactive }"
                 >
-                  <div
-                    v-if="!column.interactive"
-                    class="truncate"
-                  >
-                    <slot
-                      :name="`cell-${column.key}`"
-                      :value="item.row[column.key]"
-                      :row="item.row"
-                      :column="column"
-                      :index="item.index"
-                      :depth="getRowDepth(item.row)"
-                    >
-                      <!-- Дефолтний рендеринг з truncate -->
-                      <span :title="String(item.row[column.key])">
-                        {{ item.row[column.key] }}
-                      </span>
-                    </slot>
-                  </div>
-                  <!-- Для інтерактивних колонок - без truncate обгортки -->
-                  <slot
-                    v-else
-                    :name="`cell-${column.key}`"
-                    :value="item.row[column.key]"
-                    :row="item.row"
-                    :column="column"
-                    :index="item.index"
-                    :depth="getRowDepth(item.row)"
-                  >
-                    <!-- Дефолтний рендеринг -->
-                    <span>{{ item.row[column.key] }}</span>
-                  </slot>
-                </div>
-              </div>
-
-              <!-- Звичайні колонки без expand button -->
-              <div
-                v-else
-                class="min-w-0"
-                :class="{
-                  'overflow-hidden truncate': !column.interactive
-                }"
-              >
-                <!-- Не інтерактивна колонка - з truncate -->
-                <template v-if="!column.interactive">
                   <slot
                     :name="`cell-${column.key}`"
                     :value="item.row[column.key]"
@@ -302,25 +256,11 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
                     :depth="getRowDepth(item.row)"
                   >
                     <!-- Дефолтний рендеринг -->
-                    <span :title="String(item.row[column.key])">
+                    <span :title="!column.interactive ? String(item.row[column.key]) : undefined">
                       {{ item.row[column.key] }}
                     </span>
                   </slot>
-                </template>
-
-                <!-- Інтерактивна колонка - без truncate -->
-                <slot
-                  v-else
-                  :name="`cell-${column.key}`"
-                  :value="item.row[column.key]"
-                  :row="item.row"
-                  :column="column"
-                  :index="item.index"
-                  :depth="getRowDepth(item.row)"
-                >
-                  <!-- Дефолтний рендеринг -->
-                  <span>{{ item.row[column.key] }}</span>
-                </slot>
+                </div>
               </div>
             </TableCell>
           </TableRow>

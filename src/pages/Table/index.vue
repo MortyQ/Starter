@@ -28,8 +28,3 @@ const tabs = [
     </VTabs>
   </div>
 </template>
-
-<style scoped>
-
-</style>
-

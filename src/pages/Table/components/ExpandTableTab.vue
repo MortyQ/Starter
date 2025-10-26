@@ -11,15 +11,20 @@ const columnsExpandable: Column[] = [
   { key: "accountStatus", label: "Account Status", width: "200px", interactive: true },
 ];
 
-const accountStatusList = [{
-  label: "Active",value: "active",
-},
-{
-  label: "Inactive",value: "inactive",
-},
-{
-  label: "Block", value: "block",
-}];
+const accountStatusList = [
+  {
+    label: "Active",
+    value: "active",
+  },
+  {
+    label: "Inactive",
+    value: "inactive",
+  },
+  {
+    label: "Block",
+    value: "block",
+  },
+];
 </script>
 
 <template>
