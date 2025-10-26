@@ -14,6 +14,11 @@
 
   transition: none; // Disable transition during normal operation
 
+  // Performance optimizations for smooth scrolling
+  // Enables GPU acceleration and creates a new compositing layer
+  transform: translateZ(0);
+  will-change: scroll-position;
+
   // State during column resize
   &.is-resizing {
     cursor: col-resize;

@@ -237,7 +237,7 @@ defineExpose({
       :aria-labelledby="`tab-${currentTabId}`"
       class="flex-1 flex flex-col min-h-0"
     >
-      <div class="flex-1 overflow-auto">
+      <div class="flex-1 overflow-auto pt-4">
         <slot :name="`${currentTabId}`" />
       </div>
     </div>

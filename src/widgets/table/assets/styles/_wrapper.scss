@@ -10,11 +10,19 @@
 
 // Scroll container
 .table-scroll-container {
-  scroll-behavior: smooth;
+  // Performance: remove smooth scroll for better FPS with fixed columns
+  // smooth scrolling can cause repaints on each frame
   overflow: auto;
   border: $table-border-width solid theme('colors.cardBorder');
   border-radius: $table-border-radius;
   background-color: theme('colors.cardBg');
+
+  // Performance optimizations
+  // contain: layout style paint - isolates the element for better performance
+  contain: layout style paint;
+
+  // Enable hardware acceleration
+  transform: translateZ(0);
 
   // Custom scrollbar (optional enhancement)
   &::-webkit-scrollbar {

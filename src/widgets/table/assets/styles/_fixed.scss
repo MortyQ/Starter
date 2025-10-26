@@ -9,11 +9,9 @@
   z-index: $z-index-fixed-cell;
   background-color: theme('colors.cardBg');
 
-  // Backdrop blur for better contrast
-  @supports (backdrop-filter: $backdrop-blur-fixed) {
-    backdrop-filter: $backdrop-blur-fixed;
-    background-color: theme('colors.cardBg' / $fixed-bg-opacity);
-  }
+  // Performance optimization: use will-change for smoother scrolling
+  // This creates a new layer and enables GPU acceleration
+  will-change: transform;
 }
 
 // Left fixed column - adds sticky for horizontal scroll
@@ -45,8 +43,8 @@
     width: $table-shadow-offset;
     transform: translateX(100%);
     pointer-events: none;
-    transition: box-shadow $transition-normal;
     box-shadow: $table-shadow-left;
+    // Performance: no transition for better FPS
   }
 }
 
@@ -61,19 +59,15 @@
     width: $table-shadow-offset;
     transform: translateX(-100%);
     pointer-events: none;
-    transition: box-shadow $transition-normal;
     box-shadow: $table-shadow-right;
+    // Performance: no transition for better FPS
   }
 }
 
 // Hover effect on fixed columns
 .table-row-wrapper:hover {
   .table-fixed-column {
-    background-color: theme('colors.cardBg' / $hover-bg-opacity);
-
-    @supports (backdrop-filter: $backdrop-blur-fixed) {
-      background-color: theme('colors.cardBg' / calc($fixed-bg-opacity * $hover-bg-opacity));
-    }
+    background-color: theme('colors.cardBg');
   }
 }
 

@@ -8,7 +8,9 @@
   border-bottom: $table-border-width solid theme('colors.cardBorder');
   color: theme('colors.mainText');
   min-width: 0; // Important for truncate to work in grid
-  transition: background-color $transition-normal;
+
+  // Performance: remove background transition to reduce repaints during scroll
+  // transition: background-color $transition-normal;
 
   // Text alignment
   &--left {
