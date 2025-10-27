@@ -16,6 +16,7 @@ $table-header-padding-y: 0.875rem; // 14px
 // Sizing
 $table-default-height: 600px;
 $table-row-height: 50px;
+$table-header-height: 48px; // Calculated header height for multi-level positioning
 $table-expand-button-size: 24px; // Reduced from 28px for cleaner look
 $table-resize-handle-width: 4px; // Thinner, more subtle
 $table-indent-size: 24px;

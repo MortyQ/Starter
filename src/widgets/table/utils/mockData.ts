@@ -624,6 +624,7 @@ function generateEmployee(id: number) {
     name: `${firstName} ${lastName}`,
     email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@company.com`,
     phone: `+1-555-${String(id).padStart(4, "0")}`,
+    age: Math.floor(Math.random() * 50 + 20),
     position: getRandomItem([
       "Developer",
       "Designer",
@@ -662,6 +663,7 @@ function generateTeam(id: number, teamName: string, employeeCount: number) {
     status: getRandomItem(statuses),
     count: employeeCount,
     salary: totalSalary,
+    age: Math.floor(Math.random() * 50 + 20),
     performance: (Math.random() * 1.5 + 3.5).toFixed(1), // 3.5 - 5.0
     startDate: `20${getRandomNumber(15, 21)}-${String(getRandomNumber(1, 12)).padStart(2, "0")}-${String(getRandomNumber(1, 28)).padStart(2, "0")}`,
     projects: employees.reduce((sum, emp) => sum + emp.projects, 0),
@@ -698,6 +700,7 @@ function generateDepartment(id: number, deptName: string) {
     email: `${deptName.toLowerCase()}@company.com`,
     phone: `+1-555-${String(id).padStart(4, "0")}`,
     position: "Department",
+    age: Math.floor(Math.random() * 50 + 20),
     status: getRandomItem(statuses),
     count: totalCount,
     salary: totalSalary,
@@ -730,6 +733,7 @@ export const mockDataExpandableTotalRow = {
   name: "Total / Average",
   email: `${mockDataExpandable.length} departments`,
   phone: "-",
+  age: Math.random() * 50 + 20,
   position: "Summary",
   status: `${mockDataExpandable.filter((d) => d.status === "active").length} active`,
   count: mockDataExpandable.reduce((sum, dept) => sum + dept.count, 0),

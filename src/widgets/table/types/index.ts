@@ -5,6 +5,17 @@ export interface Column {
   align?: "left" | "center" | "right"
   interactive?: boolean // Whether column contains interactive elements (select, dropdown, etc.)
   fixed?: "left" | "right" // Fix column (sticky) to left or right
+  children?: Column[]   // Nested columns for grouped headers (AG-Grid style)
+}
+
+export interface HeaderCell {
+  key: string
+  label: string
+  column: Column
+  colspan: number       // Number of leaf columns this cell spans
+  rowspan: number       // Number of header levels this cell spans (for single columns)
+  isGroup: boolean      // Is this a group header (has children)
+  level: number         // Depth level in hierarchy (0 = top)
 }
 
 export interface ExpandableRow {

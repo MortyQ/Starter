@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 
 import TableCell from "./components/TableCell.vue";
-import TableHeader from "./components/TableHeader.vue";
+import TableHeaderGrouped from "./components/TableHeaderGrouped.vue";
+import TableHeaderSimple from "./components/TableHeaderSimple.vue";
 import TablePagination from "./components/TablePagination.vue";
 import TableRow from "./components/TableRow.vue";
 import { useColumnResize } from "./composables/useColumnResize";
 import { useExpandableTable } from "./composables/useExpandableTable";
 import { useFixedColumns } from "./composables/useFixedColumns";
+import { useGroupedHeaders } from "./composables/useGroupedHeaders";
 import { useVirtualTable } from "./composables/useVirtualTable";
 import type { Column, ExpandableRow } from "./types/index";
 
@@ -26,23 +28,51 @@ const emit = defineEmits<TableEmits>();
 // Total row visibility - simply check for presence
 const shouldShowTotal = computed(() => props.totalRow !== undefined);
 
-// Column resizing logic
+// Column resizing logic - needs to know about flat columns first
 const columnsRef = computed(() => props.columns);
+
+// Initialize columnWidths for grouped headers detection
+const columnWidths = ref<Map<string, number>>(new Map());
+
+// Grouped headers logic (AG-Grid style with children)
+const {
+  hasGroups,
+  flatColumns,
+  headerLevels,
+  getGroupWidth,
+  isGroupFixed,
+} = useGroupedHeaders(columnsRef, columnWidths);
+
+// Columns for rendering data rows and fixed logic
+// OPTIMIZATION: Use flatColumns only when groups exist
+const columnsForData = computed(() => {
+  return hasGroups.value ? flatColumns.value : props.columns;
+});
+
+// Column resize works with leaf columns (flatColumns when groups exist)
+const columnsForResize = computed(() => columnsForData.value);
 const {
   gridTemplateColumns,
   startResize,
   autoFitColumn,
   isResizing,
-  columnWidths,
-} = useColumnResize(columnsRef);
+  columnWidths: resizeColumnWidths,
+} = useColumnResize(columnsForResize);
+
+// Update columnWidths ref to match resizeColumnWidths
+watch(resizeColumnWidths, (newWidths) => {
+  columnWidths.value = newWidths;
+}, { immediate: true });
 
 // Fixed columns logic (with dynamic widths)
+// Pass flatColumns when groups exist to work with leaf columns only
+const columnsForFixed = computed(() => columnsForData.value);
 const {
   getFixedStyles,
   isFixed,
   isLastLeftFixed,
   isFirstRightFixed,
-} = useFixedColumns(columnsRef, columnWidths);
+} = useFixedColumns(columnsForFixed, columnWidths);
 
 
 // Table height - simple calculation based on prop
@@ -94,6 +124,7 @@ const {
 const gridStyles = computed(() => ({
   display: "grid",
   gridTemplateColumns: gridTemplateColumns.value,
+  gridAutoRows: "auto", // All rows auto-sized (headers get height from CSS)
 }));
 
 // Handle row click
@@ -186,6 +217,15 @@ const getColumnClasses = (column: Column) => {
 
   return classes;
 };
+
+// Get fixed styles for group headers
+const getGroupFixedStyles = (column: Column) => {
+  const fixed = isGroupFixed(column);
+  if (!fixed) return {};
+
+  // For groups, we need to calculate offset based on leaf columns
+  return getFixedStyles(column);
+};
 </script>
 
 <template>
@@ -212,20 +252,18 @@ const getColumnClasses = (column: Column) => {
           :class="{ 'is-resizing': isResizing }"
           :style="gridStyles"
         >
-          <!-- Header (always visible, sticky) -->
-          <div class="table-header-row">
-            <TableHeader
-              v-for="column in columns"
-              :key="column.key"
-              :label="column.label"
-              :align="column.align"
-              :column-key="column.key"
-              :class="getColumnClasses(column)"
-              :style="getFixedStyles(column)"
-              @resize-start="startResize"
-              @resize-dblclick="autoFitColumn"
-            />
-          </div>
+          <!-- Header - component substitution based on hasGroups -->
+          <component
+            :is="hasGroups ? TableHeaderGrouped : TableHeaderSimple"
+            :columns="columns"
+            :header-levels="headerLevels"
+            :get-column-classes="getColumnClasses"
+            :get-fixed-styles="getFixedStyles"
+            :get-group-width="getGroupWidth"
+            :get-group-fixed-styles="getGroupFixedStyles"
+            @resize-start="startResize"
+            @resize-dblclick="autoFitColumn"
+          />
 
           <!-- Empty state -->
           <div
@@ -247,7 +285,7 @@ const getColumnClasses = (column: Column) => {
             v-for="item in rowsToRender"
             :key="item.key"
             :data="item.row"
-            :columns="columns"
+            :columns="columnsForData"
             :depth="getRowDepth(item.row)"
             :is-expanded="isRowExpanded(item.row)"
             :has-children="hasRowChildren(item.row)"
@@ -256,7 +294,7 @@ const getColumnClasses = (column: Column) => {
           >
             <!-- Data cells -->
             <TableCell
-              v-for="(column, colIndex) in columns"
+              v-for="(column, colIndex) in columnsForData"
               :key="`${item.key}-${column.key}`"
               :value="item.row[column.key]"
               :align="column.align"
@@ -316,7 +354,7 @@ const getColumnClasses = (column: Column) => {
           <!-- Total Row (sticky bottom inside grid) -->
           <template v-if="shouldShowTotal && totalRow">
             <TableCell
-              v-for="(column, colIndex) in columns"
+              v-for="(column, colIndex) in columnsForData"
               :key="`total-${column.key}`"
               :value="totalRow[column.key]"
               :align="column.align"
