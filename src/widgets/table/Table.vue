@@ -69,7 +69,6 @@ watch(resizeColumnWidths, (newWidths) => {
 const columnsForFixed = computed(() => columnsForData.value);
 const {
   getFixedStyles,
-  isFixed,
   isLastLeftFixed,
   isFirstRightFixed,
 } = useFixedColumns(columnsForFixed, columnWidths);
@@ -191,16 +190,20 @@ const getRowStyles = (item: { isVirtual: boolean }) => {
 };
 
 // Classes for column (fixed with shadow effects)
+// Supports both simple columns and groups
 const getColumnClasses = (column: Column) => {
   const classes: string[] = [];
 
-  if (isFixed(column)) {
+  // Check fixed: either direct column.fixed or group fixed (all children fixed)
+  const fixedDirection = column.fixed || (hasGroups.value ? isGroupFixed(column) : null);
+
+  if (fixedDirection) {
     classes.push("table-fixed-column");
 
     // Add direction class for fixed
-    if (column.fixed === "left") {
+    if (fixedDirection === "left") {
       classes.push("table-fixed-left");
-    } else if (column.fixed === "right") {
+    } else if (fixedDirection === "right") {
       classes.push("table-fixed-right");
     }
 

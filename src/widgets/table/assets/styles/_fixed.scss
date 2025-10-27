@@ -99,6 +99,14 @@
   background-color: color-mix(in srgb, theme('colors.cardBg') 98%, theme('colors.mainText') 2%);
 }
 
+// Fixed grouped header (same z-index as header cell)
+.table-header-group.table-fixed-column {
+  z-index: $z-index-header-fixed !important;
+
+  // Group header maintains its darker background even when fixed
+  background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+}
+
 // Fixed in total row (z-index: 11)
 // Above regular header but below header+fixed
 .table-total-cell.table-fixed-column {

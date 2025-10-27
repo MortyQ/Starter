@@ -2,7 +2,7 @@
 import Table from "@/widgets/table/Table.vue";
 import TableToolbar from "@/widgets/table/components/TableToolbar.vue";
 import type { Column } from "@/widgets/table/types";
-import { mockDataUsers, mockDataUsersTotalRow } from "@/widgets/table/utils/mockData";
+import { mockDataExpandable, mockDataUsersTotalRow } from "@/widgets/table/utils/mockData";
 
 // Columns with grouped headers (AG-Grid style)
 const columnsGrouped: Column[] = [
@@ -12,9 +12,9 @@ const columnsGrouped: Column[] = [
     label: "Personal Information",
     align: "center",
     children: [
-      { key: "id", label: "ID", width: "80px", align: "center" },
-      { key: "name", label: "Full Name", width: "200px" },
-      { key: "age", label: "Age", width: "100px", align: "center" },
+      { key: "id", label: "ID", width: "80px", align: "center", fixed: "left" },
+      { key: "name", label: "Full Name", width: "200px", fixed: "left" },
+      { key: "age", label: "Age", width: "100px", align: "center",  fixed: "left" },
     ],
   },
   { key: "startDate", label: "Start Date", width: "130px" },
@@ -63,7 +63,7 @@ const columnsGrouped: Column[] = [
     <TableToolbar />
     <Table
       :columns="columnsGrouped"
-      :data="mockDataUsers"
+      :data="mockDataExpandable"
       :total-row="mockDataUsersTotalRow"
       height="60vh"
     >
