@@ -100,12 +100,3 @@ const columnsGrouped: Column[] = [
     </Table>
   </div>
 </template>
-
-<style scoped>
-.page-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-</style>
-
