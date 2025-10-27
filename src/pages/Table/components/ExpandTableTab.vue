@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import VMultiSelect from "@/shared/ui/common/VMultiSelect.vue";
 import Table from "@/widgets/table/Table.vue";
+import TableToolbar from "@/widgets/table/components/TableToolbar.vue";
 import { Column } from "@/widgets/table/types";
 import { mockDataExpandable, mockDataExpandableTotalRow } from "@/widgets/table/utils/mockData";
 
@@ -45,6 +46,7 @@ const accountStatusList = [
 
 <template>
   <div class="page-container">
+    <TableToolbar />
     <Table
       :columns="columnsExpandable"
       :data="mockDataExpandable"
@@ -86,4 +88,3 @@ const accountStatusList = [
     </Table>
   </div>
 </template>
-

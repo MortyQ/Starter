@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Table from "@/widgets/table/Table.vue";
-import type { Column } from "@/widgets/table/types";
+import TableToolbar from "@/widgets/table/components/TableToolbar.vue";
+import { Column } from "@/widgets/table/types";
 import { mockDataUsers, mockDataUsersTotalRow } from "@/widgets/table/utils/mockData";
 
-// Test 1: Fixed columns in a row (RECOMMENDED)
 const columnsGood: Column[] = [
   { key: "id", label: "ID", width: "80px", align: "center", fixed: "left" },
   { key: "name", label: "Name", width: "200px", fixed: "left" },
@@ -22,18 +22,17 @@ const columnsGood: Column[] = [
   { key: "salary", label: "Salary", width: "120px", fixed: "right" },
 ];
 
-// Test 2: Fixed columns NOT in a row (works, but NOT RECOMMENDED)
 const columnsBad: Column[] = [
   { key: "id", label: "ID", width: "80px", align: "center", fixed: "left" },
   { key: "age", label: "Age", width: "100px", align: "center" }, // Normal between fixed
-  { key: "name", label: "Name", width: "200px", fixed: "left" }, // Another fixed after normal
-  { key: "email", label: "Email", width: "250px" },
+  { key: "name", label: "Name", width: "200px" }, // Another fixed after normal
+  { key: "email", label: "Email", width: "250px",  fixed: "left" },
   { key: "phone", label: "Phone", width: "150px" },
   { key: "position", label: "Position", width: "150px" },
   { key: "status", label: "Status", width: "150px" },
   { key: "performance", label: "Rating", width: "100px" },
-  { key: "startDate", label: "Start Date", width: "130px" },
-  { key: "projects", label: "Projects", width: "100px" },
+  { key: "startDate", label: "Start Date", width: "230px" },
+  { key: "projects", label: "Projects", width: "180px" },
   { key: "location", label: "Location", width: "150px" },
   { key: "manager", label: "Manager", width: "180px" },
   { key: "budget", label: "Budget", width: "130px" },
@@ -62,13 +61,8 @@ const columnsBad: Column[] = [
 
     <!-- Bad practice: fixed NOT in a row -->
     <div>
-      <h2 class="text-xl font-bold mb-4 text-mainText">
-        ⚠️ Not Recommended: Fixed columns NOT in a row
-      </h2>
-      <p class="text-secondaryText mb-4">
-        ID is fixed, then Age is normal, then Name is fixed again.
-        Technically works, but may be visually confusing.
-      </p>
+      <TableToolbar />
+
       <Table
         :columns="columnsBad"
         :data="mockDataUsers"

@@ -11,11 +11,9 @@ import { useFixedColumns } from "./composables/useFixedColumns";
 import { useVirtualTable } from "./composables/useVirtualTable";
 import type { Column, ExpandableRow } from "./types/index";
 
-
 import VIcon from "@/shared/ui/common/VIcon.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
 import { TableEmits, TableProps } from "@/widgets/table/types/props";
-
 
 const props = withDefaults(defineProps<TableProps>(), {
   loading: false,
