@@ -46,12 +46,15 @@ const accountStatusList = [
 
 <template>
   <div class="page-container">
-    <TableToolbar />
     <Table
       :columns="columnsExpandable"
       :data="mockDataExpandable"
       :total-row="mockDataExpandableTotalRow"
     >
+      <template #toolbar>
+        <TableToolbar />
+      </template>
+
       <template #cell-status="{depth, value}">
         TEXT  TEXT  TEXT  TEXT {{ value }}: {{ depth }}
       </template>

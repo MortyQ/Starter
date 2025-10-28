@@ -24,15 +24,17 @@ const columnsRegular: Column[] = [
 
 <template>
   <div class="page-container gap-5">
-    <div>
-      <TableToolbar />
-      <Table
-        :columns="columnsRegular"
-        :data="mockDataUsers"
-        :total-row="mockDataUsersTotalRow"
-        height="40vh"
-      />
-    </div>
+    <Table
+      :columns="columnsRegular"
+      :data="mockDataUsers"
+      :total-row="mockDataUsersTotalRow"
+      height="40vh"
+    >
+      <template #toolbar>
+        <TableToolbar />
+      </template>
+    </Table>
+
     <Table
       :columns="columnsRegular"
       :data="mockDataUsers"
@@ -42,10 +44,4 @@ const columnsRegular: Column[] = [
   </div>
 </template>
 
-<style scoped>
-.table-with-toolbar {
-  display: flex;
-  flex-direction: column;
-}
-</style>
 

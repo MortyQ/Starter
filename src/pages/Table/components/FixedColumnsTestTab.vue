@@ -61,14 +61,22 @@ const columnsBad: Column[] = [
 
     <!-- Bad practice: fixed NOT in a row -->
     <div>
-      <TableToolbar />
-
+      <h2 class="text-xl font-bold mb-4 text-mainText">
+        ⚠️ Not Recommended: Fixed columns scattered
+      </h2>
+      <p class="text-secondaryText mb-4">
+        Fixed columns are not grouped together, which can cause layout issues.
+      </p>
       <Table
         :columns="columnsBad"
         :data="mockDataUsers"
         :total-row="mockDataUsersTotalRow"
         height="40vh"
-      />
+      >
+        <template #toolbar>
+          <TableToolbar />
+        </template>
+      </Table>
     </div>
   </div>
 </template>

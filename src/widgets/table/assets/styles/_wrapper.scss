@@ -19,6 +19,26 @@
 
   // Изоляция для overflow
   overflow: hidden;
+
+  // Когда есть toolbar - убираем верхний border-radius у scroll container
+  &--with-toolbar {
+    .table-scroll-container {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  }
+}
+
+// Toolbar slot - автоматическая стилизация
+.table-toolbar-slot {
+  // Занимает всю ширину
+  width: 100%;
+
+  // Граница снизу для отделения от таблицы
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+
+  // Фон прозрачный - использует фон wrapper
+  background-color: transparent;
 }
 
 // Scroll container - только для grid таблицы
@@ -29,8 +49,8 @@
   // БЕЗ border - он уже есть в wrapper
   // БЕЗ border-radius - он уже есть в wrapper
 
-  // Фон совпадает с wrapper
-  background-color: theme('colors.cardBg');
+  // Фон прозрачный - использует фон wrapper
+  background-color: transparent;
 
   // Performance optimizations
   contain: layout style paint;

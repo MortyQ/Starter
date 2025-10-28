@@ -8,7 +8,7 @@ const searchQuery = ref("");
 </script>
 
 <template>
-  <div class="toolbar toolbar--split">
+  <div class="toolbar toolbar--split ">
     <div class="toolbar-split-left">
       <div>
         <h3 class="toolbar-title">
@@ -48,10 +48,7 @@ const searchQuery = ref("");
 
 <style lang="scss" scoped>
 .toolbar {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-bottom: none;
-  border-radius: 12px 12px 0 0;
+  background: transparent;
   transition: all 0.2s ease;
 
   &--split {

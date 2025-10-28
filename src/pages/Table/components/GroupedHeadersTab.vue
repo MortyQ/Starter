@@ -60,13 +60,15 @@ const columnsGrouped: Column[] = [
 
 <template>
   <div class="page-container">
-    <TableToolbar />
     <Table
       :columns="columnsGrouped"
       :data="mockDataExpandable"
       :total-row="mockDataUsersTotalRow"
       height="60vh"
     >
+      <template #toolbar>
+        <TableToolbar />
+      </template>
       <!-- Custom cell rendering examples -->
       <template #cell-status="{ value }">
         <span

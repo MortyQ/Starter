@@ -232,7 +232,18 @@ const getGroupFixedStyles = (column: Column) => {
 </script>
 
 <template>
-  <div class="table-wrapper">
+  <div
+    class="table-wrapper"
+    :class="{ 'table-wrapper--with-toolbar': $slots.toolbar }"
+  >
+    <!-- Toolbar slot (optional) -->
+    <div
+      v-if="$slots.toolbar"
+      class="table-toolbar-slot"
+    >
+      <slot name="toolbar" />
+    </div>
+
     <!-- Loading state -->
     <div
       v-if="loading"
