@@ -1,5 +1,5 @@
 import { useVirtualizer } from "@tanstack/vue-virtual";
-import { computed, type Ref } from "vue";
+import { computed, onUnmounted, type Ref } from "vue";
 
 import { VirtualTableOptions } from "@/widgets/table/types";
 
@@ -11,7 +11,7 @@ export function useVirtualTable(
 ) {
   const {
     estimateSize = 50,
-    overscan = 5,
+    overscan = 2,  // Reduced from 5 to 2 for better performance
     measureElement = false,
   } = options;
 
@@ -20,16 +20,29 @@ export function useVirtualTable(
     get count() {
       return data.value.length;
     },
+    // CRITICAL: Return null if container is not mounted yet
+    // This prevents virtualizer from trying to work with unmounted element
     getScrollElement: () => scrollContainerRef.value,
     estimateSize: () => estimateSize,
     overscan,
   };
 
   // 🔑 CRITICAL for expand/collapse: dynamic height measurement
+  // OPTIMIZATION: Use WeakMap for caching to allow garbage collection
   if (measureElement) {
+    const heightCache = new WeakMap<Element, number>();
+
     virtualizerOptions.measureElement = (el: Element | null) => {
       if (!el) return estimateSize;
-      return el.getBoundingClientRect().height;
+
+      // Check cache first
+      const cached = heightCache.get(el);
+      if (cached !== undefined) return cached;
+
+      // Measure and cache
+      const height = el.getBoundingClientRect().height;
+      heightCache.set(el, height);
+      return height;
     };
   }
 
@@ -40,6 +53,13 @@ export function useVirtualTable(
 
   // Total height of all elements
   const totalSize = computed(() => virtualizer.value.getTotalSize());
+
+  // CRITICAL: Cleanup on unmount to prevent memory leaks
+  onUnmounted(() => {
+    // TanStack Virtual doesn't provide explicit cleanup,
+    // but we ensure references are cleared
+    virtualItems.value.length = 0;
+  });
 
   return {
     virtualizer,

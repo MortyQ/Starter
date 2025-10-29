@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, type Component } from "vue";
+import { ref, computed, watch, onUnmounted, type Component } from "vue";
 
 import TableCell from "./components/TableCell.vue";
 import TableHeaderGrouped from "./components/TableHeaderGrouped.vue";
@@ -107,6 +107,7 @@ const displayData = computed(() => {
 
 // Virtualization with dynamic height for expand
 const scrollContainerRef = ref<HTMLElement | null>(null);
+
 const {
   virtualItems,
   totalSize,
@@ -115,8 +116,11 @@ const {
   displayData,
   {
     estimateSize: props.rowHeight,
-    overscan: 5,
-    measureElement: isExpandable.value, // Dynamic height only for expandable
+    overscan: 2, // Reduced from 5 for better performance
+    // PERFORMANCE: Disable measureElement to prevent memory leaks
+    // Using fixed height improves performance dramatically for large datasets
+    // Trade-off: scroll bar may be slightly inaccurate with expanded rows
+    measureElement: false,
   },
 );
 
@@ -160,8 +164,8 @@ const hasRowChildren = (row: Record<string, unknown>): boolean => {
 
 // Computed for final rows (considering virtualization)
 const rowsToRender = computed(() => {
-  if (!props.virtualized || virtualItems.value.length === 0) {
-    // Regular rendering without virtualization
+  // If virtualization is disabled, render all data
+  if (!props.virtualized) {
     return displayData.value.map((row, index) => ({
       row,
       index,
@@ -170,14 +174,30 @@ const rowsToRender = computed(() => {
     }));
   }
 
-  // Virtualized rendering
-  return virtualItems.value.map((virtualRow) => ({
-    row: displayData.value[virtualRow.index],
-    index: virtualRow.index,
-    key: virtualRow.index,
-    isVirtual: true,
-    virtualRow,
-  }));
+  // If scroll container is not mounted yet, return empty array to prevent rendering all data
+  // This is CRITICAL - without this check, all data will be rendered on first load!
+  if (!scrollContainerRef.value) {
+    return [];
+  }
+
+  // If virtualizer hasn't calculated items yet, wait for it
+  if (virtualItems.value.length === 0) {
+    return [];
+  }
+
+  // Virtualized rendering - only render visible items
+  return virtualItems.value.map((virtualRow) => {
+    const row = displayData.value[virtualRow.index];
+    return {
+      row,
+      index: virtualRow.index,
+      // CRITICAL: Use row.id as key, not index! Index causes memory leaks
+      // because Vue reuses components for different data at same index
+      key: (row?.id as string | number) || `row-${virtualRow.index}`,
+      isVirtual: true,
+      virtualRow,
+    };
+  });
 });
 
 // Styles for virtualized rows
@@ -238,6 +258,16 @@ const headerComponent = computed<Component>(() => {
 // Computed for header columns data
 const headerColumnsData = computed<Column[] | HeaderCell[][]>(() => {
   return hasGroups.value ? headerLevels.value : columnsForData.value;
+});
+
+// CRITICAL: Cleanup on unmount to prevent memory leaks
+onUnmounted(() => {
+  // Clear expanded rows to free memory
+  if (expandableLogic) {
+    expandableLogic.collapseAll();
+  }
+  // Clear scroll container ref
+  scrollContainerRef.value = null;
 });
 </script>
 
