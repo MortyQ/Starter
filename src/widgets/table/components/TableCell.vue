@@ -44,7 +44,3 @@ const computedPaddingLeft = computed(() => {
     </slot>
   </div>
 </template>
-
-<style scoped>
-/* Styles defined in assets/styles/_cell.scss */
-</style>

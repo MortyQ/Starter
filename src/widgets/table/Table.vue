@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, type Component } from "vue";
 
 import TableCell from "./components/TableCell.vue";
 import TableHeaderGrouped from "./components/TableHeaderGrouped.vue";
@@ -11,7 +11,7 @@ import { useExpandableTable } from "./composables/useExpandableTable";
 import { useFixedColumns } from "./composables/useFixedColumns";
 import { useGroupedHeaders } from "./composables/useGroupedHeaders";
 import { useVirtualTable } from "./composables/useVirtualTable";
-import type { Column, ExpandableRow } from "./types/index";
+import type { Column, ExpandableRow, HeaderCell } from "./types/index";
 
 import VIcon from "@/shared/ui/common/VIcon.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
@@ -229,6 +229,16 @@ const getGroupFixedStyles = (column: Column) => {
   // For groups, we need to calculate offset based on leaf columns
   return getFixedStyles(column);
 };
+
+// Computed for header component with proper typing
+const headerComponent = computed<Component>(() => {
+  return hasGroups.value ? TableHeaderGrouped : TableHeaderSimple;
+});
+
+// Computed for header columns data
+const headerColumnsData = computed<Column[] | HeaderCell[][]>(() => {
+  return hasGroups.value ? headerLevels.value : columnsForData.value;
+});
 </script>
 
 <template>
@@ -266,11 +276,9 @@ const getGroupFixedStyles = (column: Column) => {
           :class="{ 'is-resizing': isResizing }"
           :style="gridStyles"
         >
-          <!-- Header - component substitution based on hasGroups -->
           <component
-            :is="hasGroups ? TableHeaderGrouped : TableHeaderSimple"
-            :columns="columns"
-            :header-levels="headerLevels"
+            :is="headerComponent"
+            :columns="headerColumnsData"
             :get-column-classes="getColumnClasses"
             :get-fixed-styles="getFixedStyles"
             :get-group-width="getGroupWidth"

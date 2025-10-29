@@ -3,7 +3,7 @@ import type { Column } from "../types";
 import TableHeader from "./TableHeader.vue";
 
 interface Props {
-  columns: Column[]
+  columns: Column[] // Union type to support both simple and grouped
   // eslint-disable-next-line no-unused-vars
   getColumnClasses: (_column: Column) => string[]
   // eslint-disable-next-line no-unused-vars
@@ -42,8 +42,3 @@ const handleResizeDblClick = (columnKey: string) => {
     />
   </div>
 </template>
-
-<style scoped>
-/* Styles defined in assets/styles/_header.scss */
-</style>
-

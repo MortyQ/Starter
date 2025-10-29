@@ -4,7 +4,7 @@ import TableHeader from "./TableHeader.vue";
 import TableHeaderGroup from "./TableHeaderGroup.vue";
 
 interface Props {
-  headerLevels: HeaderCell[][]
+  columns: HeaderCell[][]  // Union type to support both simple and grouped
   // eslint-disable-next-line no-unused-vars
   getColumnClasses: (_column: Column) => string[]
   // eslint-disable-next-line no-unused-vars
@@ -34,7 +34,7 @@ const handleResizeDblClick = (columnKey: string) => {
 <template>
   <!-- Grouped headers - multi-level support -->
   <div
-    v-for="(level, levelIndex) in headerLevels"
+    v-for="(level, levelIndex) in columns"
     :key="`header-level-${levelIndex}`"
     class="table-header-row"
     :class="`table-header-row-level-${levelIndex}`"
@@ -80,8 +80,3 @@ const handleResizeDblClick = (columnKey: string) => {
     </template>
   </div>
 </template>
-
-<style scoped>
-/* Styles defined in assets/styles/_header.scss */
-</style>
-

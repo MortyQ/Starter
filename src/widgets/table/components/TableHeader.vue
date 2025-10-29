@@ -51,7 +51,3 @@ const handleResizeDblClick = () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Styles defined in assets/styles/_header.scss */
-</style>

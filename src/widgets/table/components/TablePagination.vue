@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import VIcon from "@/shared/ui/common/VIcon.vue";
-
-// Пустой компонент - логику пагинации добавите сами
-// Можно добавить props для текущей страницы, количества элементов и т.д.
 </script>
 
 <template>
@@ -83,5 +80,3 @@ import VIcon from "@/shared/ui/common/VIcon.vue";
 <style scoped>
 /* Styles defined in assets/styles/_pagination.scss */
 </style>
-
-

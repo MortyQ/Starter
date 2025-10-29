@@ -25,4 +25,3 @@ defineProps<Props>();
 <style scoped>
 /* Styles defined in assets/styles/_header.scss */
 </style>
-
