@@ -1,11 +1,20 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import VIcon from "@/shared/ui/common/VIcon.vue";
 
 const router = useRouter();
 const route = useRoute();
+const instance = getCurrentInstance();
+
+// Check if parent component is listening to tabSelected event
+const hasTabSelectedListener = computed(() => {
+  const vnode = instance?.vnode;
+  const vNodeProps = vnode?.props || {};
+
+  return !!(vNodeProps["onTab-selected"] || vNodeProps["onTabSelected"]);
+});
 
 export type ITab = {
   id: number | string
@@ -16,6 +25,12 @@ export type ITab = {
   activeByDefault?: boolean
 };
 
+export interface TabSelectedPayload {
+  tabId: number | string
+  callback: () => void
+  tab?: ITab
+}
+
 const props = defineProps<{
   tabs: ITab[]
   loader?: boolean
@@ -24,7 +39,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  "tabSelected": [tabId: number | string]
+  tabSelected: [payload: TabSelectedPayload]
 }>();
 
 // Initialize active tab from URL hash or default
@@ -53,15 +68,29 @@ const selectTab = (tabId: number | string, updateRoute = true) => {
   // Skip if tab doesn't exist or is disabled
   if (!tab || tab.disabled) return;
 
-  currentTabId.value = tabId;
-  emits("tabSelected", tabId);
+  // Create callback that completes the tab switch
+  const completeTabSwitch = () => {
+    currentTabId.value = tabId;
 
-  // Update URL hash only if useHash is enabled (default true)
-  if (props.useHash !== false && updateRoute && route.hash !== `#tab-${tabId}`) {
-    router.push({
-      hash: `#tab-${tabId}`,
-      query: route.query,
+    // Update URL hash only if useHash is enabled (default true)
+    if (props.useHash !== false && updateRoute && route.hash !== `#tab-${tabId}`) {
+      router.push({
+        hash: `#tab-${tabId}`,
+        query: route.query,
+      });
+    }
+  };
+
+  // If parent is listening to tabSelected event, emit with callback
+  if (hasTabSelectedListener.value) {
+    emits("tabSelected", {
+      tabId,
+      callback: completeTabSwitch,
+      tab,
     });
+  } else {
+    // No listener - auto-complete the tab switch
+    completeTabSwitch();
   }
 };
 
@@ -78,15 +107,32 @@ watch(
 // Initialize from URL hash on mount
 onMounted(() => {
   // Initial tab is already set correctly in getInitialTab()
-  // Just emit the event and ensure URL hash is set (only if useHash enabled)
-  emits("tabSelected", currentTabId.value);
+  // Create callback for initial tab
+  const completeInitialTabSwitch = () => {
+    // Only sync URL hash if useHash is enabled (default true)
+    if (props.useHash !== false && route.hash !== `#tab-${currentTabId.value}`) {
+      router.replace({
+        hash: `#tab-${currentTabId.value}`,
+        query: route.query,
+      });
+    }
+  };
 
-  // Only sync URL hash if useHash is enabled (default true)
-  if (props.useHash !== false && route.hash !== `#tab-${currentTabId.value}`) {
-    router.replace({
-      hash: `#tab-${currentTabId.value}`,
-      query: route.query,
+  const initialTab = props.tabs.find((t) => t.id === currentTabId.value);
+
+  // If parent is listening to tabSelected event, emit with callback
+  if (hasTabSelectedListener.value) {
+    emits("tabSelected", {
+      tabId: currentTabId.value,
+      callback: completeInitialTabSwitch,
+      tab: initialTab,
     });
+
+    // Auto-call callback for initial mount (no blocking needed on mount)
+    completeInitialTabSwitch();
+  } else {
+    // No listener - just complete the initial tab switch
+    completeInitialTabSwitch();
   }
 });
 
