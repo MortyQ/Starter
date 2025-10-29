@@ -7,25 +7,23 @@ import { mockDataExpandable, mockDataExpandableTotalRow } from "@/widgets/table/
 
 const columnsExpandable: Column[] = [
   // All left fixed columns in a row
-  { key: "name", label: "Name", width: "300px"  },
-  { key: "count", label: "Count", width: "120px" },
-  { key: "salary", label: "Salary", width: "120px" },
-
+  { key: "name", label: "Name"  },
+  { key: "count", label: "Count"  },
+  { key: "salary", label: "Salary" },
   // Regular scrollable columns
-  { key: "email", label: "Email", width: "250px" },
-  { key: "phone", label: "Phone", width: "150px" },
-  { key: "position", label: "Position", width: "150px" },
-  { key: "status", label: "Status", width: "150px" },
-  { key: "performance", label: "Rating", width: "100px" },
-  { key: "startDate", label: "Start Date", width: "130px" },
-  { key: "projects", label: "Projects", width: "100px" },
-  { key: "location", label: "Location", width: "150px" },
-  { key: "manager", label: "Manager", width: "180px" },
-  { key: "budget", label: "Budget", width: "130px" },
-  { key: "revenue", label: "Revenue", width: "130px" },
-
+  { key: "email", label: "Email" },
+  { key: "phone", label: "Phone" },
+  { key: "position", label: "Position" },
+  { key: "status", label: "Status" },
+  { key: "performance", label: "Rating" },
+  { key: "startDate", label: "Start Date" },
+  { key: "projects", label: "Projects" },
+  { key: "location", label: "Location" },
+  { key: "manager", label: "Manager" },
+  { key: "budget", label: "Budget" },
+  { key: "revenue", label: "Revenue"  },
   // Right fixed at the end
-  { key: "accountStatus", label: "Account Status", width: "200px", interactive: true, fixed: "right" },
+  { key: "accountStatus", label: "Account Status", width: "200px", interactive: true },
 ];
 
 const accountStatusList = [
