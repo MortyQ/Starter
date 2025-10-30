@@ -39,6 +39,12 @@ const handleResizeDblClick = (columnKey: string) => {
     class="table-header-row"
     :class="`table-header-row-level-${levelIndex}`"
   >
+    <!-- Checkbox column header (slot) - only in first level -->
+    <slot
+      v-if="levelIndex === 0"
+      name="checkbox-header"
+    />
+
     <!-- Render cells in this level -->
     <template
       v-for="cell in level"

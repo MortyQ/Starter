@@ -51,6 +51,11 @@ export function useColumnResize(columns: Ref<Column[]>) {
       .join(" ");
   });
 
+  // Grid template columns with checkbox column prepended
+  const getGridTemplateWithCheckbox = (checkboxWidth = 50) => {
+    return `${checkboxWidth}px ${gridTemplateColumns.value}`;
+  };
+
   // Start resize
   const startResize = (columnKey: string, event: MouseEvent) => {
     event.preventDefault();
@@ -125,12 +130,13 @@ export function useColumnResize(columns: Ref<Column[]>) {
 
   return {
     gridTemplateColumns,
+    getGridTemplateWithCheckbox,
     columnWidths,
     isResizing: computed(() => resizeState.value.isResizing),
     startResize,
     autoFitColumn,
-    resetWidths,
     getColumnWidth,
+    resetWidths,
   };
 }
 

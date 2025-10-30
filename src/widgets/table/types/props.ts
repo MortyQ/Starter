@@ -1,4 +1,4 @@
-import type { Column, ExpandableRow } from "@/widgets/table/types/index";
+import type { Column, ExpandableRow, MultiSelectConfig } from "@/widgets/table/types/index";
 
 export type TableProps = {
   columns: Column[]
@@ -8,6 +8,8 @@ export type TableProps = {
   rowHeight?: number
   height?: string | number // Table height (CSS value or number in px)
   totalRow?: Record<string, unknown> // Summary row (sticky bottom)
+  selectedRows?: ExpandableRow[] // Pre-selected rows (v-model support)
+  multiSelect?: MultiSelectConfig // Multi-select configuration
 };
 
 export type UseTableProps = {
@@ -19,4 +21,5 @@ export type UseTableProps = {
 export interface TableEmits {
   "page-change": [page: number]
   "row-click": [row: Record<string, unknown>]
+  "update:selectedRows": [selectedRows: ExpandableRow[]]
 }

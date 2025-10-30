@@ -43,3 +43,7 @@ export interface ResizeState {
   startX: number;
   startWidth: number;
 }
+
+// Re-export selection types
+export type { MultiSelectConfig, SelectionMode, CheckboxState } from "./selection";
+

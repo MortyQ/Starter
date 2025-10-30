@@ -29,6 +29,8 @@ const handleResizeDblClick = (columnKey: string) => {
 <template>
   <!-- Simple header - single level (original implementation) -->
   <div class="table-header-row">
+    <!-- Checkbox column header (slot) -->
+    <slot name="checkbox-header" />
     <TableHeader
       v-for="column in columns"
       :key="column.key"

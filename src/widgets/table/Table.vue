@@ -2,6 +2,8 @@
 import { ref, computed, watch, onUnmounted, type Component } from "vue";
 
 import TableCell from "./components/TableCell.vue";
+import TableCheckboxCell from "./components/TableCheckboxCell.vue";
+import TableHeaderCheckbox from "./components/TableHeaderCheckbox.vue";
 import TableHeaderGrouped from "./components/TableHeaderGrouped.vue";
 import TableHeaderSimple from "./components/TableHeaderSimple.vue";
 import TablePagination from "./components/TablePagination.vue";
@@ -10,6 +12,7 @@ import { useColumnResize } from "./composables/useColumnResize";
 import { useExpandableTable } from "./composables/useExpandableTable";
 import { useFixedColumns } from "./composables/useFixedColumns";
 import { useGroupedHeaders } from "./composables/useGroupedHeaders";
+import { useTableSelection } from "./composables/useTableSelection";
 import { useVirtualTable } from "./composables/useVirtualTable";
 import type { Column, ExpandableRow, HeaderCell } from "./types/index";
 
@@ -53,6 +56,7 @@ const columnsForData = computed(() => {
 const columnsForResize = computed(() => columnsForData.value);
 const {
   gridTemplateColumns,
+  getGridTemplateWithCheckbox,
   startResize,
   autoFitColumn,
   isResizing,
@@ -105,6 +109,22 @@ const displayData = computed(() => {
   return expandableLogic ? expandableLogic.flattenedData.value : props.data;
 });
 
+// Multi-select logic
+const multiSelectConfig = computed(() => props.multiSelect);
+const selectedRowsRef = computed({
+  get: () => props.selectedRows || [],
+  set: (value) => emit("update:selectedRows", value),
+});
+
+const selection = useTableSelection({
+  config: multiSelectConfig,
+  flattenedData: displayData as any, // displayData includes FlattenedRow properties when expanded
+  selectedRows: selectedRowsRef,
+  onSelectionChange: (selected) => {
+    emit("update:selectedRows", selected);
+  },
+});
+
 // Virtualization with dynamic height for expand
 const scrollContainerRef = ref<HTMLElement | null>(null);
 
@@ -124,11 +144,17 @@ const {
   },
 );
 
-const gridStyles = computed(() => ({
-  display: "grid",
-  gridTemplateColumns: gridTemplateColumns.value,
-  gridAutoRows: "auto", // All rows auto-sized (headers get height from CSS)
-}));
+const gridStyles = computed(() => {
+  const columns = selection.isEnabled.value
+    ? getGridTemplateWithCheckbox(50) // 50px for checkbox column
+    : gridTemplateColumns.value;
+
+  return {
+    display: "grid",
+    gridTemplateColumns: columns,
+    gridAutoRows: "auto", // All rows auto-sized (headers get height from CSS)
+  };
+});
 
 // Handle row click
 const onRowClick = (row: Record<string, unknown>) => {
@@ -315,7 +341,24 @@ onUnmounted(() => {
             :get-group-fixed-styles="getGroupFixedStyles"
             @resize-start="startResize"
             @resize-dblclick="autoFitColumn"
-          />
+          >
+            <!-- Checkbox header slot - always render when multi-select enabled -->
+            <template
+              v-if="selection.isEnabled.value"
+              #checkbox-header
+            >
+              <TableHeaderCheckbox
+                v-if="multiSelectConfig?.showHeaderCheckbox !== false"
+                :state="selection.getHeaderCheckboxState"
+                @toggle="selection.toggleAllRows"
+              />
+              <!-- Empty header cell when checkbox is hidden -->
+              <div
+                v-else
+                class="table-header-checkbox-cell"
+              />
+            </template>
+          </component>
 
           <!-- Empty state -->
           <div
@@ -344,6 +387,17 @@ onUnmounted(() => {
             :style="getRowStyles(item)"
             @click="onRowClick(item.row)"
           >
+            <!-- Checkbox column (separate) -->
+            <TableCheckboxCell
+              v-if="selection.isEnabled.value"
+              :checked="selection.isRowSelected(item.row.id as string | number)"
+              :disabled="!selection.isRowSelectable(item.row as ExpandableRow)"
+              :indeterminate="selection.isDependentMode.value &&
+                hasRowChildren(item.row) &&
+                selection.getParentCheckboxState(item.row as any) === 'indeterminate'"
+              @toggle="selection.toggleRow(item.row as any)"
+            />
+
             <!-- Data cells -->
             <TableCell
               v-for="(column, colIndex) in columnsForData"
@@ -405,6 +459,11 @@ onUnmounted(() => {
 
           <!-- Total Row (sticky bottom inside grid) -->
           <template v-if="shouldShowTotal && totalRow">
+            <!-- Empty checkbox cell for total row -->
+            <div
+              v-if="selection.isEnabled.value"
+              class="table-total-cell table-checkbox-cell"
+            />
             <TableCell
               v-for="(column, colIndex) in columnsForData"
               :key="`total-${column.key}`"
@@ -445,10 +504,10 @@ onUnmounted(() => {
           </template>
         </div>
       </div>
-
-      <!-- Pagination -->
-      <TablePagination />
     </template>
+
+    <!-- Pagination -->
+    <TablePagination />
   </div>
 </template>
 
