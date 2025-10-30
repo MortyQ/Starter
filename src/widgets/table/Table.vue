@@ -355,7 +355,7 @@ onUnmounted(() => {
               <!-- Empty header cell when checkbox is hidden -->
               <div
                 v-else
-                class="table-header-checkbox-cell"
+                class="table-header-checkbox-cell table-header-checkbox-cell--empty"
               />
             </template>
           </component>

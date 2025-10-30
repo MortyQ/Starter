@@ -4,12 +4,12 @@ import { ref } from "vue";
 import VCheckbox from "@/shared/ui/common/VCheckbox.vue";
 import Table from "@/widgets/table/Table.vue";
 import type { Column, ExpandableRow, MultiSelectConfig } from "@/widgets/table/types";
-import { mockDataExpandable } from "@/widgets/table/utils/mockData";
+import { mockDataExpandable, mockDataExpandableTotalRow } from "@/widgets/table/utils/mockData";
 
 const columns: Column[] = [
   // All left fixed columns in a row
   { key: "name", label: "Name"  },
-  { key: "count", label: "Count"  },
+  { key: "count", label: "Count" },
   { key: "salary", label: "Salary" },
   // Regular scrollable columns
   { key: "email", label: "Email" },
@@ -22,9 +22,8 @@ const columns: Column[] = [
   { key: "location", label: "Location" },
   { key: "manager", label: "Manager" },
   { key: "budget", label: "Budget" },
-  { key: "revenue", label: "Revenue"  },
+  { key: "revenue", label: "Revenue" },
   // Right fixed at the end
-  { key: "accountStatus", label: "Account Status", width: "200px", interactive: true },
 ];
 
 
@@ -112,6 +111,7 @@ const toggleHeaderCheckbox = () => {
         :multi-select="currentConfig"
         :height="400"
         class="col-span-3"
+        :total-row="mockDataExpandableTotalRow"
       />
 
       <div class=" col-span-2 flex flex-col gap-2">

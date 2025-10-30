@@ -2,7 +2,7 @@
 // ============================================
 @use './variables' as *;
 
-// ...existing code...
+// Table header row - contains all header cells
 .table-header-row {
   display: contents;
 
@@ -200,8 +200,19 @@
   display: none; // Hidden in modern minimal design
 }
 
-// Divider line - removed for cleaner look
-.table-resize-divider {
-  @apply border-r border-cardBorder h-[80%]
+// Empty checkbox header cell (when showHeaderCheckbox: false)
+.table-header-checkbox-cell--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 0.5rem; /* 14px 8px - match header padding */
+  height: 48px; /* Match $table-header-height from variables */
+  min-height: 48px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, theme('colors.cardBg') 98%, theme('colors.mainText') 2%);
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+  border-right: $table-border-width solid theme('colors.cardBorder');
+  position: sticky;
+  top: 0;
+  z-index: 3;
 }
-
