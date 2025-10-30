@@ -52,6 +52,7 @@ const expandAction = ({ callback }) => {
       :columns="columnsExpandable"
       :data="mockDataExpandable"
       :total-row="mockDataExpandableTotalRow"
+      expand-mode="controlled"
       @expand-click="expandAction"
     >
       <template #toolbar>

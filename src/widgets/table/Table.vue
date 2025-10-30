@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, type Component, getCurrentInstance } from "vue";
+import { ref, computed, watch, onUnmounted, type Component } from "vue";
 
 import TableCell from "./components/TableCell.vue";
 import TableCheckboxCell from "./components/TableCheckboxCell.vue";
@@ -20,24 +20,15 @@ import VIcon from "@/shared/ui/common/VIcon.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
 import { TableEmits, TableProps } from "@/widgets/table/types/props";
 
-const instance = getCurrentInstance();
-
 const props = withDefaults(defineProps<TableProps>(), {
   loading: false,
   virtualized: true,
   rowHeight: 50,
+  expandMode: "auto",
 });
 
 const emit = defineEmits<TableEmits>();
 
-const hasInstance = computed(() => {
-  const vnode = instance?.vnode;
-  const vNodeProps = vnode?.props || {};
-
-  return {
-    expand: !!(vNodeProps["onExpandClick"]),
-  };
-});
 
 // Total row visibility - simply check for presence
 const shouldShowTotal = computed(() => props.totalRow !== undefined);
@@ -174,13 +165,25 @@ const onRowClick = (row: Record<string, unknown>) => {
 
 const handleToggleRow = (id: string | number, row: ExpandableRow, column: Column) => {
   if (!expandableLogic) return;
-  hasInstance.value.expand ?
+
+  if (props.expandMode === "controlled") {
+    // Controlled mode: emit event with callback, parent controls expansion
     emit("expand-click", {
       row,
       column,
       callback: () => expandableLogic.toggleRow(id),
       expanded: isRowExpanded(row as Record<string, unknown>),
-    }) : expandableLogic.toggleRow(id);
+    });
+  } else {
+    // Auto mode (default): toggle immediately, emit for notification
+    expandableLogic.toggleRow(id);
+    emit("expand-click", {
+      row,
+      column,
+      callback: () => {}, // Already toggled, callback is no-op
+      expanded: !isRowExpanded(row as Record<string, unknown>), // New state after toggle
+    });
+  }
 };
 
 // Check if row is expandable

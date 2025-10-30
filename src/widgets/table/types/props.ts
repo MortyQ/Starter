@@ -10,6 +10,13 @@ export type TableProps = {
   totalRow?: Record<string, unknown> // Summary row (sticky bottom)
   selectedRows?: ExpandableRow[] // Pre-selected rows (v-model support)
   multiSelect?: MultiSelectConfig // Multi-select configuration
+  /**
+   * Expand behavior mode:
+   * - 'auto' (default): Rows expand/collapse automatically on click
+   * - 'controlled': Expansion is controlled via @expand-click callback
+   *   Parent must call the provided callback to toggle expansion
+   */
+  expandMode?: "auto" | "controlled"
 };
 
 export type UseTableProps = {
