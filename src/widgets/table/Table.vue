@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, type Component } from "vue";
+import { ref, computed, watch, onUnmounted, type Component, getCurrentInstance } from "vue";
 
 import TableCell from "./components/TableCell.vue";
 import TableCheckboxCell from "./components/TableCheckboxCell.vue";
@@ -20,6 +20,8 @@ import VIcon from "@/shared/ui/common/VIcon.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
 import { TableEmits, TableProps } from "@/widgets/table/types/props";
 
+const instance = getCurrentInstance();
+
 const props = withDefaults(defineProps<TableProps>(), {
   loading: false,
   virtualized: true,
@@ -27,6 +29,15 @@ const props = withDefaults(defineProps<TableProps>(), {
 });
 
 const emit = defineEmits<TableEmits>();
+
+const hasTabSelectedListener = computed(() => {
+  const vnode = instance?.vnode;
+  const vNodeProps = vnode?.props || {};
+
+  return {
+    expand: !!(vNodeProps["onExpandClick"]),
+  };
+});
 
 // Total row visibility - simply check for presence
 const shouldShowTotal = computed(() => props.totalRow !== undefined);
@@ -113,7 +124,7 @@ const displayData = computed(() => {
 const multiSelectConfig = computed(() => props.multiSelect);
 const selectedRowsRef = computed({
   get: () => props.selectedRows || [],
-  set: (value) => emit("update:selectedRows", value),
+  set: (value) => emit("update:selected-rows", value),
 });
 
 const selection = useTableSelection({
@@ -121,7 +132,7 @@ const selection = useTableSelection({
   flattenedData: displayData as any, // displayData includes FlattenedRow properties when expanded
   selectedRows: selectedRowsRef,
   onSelectionChange: (selected) => {
-    emit("update:selectedRows", selected);
+    emit("update:selected-rows", selected);
   },
 });
 
@@ -161,9 +172,15 @@ const onRowClick = (row: Record<string, unknown>) => {
   emit("row-click", row);
 };
 
-const handleToggleRow = (id: string | number) => {
+const handleToggleRow = (id: string | number, row: ExpandableRow, column: Column) => {
   if (expandableLogic) {
-    expandableLogic.toggleRow(id);
+    hasTabSelectedListener.value.expand ?
+      emit("expand-click", {
+        row,
+        callback: () => expandableLogic.toggleRow(id),
+        col: column,
+        expanded: isRowExpanded(row as Record<string, unknown>),
+      }) : expandableLogic.toggleRow(id);
   }
 };
 
@@ -349,7 +366,7 @@ onUnmounted(() => {
             >
               <TableHeaderCheckbox
                 v-if="multiSelectConfig?.showHeaderCheckbox !== false"
-                :state="selection.getHeaderCheckboxState"
+                :state="selection.getHeaderCheckboxState()"
                 @toggle="selection.toggleAllRows"
               />
               <!-- Empty header cell when checkbox is hidden -->
@@ -414,7 +431,7 @@ onUnmounted(() => {
                   v-if="colIndex === 0 && isExpandable &&
                     isRowExpandable(item.row as ExpandableRow)"
                   class="table-cell-expand-btn"
-                  @click.stop="handleToggleRow(item.row.id as string | number)"
+                  @click.stop="handleToggleRow(item.row.id as string | number, item.row, column)"
                 >
                   <VIcon
                     :icon="isRowExpanded(item.row)

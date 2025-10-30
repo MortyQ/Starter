@@ -21,5 +21,6 @@ export type UseTableProps = {
 export interface TableEmits {
   "page-change": [page: number]
   "row-click": [row: Record<string, unknown>]
-  "update:selectedRows": [selectedRows: ExpandableRow[]]
+  "update:selected-rows": [selectedRows: ExpandableRow[]]
+  "expand-click": [{ row: ExpandableRow, col: Column, callback: () => void, expanded: boolean }]
 }

@@ -40,6 +40,10 @@ const accountStatusList = [
     value: "block",
   },
 ];
+
+const expandAction = ({ callback }) => {
+  callback();
+};
 </script>
 
 <template>
@@ -48,6 +52,7 @@ const accountStatusList = [
       :columns="columnsExpandable"
       :data="mockDataExpandable"
       :total-row="mockDataExpandableTotalRow"
+      @expand-click="expandAction"
     >
       <template #toolbar>
         <TableToolbar />
