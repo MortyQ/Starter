@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<TableProps>(), {
 
 const emit = defineEmits<TableEmits>();
 
-const hasTabSelectedListener = computed(() => {
+const hasInstance = computed(() => {
   const vnode = instance?.vnode;
   const vNodeProps = vnode?.props || {};
 
@@ -173,15 +173,14 @@ const onRowClick = (row: Record<string, unknown>) => {
 };
 
 const handleToggleRow = (id: string | number, row: ExpandableRow, column: Column) => {
-  if (expandableLogic) {
-    hasTabSelectedListener.value.expand ?
-      emit("expand-click", {
-        row,
-        callback: () => expandableLogic.toggleRow(id),
-        col: column,
-        expanded: isRowExpanded(row as Record<string, unknown>),
-      }) : expandableLogic.toggleRow(id);
-  }
+  if (!expandableLogic) return;
+  hasInstance.value.expand ?
+    emit("expand-click", {
+      row,
+      column,
+      callback: () => expandableLogic.toggleRow(id),
+      expanded: isRowExpanded(row as Record<string, unknown>),
+    }) : expandableLogic.toggleRow(id);
 };
 
 // Check if row is expandable

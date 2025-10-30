@@ -616,11 +616,16 @@ function getRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function generateEmployee(id: number) {
+// Global ID counter to ensure unique IDs across all levels
+let globalIdCounter = 1;
+
+function generateEmployee() {
   const firstName = getRandomItem(firstNames);
   const lastName = getRandomItem(lastNames);
+  const id = globalIdCounter++;
+
   return {
-    id,
+    id: `emp-${id}`, // Use string IDs with prefix to avoid conflicts
     name: `${firstName} ${lastName}`,
     email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@company.com`,
     phone: `+1-555-${String(id).padStart(4, "0")}`,
@@ -644,18 +649,19 @@ function generateEmployee(id: number) {
   };
 }
 
-function generateTeam(id: number, teamName: string, employeeCount: number) {
+function generateTeam(teamName: string, employeeCount: number) {
   const employees = [];
   const hasChildren = employeeCount > 0 && Math.random() > 0.3;
+  const id = globalIdCounter++;
 
   for (let i = 0; i < employeeCount; i++) {
-    employees.push(generateEmployee(id * 100 + i + 1));
+    employees.push(generateEmployee());
   }
 
   const totalSalary = employees.reduce((sum, emp) => sum + emp.salary, 0);
 
   return {
-    id,
+    id: `team-${id}`, // Use string IDs with prefix
     name: `${teamName} Team`,
     email: `${teamName.toLowerCase().replace(/\s+/g, "")}@company.com`,
     phone: `+1-555-${String(id * 10).padStart(4, "0")}`,
@@ -677,15 +683,15 @@ function generateTeam(id: number, teamName: string, employeeCount: number) {
   };
 }
 
-function generateDepartment(id: number, deptName: string) {
+function generateDepartment(deptIndex: number, deptName: string) {
   const teamCount = getRandomNumber(2, 6);
   const teams: ReturnType<typeof generateTeam>[] = [];
   const hasChildren = Math.random() > 0.2;
+  const id = globalIdCounter++;
 
   for (let i = 0; i < teamCount; i++) {
     const employeeCount = getRandomNumber(3, 12);
-    teams.push(generateTeam(id * 10 + i + 1,
-      getRandomItem(teamTypes), employeeCount));
+    teams.push(generateTeam(getRandomItem(teamTypes), employeeCount));
   }
 
   const totalCount = teams.reduce((sum, team) => sum + team.count, 0);
@@ -695,10 +701,10 @@ function generateDepartment(id: number, deptName: string) {
   const totalProjects = teams.reduce((sum, team) => sum + team.projects, 0);
 
   return {
-    id,
+    id: `dept-${id}`, // Use string IDs with prefix
     name: `${deptName} Department`,
     email: `${deptName.toLowerCase()}@company.com`,
-    phone: `+1-555-${String(id).padStart(4, "0")}`,
+    phone: `+1-555-${String(deptIndex + 1).padStart(4, "0")}`,
     position: "Department",
     age: Math.floor(Math.random() * 50 + 20),
     status: getRandomItem(statuses),
@@ -720,11 +726,14 @@ function generateDepartment(id: number, deptName: string) {
   };
 }
 
-// Генеруємо 200 департаментів (це дасть ~1000+ записів з вкладеністю)
+// Reset global ID counter before generating data
+globalIdCounter = 1;
+
+// Generate 200 departments (~1000+ records with nested structure)
 export const mockDataExpandable = Array.from({ length: 200 }, (_, index) => {
   const deptName = getRandomItem(departments);
   const suffix = index > departments.length - 1 ? ` ${Math.floor(index / departments.length) + 1}` : "";
-  return generateDepartment(index + 1, `${deptName}${suffix}`);
+  return generateDepartment(index, `${deptName}${suffix}`);
 });
 
 // Total row для mockDataExpandable (агреговані дані)
