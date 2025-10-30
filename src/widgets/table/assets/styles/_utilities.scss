@@ -1,0 +1,133 @@
+// Table Utilities & Helpers - Modern Edition
+// ============================================
+@use './variables' as *;
+
+// ...existing code...
+.table-scrollbar-styled {
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    // Track blends with card background
+    background: theme('colors.cardBg');
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    // Thumb uses cardBorder with darkening for visibility
+    background: color-mix(in srgb, theme('colors.cardBorder') 70%, theme('colors.secondaryText') 30%);
+    border-radius: 4px;
+    border: 2px solid theme('colors.cardBg'); // Creates padding effect
+
+    &:hover {
+      // More prominent on hover
+      background: color-mix(in srgb, theme('colors.cardBorder') 50%, theme('colors.secondaryText') 50%);
+    }
+
+    &:active {
+      // Even darker when dragging
+      background: theme('colors.secondaryText');
+    }
+  }
+
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.cardBorder') theme('colors.cardBg');
+}
+
+// Selection styling
+.table-user-select-none {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+// Smooth transitions with modern easing
+.table-transition-fast {
+  transition: all $transition-fast;
+}
+
+.table-transition-normal {
+  transition: all $transition-normal;
+}
+
+.table-transition-slow {
+  transition: all $transition-slow;
+}
+
+// Modern loading skeleton animation with theme colors
+@keyframes tableSkeleton {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.table-skeleton {
+  // Elegant shimmer using theme colors
+  background: linear-gradient(
+    90deg,
+    theme('colors.cardBg') 0px,
+    color-mix(in srgb, theme('colors.cardBorder') 30%, transparent 70%) 50px,
+    theme('colors.cardBg') 100px
+  );
+  background-size: 200px 100%;
+  animation: tableSkeleton 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+// Ellipsis utilities for text truncation
+.table-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-ellipsis-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Fade-in animation for dynamic content
+@keyframes tableFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.table-fade-in {
+  animation: tableFadeIn $transition-normal cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Hover effect utilities
+.table-hover-lift {
+  transition: transform $transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+

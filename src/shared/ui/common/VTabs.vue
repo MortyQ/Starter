@@ -1,20 +1,11 @@
 <script lang="ts" setup>
-import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import VIcon from "@/shared/ui/common/VIcon.vue";
 
 const router = useRouter();
 const route = useRoute();
-const instance = getCurrentInstance();
-
-// Check if parent component is listening to tabSelected event
-const hasTabSelectedListener = computed(() => {
-  const vnode = instance?.vnode;
-  const vNodeProps = vnode?.props || {};
-
-  return !!(vNodeProps["onTab-selected"] || vNodeProps["onTabSelected"]);
-});
 
 export type ITab = {
   id: number | string
@@ -36,6 +27,13 @@ const props = defineProps<{
   loader?: boolean
   reset?: boolean
   useHash?: boolean // Enable/disable URL hash synchronization (default: true)
+  /**
+   * Tab selection mode:
+   * - 'auto' (default): Tabs switch immediately on click
+   * - 'controlled': Tab switching is controlled via @tab-selected callback
+   *   Parent must call the provided callback to complete the switch
+   */
+  tabSelectionMode?: "auto" | "controlled"
 }>();
 
 const emits = defineEmits<{
@@ -81,16 +79,21 @@ const selectTab = (tabId: number | string, updateRoute = true) => {
     }
   };
 
-  // If parent is listening to tabSelected event, emit with callback
-  if (hasTabSelectedListener.value) {
+  if (props.tabSelectionMode === "controlled") {
+    // Controlled mode: emit event with callback, parent controls tab switch
     emits("tabSelected", {
       tabId,
       callback: completeTabSwitch,
       tab,
     });
   } else {
-    // No listener - auto-complete the tab switch
+    // Auto mode (default): switch immediately, emit for notification
     completeTabSwitch();
+    emits("tabSelected", {
+      tabId,
+      callback: () => {}, // Already switched, callback is no-op
+      tab,
+    });
   }
 };
 
@@ -120,20 +123,13 @@ onMounted(() => {
 
   const initialTab = props.tabs.find((t) => t.id === currentTabId.value);
 
-  // If parent is listening to tabSelected event, emit with callback
-  if (hasTabSelectedListener.value) {
-    emits("tabSelected", {
-      tabId: currentTabId.value,
-      callback: completeInitialTabSwitch,
-      tab: initialTab,
-    });
-
-    // Auto-call callback for initial mount (no blocking needed on mount)
-    completeInitialTabSwitch();
-  } else {
-    // No listener - just complete the initial tab switch
-    completeInitialTabSwitch();
-  }
+  // Complete initial tab switch and emit notification
+  completeInitialTabSwitch();
+  emits("tabSelected", {
+    tabId: currentTabId.value,
+    callback: () => {}, // Already initialized, callback is no-op
+    tab: initialTab,
+  });
 });
 
 const isTabActive = (tabId: number | string): boolean => {
@@ -237,7 +233,7 @@ defineExpose({
       :aria-labelledby="`tab-${currentTabId}`"
       class="flex-1 flex flex-col min-h-0"
     >
-      <div class="flex-1 overflow-auto">
+      <div class="flex-1 overflow-auto pt-4">
         <slot :name="`${currentTabId}`" />
       </div>
     </div>

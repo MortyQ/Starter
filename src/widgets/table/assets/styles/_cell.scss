@@ -1,0 +1,117 @@
+// Table Cell Styles - Modern Edition
+// ============================================
+@use './variables' as *;
+
+// ...existing code...
+.table-cell {
+  padding: $table-cell-padding-y $table-cell-padding-x;
+
+  // Ultra-subtle bottom border for row separation
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+
+  // Typography - mainText for primary content
+  color: theme('colors.mainText');
+  font-size: $table-font-size-base;
+  line-height: $table-line-height-base;
+  font-weight: $table-font-weight-regular;
+
+  min-width: 0; // Important for truncate to work in grid
+
+  // Performance: no background transition during scroll
+  // Only color transitions are allowed on interactive elements
+
+  // Text alignment
+  &--left {
+    text-align: left;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+// Content wrapper in cell - flexible layout
+.table-cell-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  height: 100%;
+}
+
+// Text content with elegant truncation
+.table-cell-text {
+  flex: 1;
+  min-width: 0;
+
+  &--truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &--wrap {
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+  }
+}
+
+// Interactive cell (doesn't truncate content, allows full interaction)
+.table-cell--interactive {
+  .table-cell-text {
+    overflow: visible;
+  }
+}
+
+// Expand button - modern, minimal design
+.table-cell-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $table-expand-button-size;
+  height: $table-expand-button-size;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: all $transition-fast;
+  cursor: pointer;
+
+  // Subtle secondaryText for icon
+  color: theme('colors.secondaryText');
+
+  // Smooth hover effect
+  &:hover {
+    background-color: color-mix(in srgb, theme('colors.cardBorder') 40%, transparent 60%);
+    color: theme('colors.mainText');
+    transform: scale(1.08);
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+
+  // Icon rotation for expand/collapse
+  :deep(svg) {
+    transition: transform $transition-normal;
+  }
+}
+
+// Spacer for alignment in non-expandable rows
+.table-cell-expand-spacer {
+  width: $table-expand-button-size;
+  flex-shrink: 0;
+}
+
+// Indent for nested rows - creates clear hierarchy
+.table-cell--indented {
+  // Dynamic padding added through inline styles
+  // padding-left: calc(depth * $table-indent-size + base-padding)
+}
+

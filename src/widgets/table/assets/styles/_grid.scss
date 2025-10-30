@@ -1,0 +1,44 @@
+// Table Grid Styles - Modern Edition
+// ============================================
+@use './variables' as *;
+
+// ...existing code...
+.table-grid {
+  display: grid;
+  width: 100%;
+
+  // IMPORTANT: min-width ensures grid expands to accommodate all columns
+  // Without this, fixed columns (position: sticky) may disappear during horizontal scroll
+  // because the grid would only be as wide as the scroll container
+  min-width: fit-content;
+
+  transition: none; // Disable transition during normal operation
+
+  // Performance optimizations for smooth scrolling
+  // Enables GPU acceleration and creates a new compositing layer
+  transform: translateZ(0);
+  will-change: scroll-position;
+
+  // State during column resize
+  &.is-resizing {
+    cursor: col-resize;
+    user-select: none;
+
+    // All child elements also have resize cursor
+    * {
+      cursor: col-resize !important;
+      user-select: none !important;
+    }
+  }
+}
+
+// Helper for display: contents
+.contents {
+  display: contents;
+}
+
+// Spacer for virtualization
+.table-virtual-spacer {
+  grid-column: 1 / -1; // span all columns
+}
+

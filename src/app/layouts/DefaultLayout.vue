@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 
-import Header from "@/widgets/Navigation/Header.vue";
+import Header from "@/widgets/navigation/Header.vue";
 </script>
 
 <template>
@@ -10,9 +10,7 @@ import Header from "@/widgets/Navigation/Header.vue";
     class="flex flex-col min-h-screen bg-base-100 text-neutral"
   >
     <!-- Navigation Header -->
-
     <Header />
-
     <!-- Main Content -->
     <main class="flex-1 w-full flex flex-col">
       <div class="w-full flex-1 py-4 px-2 sm:px-4 lg:px-6 flex flex-col">

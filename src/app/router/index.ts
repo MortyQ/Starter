@@ -57,6 +57,14 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: "/table",
+    name: "Table",
+    component: () => import("@/pages/Table/index.vue"),
+    meta: {
+      title: "Table Example - Vue 3 Starter",
+    },
+  },
+  {
     // Catch-all route for 404 handling
     path: "/:pathMatch(.*)*",
     name: "NotFound",

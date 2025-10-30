@@ -1,0 +1,118 @@
+// Table Fixed Columns Styles - Modern Edition
+// ============================================
+@use './variables' as *;
+
+// Base fixed column - PERFORMANCE FIRST
+// Only background and z-index styles, WITHOUT position: sticky!
+// Sticky is added separately for left/right
+.table-fixed-column {
+  z-index: $z-index-fixed-cell;
+
+  // Solid background using cardBg (PERFORMANCE: no transparency, no blur)
+  background-color: theme('colors.cardBg');
+
+  // Performance optimization: GPU acceleration for smoother scrolling
+  will-change: transform;
+}
+
+// Left fixed column - sticky for horizontal scroll
+.table-fixed-left {
+  position: sticky;
+  left: 0;
+
+  // Dynamic left position set through inline styles
+  // left: calc(sum of previous fixed left widths)
+}
+
+// Right fixed column - sticky for horizontal scroll
+.table-fixed-right {
+  position: sticky;
+  right: 0;
+
+  // Dynamic right position set through inline styles
+  // right: calc(sum of previous fixed right widths)
+}
+
+// Modern shadow for last left fixed column - soft, elegant depth
+.table-fixed-left-last {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: $table-shadow-offset;
+    transform: translateX(100%);
+    pointer-events: none;
+
+    // Soft shadow using mainText at low opacity for theme compatibility
+    // Creates elegant depth indicator without performance impact
+    box-shadow: inset $table-shadow-offset 0 $table-shadow-blur $table-shadow-spread
+                color-mix(in srgb, theme('colors.mainText') 10%, transparent 90%);
+
+    // PERFORMANCE: No transition - static shadow for 60 FPS
+  }
+}
+
+// Modern shadow for first right fixed column
+.table-fixed-right-first {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: $table-shadow-offset;
+    transform: translateX(-100%);
+    pointer-events: none;
+
+    // Soft shadow using mainText at low opacity
+    box-shadow: inset (-$table-shadow-offset) 0 $table-shadow-blur $table-shadow-spread
+                color-mix(in srgb, theme('colors.mainText') 10%, transparent 90%);
+
+    // PERFORMANCE: No transition - static shadow for 60 FPS
+  }
+}
+
+// Hover effect on fixed columns - maintains solid background
+.table-row-wrapper:hover {
+  .table-fixed-column {
+    // Match row hover background
+    background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+  }
+}
+
+// Z-index hierarchy for fixed columns
+
+// Body cells with fixed (not header, not total)
+// Have lowest z-index to not overlap header/total
+.table-cell.table-fixed-column {
+  z-index: $z-index-fixed-cell !important;
+}
+
+// Fixed in header (highest z-index: 15)
+// Always on top to not overlap during scroll
+.table-header-cell.table-fixed-column {
+  z-index: $z-index-header-fixed !important;
+
+  // Header fixed columns maintain header background
+  background-color: color-mix(in srgb, theme('colors.cardBg') 98%, theme('colors.mainText') 2%);
+}
+
+// Fixed grouped header (same z-index as header cell)
+.table-header-group.table-fixed-column {
+  z-index: $z-index-header-fixed !important;
+
+  // Group header maintains its darker background even when fixed
+  background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+}
+
+// Fixed in total row (z-index: 11)
+// Above regular header but below header+fixed
+.table-total-cell.table-fixed-column {
+  z-index: $z-index-total-fixed !important;
+
+  // Total fixed columns maintain total background
+  background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+}
+

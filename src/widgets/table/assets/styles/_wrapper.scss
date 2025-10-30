@@ -1,0 +1,118 @@
+// Table Wrapper Styles - Modern Edition
+// ============================================
+@use './variables' as *;
+
+// Container for entire table + pagination
+.table-wrapper {
+  width: 100%;
+  position: relative;
+
+  // Soft shadow for elevation of entire component
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+  // Common border for table and pagination
+  border: $table-border-width solid theme('colors.cardBorder');
+  border-radius: $table-border-radius;
+
+  // Background for entire component
+  background-color: theme('colors.cardBg');
+
+  // CRITICAL: Prevent content from escaping rounded corners
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  // CRITICAL: Don't stretch in grid/flex layouts - fit to content height
+  align-self: start;
+  height: fit-content;
+
+  // When toolbar is present - remove top border-radius from scroll container
+  &--with-toolbar {
+    .table-scroll-container {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  }
+}
+
+// Toolbar slot - automatic styling
+.table-toolbar-slot {
+  width: 100%;
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+  background-color: transparent;
+}
+
+// Scroll container - only for table grid
+.table-scroll-container {
+  // Performance: no smooth scroll for better FPS with fixed columns
+  overflow: auto;
+
+  // Flex child behavior - don't grow beyond specified height
+  flex-shrink: 0;
+
+  // NO border - already in wrapper
+  // NO border-radius - already in wrapper
+
+  // Transparent background - uses wrapper background
+  background-color: transparent;
+
+  // Performance optimizations
+  contain: layout style paint;
+  transform: translateZ(0);
+
+  // Modern thin scrollbar (8px)
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    // Track blends with card background
+    background: theme('colors.cardBg');
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    // Thumb uses cardBorder with slight darkening for visibility
+    background: color-mix(in srgb, theme('colors.cardBorder') 70%, theme('colors.secondaryText') 30%);
+    border-radius: 4px;
+    border: 2px solid theme('colors.cardBg'); // Creates padding effect
+
+    &:hover {
+      // More prominent on hover
+      background: color-mix(in srgb, theme('colors.cardBorder') 50%, theme('colors.secondaryText') 50%);
+    }
+
+    &:active {
+      // Even darker when dragging
+      background: theme('colors.secondaryText');
+    }
+  }
+
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.cardBorder') theme('colors.cardBg');
+}
+
+// Loading state - centered with comfortable spacing
+.table-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 0;
+  min-height: 300px;
+}
+
+// Empty state - clear, readable
+.table-empty {
+  padding: 4rem 2rem;
+  text-align: center;
+
+  // Using secondaryText for less prominent empty state
+  color: theme('colors.secondaryText');
+  font-size: $table-font-size-base;
+  line-height: $table-line-height-base;
+
+  grid-column: 1 / -1; // span all columns
+}
+

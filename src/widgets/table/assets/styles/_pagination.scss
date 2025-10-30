@@ -1,0 +1,227 @@
+// Table Pagination Styles - Modern & Organic Edition
+// ============================================
+@use './variables' as *;
+
+// ...existing code...
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  // Паддинг такой же как в ячейках таблицы для органичности
+  padding: $table-cell-padding-y $table-cell-padding-x;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+
+  // Используем cardBg для бесшовной интеграции с таблицей
+  background-color: theme('colors.cardBg');
+
+  // Тонкая верхняя граница для разделения
+  border-top: $table-border-width solid theme('colors.cardBorder');
+
+  // Нижние углы совпадают с таблицей
+  border-bottom-left-radius: $table-border-radius;
+  border-bottom-right-radius: $table-border-radius;
+
+  // Минимальная высота для комфорта
+  min-height: 60px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1rem;
+  }
+}
+
+// Информация о pagination - мягкий secondaryText
+.table-pagination-info {
+  color: theme('colors.secondaryText');
+  font-size: $table-font-size-base;
+  line-height: $table-line-height-base;
+  font-weight: $table-font-weight-regular;
+  white-space: nowrap;
+
+  // Highlight numbers - mainText для акцента
+  &-highlight {
+    color: theme('colors.mainText');
+    font-weight: $table-font-weight-semibold;
+  }
+}
+
+// Контролы пагинации - группа кнопок
+.table-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem; // Плотная группировка кнопок
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+// Современная кнопка пагинации
+.table-pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // Размеры кнопки
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.375rem 0.75rem;
+
+  // Тонкая граница из cardBorder
+  border: $table-border-width solid theme('colors.cardBorder');
+  border-radius: 6px;
+
+  // Фон и текст как у таблицы
+  background-color: theme('colors.cardBg');
+  color: theme('colors.mainText');
+
+  // Типографика
+  font-size: $table-font-size-base;
+  font-weight: $table-font-weight-medium;
+  line-height: 1;
+
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  // Убираем outline при фокусе, добавим box-shadow
+  outline: none;
+
+  // Hover state - subtle overlay как в таблице
+  &:hover:not(:disabled):not(.table-pagination-btn--active) {
+    background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+    border-color: color-mix(in srgb, theme('colors.cardBorder') 70%, theme('colors.mainText') 30%);
+  }
+
+  // Active/pressed state
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  // Disabled state - как disabled ячейки
+  &:disabled {
+    opacity: $opacity-disabled;
+    cursor: not-allowed;
+    color: theme('colors.secondaryText');
+  }
+
+  // Active page - primary color
+  &--active {
+    background-color: theme('colors.primary');
+    color: white;
+    border-color: theme('colors.primary');
+    font-weight: $table-font-weight-semibold;
+    cursor: default;
+
+    &:hover {
+      background-color: theme('colors.primary');
+      border-color: theme('colors.primary');
+    }
+  }
+
+  // Focus state - кольцо как у таблицы
+  &:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, theme('colors.primary') 20%, transparent 80%);
+  }
+}
+
+// Page size selector - органичный dropdown
+.table-pagination-size {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+
+  label {
+    color: theme('colors.secondaryText');
+    font-size: $table-font-size-base;
+    font-weight: $table-font-weight-medium;
+  }
+
+  select {
+    // Размеры
+    padding: 0.375rem 2rem 0.375rem 0.75rem;
+    min-width: 80px;
+    height: 2.25rem;
+
+    // Граница как у кнопок
+    border: $table-border-width solid theme('colors.cardBorder');
+    border-radius: 6px;
+
+    // Фон и текст
+    background-color: theme('colors.cardBg');
+    color: theme('colors.mainText');
+
+    // Типографика
+    font-size: $table-font-size-base;
+    font-weight: $table-font-weight-medium;
+    line-height: 1;
+
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    // Кастомная стрелка
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%2364748b' d='M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 16px;
+
+    // Hover state
+    &:hover {
+      background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+      border-color: color-mix(in srgb, theme('colors.cardBorder') 70%, theme('colors.mainText') 30%);
+    }
+
+    // Focus state
+    &:focus {
+      outline: none;
+      border-color: theme('colors.primary');
+      box-shadow: 0 0 0 3px color-mix(in srgb, theme('colors.primary') 20%, transparent 80%);
+    }
+
+    // Options
+    option {
+      background-color: theme('colors.cardBg');
+      color: theme('colors.mainText');
+      padding: 0.5rem;
+    }
+  }
+}
+
+// Ellipsis для многих страниц
+.table-pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  color: theme('colors.secondaryText');
+  font-weight: $table-font-weight-medium;
+  cursor: default;
+  user-select: none;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .table-pagination {
+    &-info {
+      order: 1;
+      text-align: center;
+      width: 100%;
+    }
+
+    &-controls {
+      order: 2;
+      width: 100%;
+    }
+
+    &-size {
+      order: 3;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+

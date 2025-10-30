@@ -13,6 +13,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@tanstack/vue-virtual": "^3.13.12",
     "@vueuse/core": "^13.6.0",
     "axios": "^1.12.2",
     "dompurify": "^3.3.0",

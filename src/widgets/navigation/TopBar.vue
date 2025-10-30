@@ -6,7 +6,7 @@ const topbarMenu = [
   { name: "About", to: "/about" },
   { name: "Components", to: "/components" },
   { name: "UI Gallery", to: "/ui-gallery" },
-  { name: "Not found", to: "/random-url" },
+  { name: "Table", to: "/table" },
 ];
 </script>
 

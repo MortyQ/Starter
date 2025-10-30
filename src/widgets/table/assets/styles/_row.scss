@@ -1,0 +1,91 @@
+// Table Row Styles - Modern Edition
+// ============================================
+@use './variables' as *;
+
+// ...existing code...
+.table-row-wrapper {
+  display: contents;
+  cursor: pointer;
+
+  // Subtle hover effect - cardBg with minimal mainText overlay for readability
+  &:hover > .table-cell {
+    background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+  }
+
+  // Active/clicked state - slightly more prominent
+  &:active > .table-cell {
+    background-color: color-mix(in srgb, theme('colors.cardBg') 94%, theme('colors.mainText') 6%);
+  }
+
+  // Disabled state - clear visual feedback
+  &--disabled {
+    cursor: not-allowed;
+    opacity: $opacity-disabled;
+
+    &:hover > .table-cell {
+      background-color: theme('colors.cardBg'); // No hover when disabled
+    }
+  }
+
+  // Selected state - primary color at low opacity for clear indication
+  &--selected > .table-cell {
+    background-color: color-mix(in srgb, theme('colors.cardBg') 92%, theme('colors.primary') 8%);
+
+    // Slightly bolder text for selected rows
+    font-weight: $table-font-weight-medium;
+  }
+
+  // Combined selected + hover state
+  &--selected:hover > .table-cell {
+    background-color: color-mix(in srgb, theme('colors.cardBg') 88%, theme('colors.primary') 12%);
+  }
+}
+
+// Virtual row styles
+.table-row-virtual {
+  display: contents;
+
+  // Fixed height for virtualization
+  & > .table-cell {
+    min-height: $table-row-height;
+    height: $table-row-height;
+  }
+}
+
+// Expandable row (for nested/children) with smooth animations
+.table-row-expandable {
+  display: contents;
+
+  // Appear animation for child rows - elegant fade + slide
+  &--entering > .table-cell {
+    animation: expandRowIn $transition-normal cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &--leaving > .table-cell {
+    animation: expandRowOut $transition-normal cubic-bezier(0.4, 0, 1, 1);
+  }
+}
+
+// Keyframes for expand animation - smooth, professional
+@keyframes expandRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandRowOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+

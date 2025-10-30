@@ -1,0 +1,218 @@
+// Table Header Styles - Modern Edition
+// ============================================
+@use './variables' as *;
+
+// Table header row - contains all header cells
+.table-header-row {
+  display: contents;
+
+  // Sticky positioning for all header cells
+  // Default: top: 0 for simple tables
+  & > * {
+    position: sticky;
+    top: 0;
+    z-index: $z-index-header;
+  }
+
+  // Multi-level header rows - override top for specific levels
+  &-level-0 > * {
+    top: 0; // First level at top
+  }
+
+  &-level-1 > * {
+    top: $table-header-height; // Below level 0
+  }
+
+  &-level-2 > * {
+    top: calc($table-header-height * 2); // Below level 1
+  }
+}
+
+// Grouped header cell (parent header that spans multiple columns)
+.table-header-group {
+  // position: sticky inherited from .table-header-row > *
+  // top: inherited from .table-header-row-level-X
+  padding: $table-header-padding-y $table-header-padding-x;
+  min-height: $table-header-height;
+  height: $table-header-height; // Fixed height to prevent shifting
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box; // Include borders in height calculation
+
+  // Slightly darker background for visual hierarchy
+  background-color: color-mix(in srgb, theme('colors.cardBg') 96%, theme('colors.mainText') 4%);
+
+  // Bottom border to separate from leaf headers
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+
+  // Typography - bold and centered for group labels
+  font-weight: $table-font-weight-bold;
+  font-size: $table-font-size-header;
+  line-height: $table-line-height-header;
+  color: theme('colors.mainText');
+  text-transform: uppercase;
+  letter-spacing: 0.05em; // More spacing for prominence
+  text-align: center; // Groups are typically centered
+
+  overflow: hidden;
+  min-width: 0;
+  user-select: none;
+
+  // Alignment variants
+  &--left {
+    text-align: left;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
+
+  // Fixed group has higher z-index
+  &.table-fixed-column {
+    z-index: $z-index-header-fixed !important;
+  }
+
+  // No resize handle on groups
+  // Groups inherit width from children, not resizable directly
+}
+
+// Label in group header
+.table-header-group-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Individual header cell with modern aesthetics
+.table-header-cell {
+  // position: sticky inherited from .table-header-row > *
+  // top: inherited from .table-header-row-level-X
+  padding: $table-header-padding-y $table-header-padding-x;
+  min-height: $table-header-height;
+  height: $table-header-height; // Fixed height to prevent shifting
+  display: flex;
+  align-items: center;
+  box-sizing: border-box; // Include borders in height calculation
+
+  // Subtle background distinction - cardBg with slight darkening for depth
+  background-color: color-mix(in srgb, theme('colors.cardBg') 98%, theme('colors.mainText') 2%);
+
+  // Minimal bottom border using cardBorder
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+
+  // Typography - semibold for emphasis
+  font-weight: $table-font-weight-semibold;
+  font-size: $table-font-size-header;
+  line-height: $table-line-height-header;
+  color: theme('colors.mainText');
+  text-transform: uppercase;
+  letter-spacing: 0.025em; // Slight tracking for uppercase
+
+  overflow: hidden;
+  min-width: 0;
+
+  // Text alignment
+  &--left {
+    text-align: left;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
+
+  // Fixed header has higher z-index (always on top)
+  &.table-fixed-column {
+    z-index: $z-index-header-fixed !important;
+  }
+
+  // Grouped leaf header (header that is part of a group)
+  // Positioned below the group header row
+  &--grouped {
+    // Lighter background to distinguish from group
+    background-color: color-mix(in srgb, theme('colors.cardBg') 99%, theme('colors.mainText') 1%);
+  }
+
+  // Header cell with rowspan (spans multiple levels)
+  // Spans 2 rows: includes both header levels
+  &--rowspan {
+    // Height = 48px * 2 = 96px (spans 2 header rows)
+    min-height: calc($table-header-height * 2);
+    height: calc($table-header-height * 2);
+
+    // Keep bottom border to separate from data rows
+    border-bottom: $table-border-width solid theme('colors.cardBorder');
+
+    // Align content to center vertically across all spanned levels
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Label in header - clean, readable
+.table-header-label {
+  user-select: none;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 1rem; // space for resize handle
+}
+
+// Resize handle - subtle, modern appearance
+.table-resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: $table-resize-handle-width;
+  cursor: col-resize;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+
+  // Barely visible by default
+  background-color: transparent;
+  transition: background-color $transition-fast;
+
+  // Hover state - subtle indicator
+  &:hover {
+    background-color: color-mix(in srgb, theme('colors.primary') 25%, transparent 75%);
+  }
+
+  // Active state - clear feedback
+  &:active {
+    background-color: theme('colors.primary');
+  }
+}
+
+// Resize indicator (grip lines) - minimal, appears on hover
+.table-resize-indicator {
+  display: none; // Hidden in modern minimal design
+}
+
+// Empty checkbox header cell (when showHeaderCheckbox: false)
+.table-header-checkbox-cell--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 0.5rem; /* 14px 8px - match header padding */
+  height: 48px; /* Match $table-header-height from variables */
+  min-height: 48px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, theme('colors.cardBg') 98%, theme('colors.mainText') 2%);
+  border-bottom: $table-border-width solid theme('colors.cardBorder');
+  border-right: $table-border-width solid theme('colors.cardBorder');
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
